@@ -18,6 +18,22 @@ The system ensures that documents cannot be altered without detection.
 
 ---
 
+## ✨ Features
+
+## 📸 Screenshots
+
+### Dashboard (Verify Mode)
+
+![Dashboard](Screenshots/Dashboard.png)
+
+### Register Document
+
+![Register](Screenshots/Register.png)
+
+### Verification Result
+
+![Verified](Screenshots/Verified.png)
+
 ## 🧠 How It Works
 
 1. A document is uploaded via the web interface
