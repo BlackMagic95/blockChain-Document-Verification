@@ -4,6 +4,8 @@ A blockchain-based platform for secure document registration and verification us
 
 ---
 
+🔗 Ethereum · 🔐 SHA-256 · 🧾 Proof-of-Existence · 🌐 Web3
+
 ## 🚀 Overview
 
 This project implements a **proof-of-existence and document integrity verification system** using blockchain technology.

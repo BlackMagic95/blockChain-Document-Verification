@@ -67,7 +67,14 @@ public class App {
         DocumentRepo repo;
 
         private final String RPC = "https://ethereum-sepolia-rpc.publicnode.com";
-        private final String PRIVATE_KEY = "0x209aeba85c22705e0f2029d2eede9f475825aa67221e8125a61a16c16a72cfca";
+        private final String PRIVATE_KEY = System.getenv("PRIVATE_KEY");
+
+        public DocumentController() {
+            if (PRIVATE_KEY == null || PRIVATE_KEY.isEmpty()) {
+                throw new RuntimeException("PRIVATE_KEY not set in environment variables");
+            }
+        }
+
         private final String CONTRACT = "0x5B599CcB905E9E4D171FFC363A0E8d560aE4C10B";
 
         Web3j web3 = Web3j.build(new HttpService(RPC));
