@@ -22,8 +22,6 @@ The system ensures that documents cannot be altered without detection.
 
 ## 📸 Screenshots
 
-## 📸 Screenshots
-
 ### Dashboard
 
 ![Dashboard](screenshots/dashboard.png)
@@ -96,6 +94,8 @@ set PRIVATE_KEY=your_private_key_here
 
 ### Frontend
 
+```bash
 cd frontend
 npm install
 npm run dev
+```
