@@ -22,17 +22,19 @@ The system ensures that documents cannot be altered without detection.
 
 ## 📸 Screenshots
 
-### Dashboard (Verify Mode)
+## 📸 Screenshots
 
-![Dashboard](ScreenShots/Dashboard.png)
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
 
 ### Register Document
 
-![Register](ScreenShots/Register.png)
+![Register](screenshots/register.png)
 
 ### Verification Result
 
-![Verified](ScreenShots/Verify.png)
+![Verified](screenshots/verified.png)
 
 ## 🧠 How It Works
 
