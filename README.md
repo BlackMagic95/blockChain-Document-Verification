@@ -24,15 +24,15 @@ The system ensures that documents cannot be altered without detection.
 
 ### Dashboard (Verify Mode)
 
-![Dashboard](Screenshots/Dashboard.png)
+![Dashboard](ScreenShots/Dashboard.png)
 
 ### Register Document
 
-![Register](Screenshots/Register.png)
+![Register](ScreenShots/Register.png)
 
 ### Verification Result
 
-![Verified](Screenshots/Verified.png)
+![Verified](ScreenShots/Verify.png)
 
 ## 🧠 How It Works
 
