@@ -19,3 +19,4 @@ Thumbs.db
 
 # ================= ENV =================
 .env
+application.properties

@@ -4,23 +4,28 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "hash"))
+@Table(name = "documents", uniqueConstraints = @UniqueConstraint(columnNames = "hash"))
 public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 64)
     private String hash;
+
+    @Column(nullable = false, length = 500)
+    private String fileUrl;
 
     private LocalDateTime registeredAt = LocalDateTime.now();
 
     private LocalDateTime verifiedAt;
 
-    // getters & setters
+    /* ===== GETTERS / SETTERS ===== */
+
     public Long getId() {
         return id;
     }
@@ -31,6 +36,10 @@ public class Document {
 
     public String getHash() {
         return hash;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
     }
 
     public LocalDateTime getRegisteredAt() {
@@ -47,6 +56,10 @@ public class Document {
 
     public void setHash(String hash) {
         this.hash = hash;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 
     public void setVerifiedAt(LocalDateTime verifiedAt) {

@@ -19,7 +19,7 @@ export default function App() {
   const loadDocs = async () => {
     try {
       const res = await axios.get(API + "/docs");
-      setDocs(res.data);
+      setDocs(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to load docs", err);
     }
@@ -40,7 +40,15 @@ export default function App() {
       const f = new FormData();
       f.append("file", file);
 
-      const res = await axios.post(API + "/upload", f);
+      const res = await axios.post(API + "/upload", f, {
+        validateStatus: () => true, // IMPORTANT
+      });
+
+      if (!res.data || typeof res.data !== "object") {
+        setMsg("Unexpected response from server");
+        setResultType("error");
+        return;
+      }
 
       if (res.data.status === "DUPLICATE") {
         setMsg("Document already registered ⚠️");
@@ -48,10 +56,10 @@ export default function App() {
       } else if (res.data.status === "REGISTERED") {
         setMsg("Document registered successfully ✅");
         setResultType("success");
-        setFile(null);           // IMPORTANT: reset file
-        await loadDocs();        // IMPORTANT: refresh docs
+        setFile(null);          // reset file
+        await loadDocs();       // refresh docs
       } else {
-        setMsg("Unexpected response from server");
+        setMsg("Registration failed ❌");
         setResultType("error");
       }
 
@@ -65,7 +73,7 @@ export default function App() {
   // ================= VERIFY =================
   const handleVerify = async () => {
     if (!file) {
-      setMsg("Please select a file");
+      setMsg("Please upload a file");
       setResultType("info");
       return;
     }
@@ -77,22 +85,35 @@ export default function App() {
       const f = new FormData();
       f.append("file", file);
 
-      const res = await axios.post(API + "/verify", f);
+      const res = await axios.post(API + "/verify", f, {
+        validateStatus: () => true,
+      });
+
+      if (!res.data || typeof res.data !== "object") {
+        setMsg("Unexpected response from server");
+        setResultType("error");
+        return;
+      }
 
       if (res.data.status === "VERIFIED") {
         setMsg(`VERIFIED ✅ (at ${res.data.verifiedAt})`);
         setResultType("success");
       } else if (res.data.status === "NOT_REGISTERED") {
-        setMsg("Document not registered ❌");
+        setMsg("NOT REGISTERED ❌");
+        setResultType("error");
+      } else if (res.data.status === "CHAIN_MISSING") {
+        setMsg("BLOCKCHAIN RECORD MISSING ⚠️");
         setResultType("error");
       } else {
-        setMsg(res.data.message || "Verification failed");
+        setMsg("Verification failed ❌");
         setResultType("error");
       }
 
+      setFile(null); // reset after verify
+
     } catch (err) {
       console.error(err);
-      setMsg("Verification error. Check backend.");
+      setMsg("Verification failed");
       setResultType("error");
     }
   };

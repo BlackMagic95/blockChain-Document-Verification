@@ -2,10 +2,15 @@ package com.verify.controller;
 
 import com.verify.entity.Document;
 import com.verify.repo.DocumentRepo;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.MessageDigest;
 import java.time.LocalDateTime;
@@ -22,24 +27,32 @@ import org.web3j.protocol.core.methods.response.*;
 
 @RestController
 @CrossOrigin("*")
+@RequestMapping("/")
 public class DocumentController {
 
     @Autowired
     private DocumentRepo repo;
 
-    private final String RPC = "https://ethereum-sepolia-rpc.publicnode.com";
-    private final String PRIVATE_KEY = System.getenv("PRIVATE_KEY");
-    private final String CONTRACT = "0x5B599CcB905E9E4D171FFC363A0E8d560aE4C10B";
+    @Autowired
+    private Cloudinary cloudinary;
 
-    private final Web3j web3 = Web3j.build(new HttpService(RPC));
+    // private final String RPC = "https://ethereum-sepolia-rpc.publicnode.com";
+    // private final String PRIVATE_KEY = System.getenv("PRIVATE_KEY");
+    @Value("${blockchain.private-key}")
+    private String PRIVATE_KEY;
 
-    public DocumentController() {
-        if (PRIVATE_KEY == null || PRIVATE_KEY.isBlank()) {
-            throw new RuntimeException("PRIVATE_KEY not set");
-        }
-    }
+    @Value("${blockchain.contract}")
+    private String CONTRACT;
 
-    // ================= SHA-256 =================
+    @Value("${blockchain.rpc}")
+    private String RPC;
+
+    // private final String CONTRACT = "0x5B599CcB905E9E4D171FFC363A0E8d560aE4C10B";
+
+    @Autowired
+    private Web3j web3;
+
+    /* ================= SHA-256 ================= */
     private String sha256(byte[] data) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] hash = md.digest(data);
@@ -49,7 +62,7 @@ public class DocumentController {
         return sb.toString();
     }
 
-    // ================= BLOCKCHAIN STORE =================
+    /* ================= BLOCKCHAIN ================= */
     private void storeHashOnChain(String hash) throws Exception {
         Credentials cred = Credentials.create(PRIVATE_KEY);
         RawTransactionManager tm = new RawTransactionManager(web3, cred, 11155111);
@@ -71,35 +84,40 @@ public class DocumentController {
         System.out.println("Blockchain TX: " + tx.getTransactionHash());
     }
 
-    // ================= REGISTER =================
+    /* ================= REGISTER ================= */
     @PostMapping("/upload")
-    public Map<String, String> upload(@RequestParam MultipartFile file)
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile file)
             throws Exception {
 
         String hash = sha256(file.getBytes());
 
-        // 1️⃣ DUPLICATE CHECK
         if (repo.findByHash(hash).isPresent()) {
-            return Map.of(
-                    "status", "DUPLICATE",
-                    "message", "Document already registered");
+            return Map.of("status", "DUPLICATE");
         }
+
+        Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                file.getBytes(),
+                ObjectUtils.asMap("resource_type", "auto"));
+
+        String fileUrl = uploadResult.get("secure_url").toString();
 
         Document d = new Document();
         d.setName(file.getOriginalFilename());
         d.setHash(hash);
-        repo.save(d);
+        d.setFileUrl(fileUrl);
 
+        repo.save(d);
         storeHashOnChain(hash);
 
         return Map.of(
                 "status", "REGISTERED",
-                "hash", hash);
+                "id", d.getId(),
+                "fileUrl", fileUrl);
     }
 
-    // ================= VERIFY =================
+    /* ================= VERIFY ================= */
     @PostMapping("/verify")
-    public Map<String, String> verify(@RequestParam MultipartFile file)
+    public Map<String, String> verify(@RequestParam("file") MultipartFile file)
             throws Exception {
 
         String uploadedHash = sha256(file.getBytes());
@@ -107,12 +125,9 @@ public class DocumentController {
         Optional<Document> docOpt = repo.findByHash(uploadedHash);
 
         if (docOpt.isEmpty()) {
-            return Map.of(
-                    "status", "NOT_REGISTERED",
-                    "message", "Document not found");
+            return Map.of("status", "NOT_REGISTERED");
         }
 
-        // 2️⃣ READ FROM BLOCKCHAIN
         Function function = new Function(
                 "getHash",
                 List.of(new Utf8String(uploadedHash)),
@@ -134,12 +149,9 @@ public class DocumentController {
                 function.getOutputParameters());
 
         if (decoded.isEmpty()) {
-            return Map.of(
-                    "status", "CHAIN_MISSING",
-                    "message", "Hash not found on blockchain");
+            return Map.of("status", "CHAIN_MISSING");
         }
 
-        // 3️⃣ VERIFIED + TIMESTAMP
         Document d = docOpt.get();
         d.setVerifiedAt(LocalDateTime.now());
         repo.save(d);
@@ -149,7 +161,7 @@ public class DocumentController {
                 "verifiedAt", d.getVerifiedAt().toString());
     }
 
-    // ================= LIST =================
+    /* ================= LIST ================= */
     @GetMapping("/docs")
     public List<Document> docs() {
         return repo.findAll();
