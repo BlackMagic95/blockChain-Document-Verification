@@ -1,32 +1,23 @@
 package com.verify.entity;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "documents", uniqueConstraints = @UniqueConstraint(columnNames = "hash"))
+@org.springframework.data.mongodb.core.mapping.Document(collection = "documents")
 public class Document {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false, unique = true, length = 64)
     private String hash;
-
-    @Column(nullable = false, length = 500)
     private String fileUrl;
 
     private LocalDateTime registeredAt = LocalDateTime.now();
-
     private LocalDateTime verifiedAt;
 
-    /* ===== GETTERS / SETTERS ===== */
-
-    public Long getId() {
+    // getters & setters
+    public String getId() {
         return id;
     }
 
@@ -48,6 +39,10 @@ public class Document {
 
     public LocalDateTime getVerifiedAt() {
         return verifiedAt;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {
