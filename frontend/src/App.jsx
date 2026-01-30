@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "./api/axios";          // 🔐 JWT-enabled axios
+import { getRole, logout } from "./utils/auth";
 import "./App.css";
-
-const API = "http://localhost:8080";
 
 export default function App() {
   const [mode, setMode] = useState("verify"); // register | verify
   const [file, setFile] = useState(null);
   const [msg, setMsg] = useState("");
-  const [resultType, setResultType] = useState("info"); // success | error | info
+  const [resultType, setResultType] = useState("info");
   const [docs, setDocs] = useState([]);
+
+  const role = getRole(); // ADMIN / USER
 
   // ================= LOAD DOCS =================
   useEffect(() => {
@@ -18,14 +19,14 @@ export default function App() {
 
   const loadDocs = async () => {
     try {
-      const res = await axios.get(API + "/docs");
+      const res = await api.get("/docs");
       setDocs(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to load docs", err);
     }
   };
 
-  // ================= REGISTER =================
+  // ================= REGISTER (ADMIN ONLY) =================
   const handleRegister = async () => {
     if (!file) {
       setMsg("Please select a file");
@@ -40,37 +41,21 @@ export default function App() {
       const f = new FormData();
       f.append("file", file);
 
-      const res = await axios.post(API + "/upload", f, {
-        validateStatus: () => true, // IMPORTANT
-      });
+      await api.post("/upload", f); // 🔐 JWT auto-attached
 
-      if (!res.data || typeof res.data !== "object") {
-        setMsg("Unexpected response from server");
-        setResultType("error");
-        return;
-      }
-
-      if (res.data.status === "DUPLICATE") {
-        setMsg("Document already registered ⚠️");
-        setResultType("error");
-      } else if (res.data.status === "REGISTERED") {
-        setMsg("Document registered successfully ✅");
-        setResultType("success");
-        setFile(null);          // reset file
-        await loadDocs();       // refresh docs
-      } else {
-        setMsg("Registration failed ❌");
-        setResultType("error");
-      }
+      setMsg("Document registered successfully ✅");
+      setResultType("success");
+      setFile(null);
+      await loadDocs();
 
     } catch (err) {
       console.error(err);
-      setMsg("Registration failed. Check backend.");
+      setMsg("Not authorized or failed ❌");
       setResultType("error");
     }
   };
 
-  // ================= VERIFY =================
+  // ================= VERIFY (PUBLIC) =================
   const handleVerify = async () => {
     if (!file) {
       setMsg("Please upload a file");
@@ -85,15 +70,7 @@ export default function App() {
       const f = new FormData();
       f.append("file", file);
 
-      const res = await axios.post(API + "/verify", f, {
-        validateStatus: () => true,
-      });
-
-      if (!res.data || typeof res.data !== "object") {
-        setMsg("Unexpected response from server");
-        setResultType("error");
-        return;
-      }
+      const res = await api.post("/verify", f);
 
       if (res.data.status === "VERIFIED") {
         setMsg(`VERIFIED ✅ (at ${res.data.verifiedAt})`);
@@ -109,11 +86,11 @@ export default function App() {
         setResultType("error");
       }
 
-      setFile(null); // reset after verify
+      setFile(null);
 
     } catch (err) {
       console.error(err);
-      setMsg("Verification failed");
+      setMsg("Verification failed ❌");
       setResultType("error");
     }
   };
@@ -130,19 +107,23 @@ export default function App() {
           <p className="subtitle">
             Blockchain-backed document registry using SHA-256
           </p>
+          <p><b>Role:</b> {role}</p>
         </div>
 
         <div className="toggle">
-          <button
-            className={mode === "register" ? "active" : ""}
-            onClick={() => {
-              setMode("register");
-              setMsg("");
-              setFile(null);
-            }}
-          >
-            📄 Register
-          </button>
+          {role === "ADMIN" && (
+            <button
+              className={mode === "register" ? "active" : ""}
+              onClick={() => {
+                setMode("register");
+                setMsg("");
+                setFile(null);
+              }}
+            >
+              📄 Register
+            </button>
+          )}
+
           <button
             className={mode === "verify" ? "active" : ""}
             onClick={() => {
@@ -152,6 +133,13 @@ export default function App() {
             }}
           >
             ✅ Verify
+          </button>
+
+          <button onClick={() => {
+            logout();
+            window.location.reload();
+          }}>
+            🚪 Logout
           </button>
         </div>
       </div>
