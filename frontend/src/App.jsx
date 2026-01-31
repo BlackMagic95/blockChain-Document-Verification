@@ -1,7 +1,31 @@
 import { useState, useEffect } from "react";
-import api from "./api/axios";          // 🔐 JWT-enabled axios
-import { getRole, logout } from "./utils/auth";
+import axios from "axios";
 import "./App.css";
+
+const API = "http://localhost:8080";
+
+// ===== AUTH HELPERS =====
+const getToken = () => localStorage.getItem("token");
+const getRole = () => localStorage.getItem("role");
+
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.reload();
+};
+
+// ===== AXIOS INSTANCE =====
+const api = axios.create({
+  baseURL: API,
+});
+
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export default function App() {
   const [mode, setMode] = useState("verify"); // register | verify
@@ -10,9 +34,9 @@ export default function App() {
   const [resultType, setResultType] = useState("info");
   const [docs, setDocs] = useState([]);
 
-  const role = getRole(); // ADMIN / USER
+  const role = getRole(); // ADMIN | null
 
-  // ================= LOAD DOCS =================
+  // ================= LOAD DOCS (PUBLIC) =================
   useEffect(() => {
     loadDocs();
   }, []);
@@ -22,7 +46,7 @@ export default function App() {
       const res = await api.get("/docs");
       setDocs(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error("Failed to load docs", err);
+      console.error("Docs load failed", err);
     }
   };
 
@@ -34,23 +58,29 @@ export default function App() {
       return;
     }
 
+    if (role !== "ADMIN") {
+      setMsg("Login as ADMIN to register documents");
+      setResultType("error");
+      return;
+    }
+
     try {
-      setMsg("Registering document on blockchain...");
+      setMsg("Registering document...");
       setResultType("info");
 
       const f = new FormData();
       f.append("file", file);
 
-      await api.post("/upload", f); // 🔐 JWT auto-attached
+      const res = await api.post("/upload", f);
 
       setMsg("Document registered successfully ✅");
       setResultType("success");
       setFile(null);
-      await loadDocs();
+      loadDocs();
 
     } catch (err) {
       console.error(err);
-      setMsg("Not authorized or failed ❌");
+      setMsg("Registration failed ❌");
       setResultType("error");
     }
   };
@@ -73,7 +103,7 @@ export default function App() {
       const res = await api.post("/verify", f);
 
       if (res.data.status === "VERIFIED") {
-        setMsg(`VERIFIED ✅ (at ${res.data.verifiedAt})`);
+        setMsg(`VERIFIED ✅ (${res.data.verifiedAt})`);
         setResultType("success");
       } else if (res.data.status === "NOT_REGISTERED") {
         setMsg("NOT REGISTERED ❌");
@@ -107,10 +137,21 @@ export default function App() {
           <p className="subtitle">
             Blockchain-backed document registry using SHA-256
           </p>
-          <p><b>Role:</b> {role}</p>
+          <p><strong>Role:</strong> {role || "PUBLIC"}</p>
         </div>
 
         <div className="toggle">
+          <button
+            className={mode === "verify" ? "active" : ""}
+            onClick={() => {
+              setMode("verify");
+              setMsg("");
+              setFile(null);
+            }}
+          >
+            ✅ Verify
+          </button>
+
           {role === "ADMIN" && (
             <button
               className={mode === "register" ? "active" : ""}
@@ -124,44 +165,25 @@ export default function App() {
             </button>
           )}
 
-          <button
-            className={mode === "verify" ? "active" : ""}
-            onClick={() => {
-              setMode("verify");
-              setMsg("");
-              setFile(null);
-            }}
-          >
-            ✅ Verify
-          </button>
-
-          <button onClick={() => {
-            logout();
-            window.location.reload();
-          }}>
-            🚪 Logout
-          </button>
+          {role && (
+            <button onClick={logout}>
+              🚪 Logout
+            </button>
+          )}
         </div>
       </div>
 
-      {/* MAIN GRID */}
+      {/* MAIN */}
       <div className="main">
 
-        {/* LEFT CARD */}
+        {/* LEFT */}
         <div className="card big">
-          <h2>
-            {mode === "register"
-              ? "Register a document"
-              : "Verify a document"}
-          </h2>
+          <h2>{mode === "register" ? "Register a document" : "Verify a document"}</h2>
 
           <div className="dropzone">
             <div className="fileIcon">📄</div>
             <p>{file ? file.name : "Drop a file here or click to browse"}</p>
-            <input
-              type="file"
-              onChange={e => setFile(e.target.files[0])}
-            />
+            <input type="file" onChange={e => setFile(e.target.files[0])} />
           </div>
 
           <button
@@ -171,14 +193,10 @@ export default function App() {
             {mode === "register" ? "Register Document" : "Verify Document"}
           </button>
 
-          {msg && (
-            <div className={`result ${resultType}`}>
-              {msg}
-            </div>
-          )}
+          {msg && <div className={`result ${resultType}`}>{msg}</div>}
         </div>
 
-        {/* RIGHT CARD */}
+        {/* RIGHT */}
         <div className="card side">
           <h2>Chain overview</h2>
 
