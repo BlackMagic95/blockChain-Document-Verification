@@ -21,3 +21,4 @@ Thumbs.db
 .env
 # Spring config
 backend/src/main/resources/application.properties
+backend/bin/main/resources/application.properties
