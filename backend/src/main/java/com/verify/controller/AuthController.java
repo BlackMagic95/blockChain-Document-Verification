@@ -41,4 +41,5 @@ public class AuthController {
                 "token", token,
                 "role", user.getRole());
     }
+
 }

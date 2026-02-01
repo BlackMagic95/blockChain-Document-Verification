@@ -10,16 +10,16 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "supersecretkeysupersecretkeysupersecretkey123"; // ≥32 chars
+    private static final String SECRET = "supersecretkeysupersecretkeysupersecretkey123";
 
-    private static final long EXPIRATION = 1000 * 60 * 60 * 24; // 24h
+    private static final long EXPIRATION = 1000 * 60 * 60 * 24;
 
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", "ROLE_" + role) // 🔥 IMPORTANT
+                .claim("role", role) // ✅ FIXED (NO double ROLE_)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(key, SignatureAlgorithm.HS256)

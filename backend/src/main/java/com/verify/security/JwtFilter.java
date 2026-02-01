@@ -30,14 +30,22 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 🔹 Skip auth endpoints
+        String path = request.getRequestURI();
+        if (path.startsWith("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
 
             if (jwtUtil.validateToken(token)) {
+
                 String email = jwtUtil.getEmail(token);
-                String role = jwtUtil.getRole(token);
+                String role = jwtUtil.getRole(token); // MUST be ROLE_ADMIN
 
                 var auth = new UsernamePasswordAuthenticationToken(
                         email,
@@ -49,5 +57,6 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+
     }
 }
