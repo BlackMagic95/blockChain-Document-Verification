@@ -1,0 +1,96 @@
+*{
+  margin:0;
+}
+.login-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #020617, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, system-ui, sans-serif;
+  color: #e5e7eb;
+}
+
+.login-card {
+  width: 380px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+.login-card h1 {
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: #020617;
+  border: 1px solid #334155;
+  color: #fff;
+  font-size: 14px;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: white;
+  margin-top: 8px;
+}
+
+.login-card button:disabled {
+  opacity: 0.6;
+}
+
+.error {
+  margin-top: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #fecaca;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.public-link {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.public-link span {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.public-link a {
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.public-link a:hover {
+  text-decoration: underline;
+}

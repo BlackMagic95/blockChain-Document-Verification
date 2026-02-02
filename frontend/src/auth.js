@@ -1,0 +1,12 @@
+export const getToken = () => localStorage.getItem("token");
+export const getRole = () => localStorage.getItem("role");
+
+export const loginSave = (token, role) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
+};
+
+export const logout = () => {
+  localStorage.clear();
+  window.location.href = "/";
+};

@@ -1,232 +1,31 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import "./App.css";
-
-const API = "http://localhost:8080";
-
-// ===== AUTH HELPERS =====
-const getToken = () => localStorage.getItem("token");
-const getRole = () => localStorage.getItem("role");
-
-const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
-  window.location.reload();
-};
-
-// ===== AXIOS INSTANCE =====
-const api = axios.create({
-  baseURL: API,
-});
-
-api.interceptors.request.use((config) => {
-  const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import VerifyPage from "./pages/VerifyPage";
+import AdminPage from "./pages/AdminPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
-  const [mode, setMode] = useState("verify"); // register | verify
-  const [file, setFile] = useState(null);
-  const [msg, setMsg] = useState("");
-  const [resultType, setResultType] = useState("info");
-  const [docs, setDocs] = useState([]);
-
-  const role = getRole(); // ADMIN | null
-
-  // ================= LOAD DOCS (PUBLIC) =================
-  useEffect(() => {
-    loadDocs();
-  }, []);
-
-  const loadDocs = async () => {
-    try {
-      const res = await api.get("/docs");
-      setDocs(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
-      console.error("Docs load failed", err);
-    }
-  };
-
-  // ================= REGISTER (ADMIN ONLY) =================
-  const handleRegister = async () => {
-    if (!file) {
-      setMsg("Please select a file");
-      setResultType("info");
-      return;
-    }
-
-    if (role !== "ADMIN") {
-      setMsg("Login as ADMIN to register documents");
-      setResultType("error");
-      return;
-    }
-
-    try {
-      setMsg("Registering document...");
-      setResultType("info");
-
-      const f = new FormData();
-      f.append("file", file);
-
-      const res = await api.post("/upload", f);
-
-      setMsg("Document registered successfully ✅");
-      setResultType("success");
-      setFile(null);
-      loadDocs();
-
-    } catch (err) {
-      console.error(err);
-      setMsg("Registration failed ❌");
-      setResultType("error");
-    }
-  };
-
-  // ================= VERIFY (PUBLIC) =================
-  const handleVerify = async () => {
-    if (!file) {
-      setMsg("Please upload a file");
-      setResultType("info");
-      return;
-    }
-
-    try {
-      setMsg("Verifying document...");
-      setResultType("info");
-
-      const f = new FormData();
-      f.append("file", file);
-
-      const res = await api.post("/verify", f);
-
-      if (res.data.status === "VERIFIED") {
-        setMsg(`VERIFIED ✅ (${res.data.verifiedAt})`);
-        setResultType("success");
-      } else if (res.data.status === "NOT_REGISTERED") {
-        setMsg("NOT REGISTERED ❌");
-        setResultType("error");
-      } else if (res.data.status === "CHAIN_MISSING") {
-        setMsg("BLOCKCHAIN RECORD MISSING ⚠️");
-        setResultType("error");
-      } else {
-        setMsg("Verification failed ❌");
-        setResultType("error");
-      }
-
-      setFile(null);
-
-    } catch (err) {
-      console.error(err);
-      setMsg("Verification failed ❌");
-      setResultType("error");
-    }
-  };
-
-  // ================= UI =================
   return (
-    <div className="page">
+    <Routes>
+      <Route path="/" element={<Login />} />
 
-      {/* HEADER */}
-      <div className="header">
-        <div>
-          <span className="status">🟢 Node active · Sepolia</span>
-          <h1>Document Verification</h1>
-          <p className="subtitle">
-            Blockchain-backed document registry using SHA-256
-          </p>
-          <p><strong>Role:</strong> {role || "PUBLIC"}</p>
-        </div>
+      <Route
+        path="/verify"
+        element={
+          <ProtectedRoute>
+            <VerifyPage />
+          </ProtectedRoute>
+        }
+      />
 
-        <div className="toggle">
-          <button
-            className={mode === "verify" ? "active" : ""}
-            onClick={() => {
-              setMode("verify");
-              setMsg("");
-              setFile(null);
-            }}
-          >
-            ✅ Verify
-          </button>
-
-          {role === "ADMIN" && (
-            <button
-              className={mode === "register" ? "active" : ""}
-              onClick={() => {
-                setMode("register");
-                setMsg("");
-                setFile(null);
-              }}
-            >
-              📄 Register
-            </button>
-          )}
-
-          {role && (
-            <button onClick={logout}>
-              🚪 Logout
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* MAIN */}
-      <div className="main">
-
-        {/* LEFT */}
-        <div className="card big">
-          <h2>{mode === "register" ? "Register a document" : "Verify a document"}</h2>
-
-          <div className="dropzone">
-            <div className="fileIcon">📄</div>
-            <p>{file ? file.name : "Drop a file here or click to browse"}</p>
-            <input type="file" onChange={e => setFile(e.target.files[0])} />
-          </div>
-
-          <button
-            className="primary full"
-            onClick={mode === "register" ? handleRegister : handleVerify}
-          >
-            {mode === "register" ? "Register Document" : "Verify Document"}
-          </button>
-
-          {msg && <div className={`result ${resultType}`}>{msg}</div>}
-        </div>
-
-        {/* RIGHT */}
-        <div className="card side">
-          <h2>Chain overview</h2>
-
-          <div className="stats">
-            <div className="stat">
-              <span>{docs.length}</span>
-              Documents registered
-            </div>
-            <div className="stat">
-              <span>{docs.length + 1}</span>
-              Total blocks
-            </div>
-          </div>
-
-          <div className="valid">
-            Blockchain is valid ✅
-          </div>
-
-          <div className="explorer">
-            <h3>Recent Documents</h3>
-            {docs.slice(-3).reverse().map(d => (
-              <div key={d.id} className="block">
-                <strong>{d.name}</strong>
-                <div className="hash">{d.hash}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </div>
-    </div>
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute role="ROLE_ADMIN">
+            <AdminPage />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
