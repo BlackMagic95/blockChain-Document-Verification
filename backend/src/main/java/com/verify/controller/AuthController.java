@@ -1,45 +1,65 @@
 package com.verify.controller;
 
-import com.verify.entity.User;
-import com.verify.repo.UserRepo;
+import com.google.api.client.googleapis.auth.oauth2.*;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.verify.security.JwtUtil;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin("*")
 public class AuthController {
 
-    private final UserRepo userRepo;
     private final JwtUtil jwtUtil;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public AuthController(UserRepo userRepo, JwtUtil jwtUtil) {
-        this.userRepo = userRepo;
+    @Value("${google.client-id}")
+    private String googleClientId;
+
+    // 🔐 Only allowed admin emails
+    private static final Set<String> ADMIN_EMAILS = Set.of(
+            "rohanrk2611@gmail.com");
+
+    public AuthController(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> req) {
+    @PostMapping("/google")
+    public Map<String, String> googleLogin(@RequestBody Map<String, String> body) throws Exception {
 
-        User user = userRepo.findByEmail(req.get("email"))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        String token = body.get("token");
 
-        if (!encoder.matches(req.get("password"), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+        if (token == null || token.isBlank()) {
+            throw new RuntimeException("Google token missing");
         }
 
-        String token = jwtUtil.generateToken(
-                user.getEmail(),
-                user.getRole());
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+                new NetHttpTransport(),
+                GsonFactory.getDefaultInstance())
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
+
+        GoogleIdToken idToken = verifier.verify(token);
+
+        if (idToken == null) {
+            throw new RuntimeException("Invalid Google token");
+        }
+
+        String email = idToken.getPayload().getEmail();
+
+        if (!ADMIN_EMAILS.contains(email)) {
+            throw new RuntimeException("Not authorized as admin");
+        }
+
+        String jwt = jwtUtil.generateToken(email, "ADMIN");
 
         return Map.of(
-                "token", token,
-                "role", user.getRole());
+                "token", jwt,
+                "role", "ADMIN");
     }
-
 }

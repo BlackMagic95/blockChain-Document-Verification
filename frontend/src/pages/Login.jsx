@@ -1,83 +1,59 @@
-import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useState } from "react";
 import "./Login.css";
-import { useNavigate, Link } from "react-router-dom";
+
 const API = "http://localhost:8080";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    if (!email || !password) {
-      setMsg("Enter email and password");
-      return;
-    }
-
+  const onSuccess = async (cred) => {
     try {
       setLoading(true);
-      setMsg("");
+      setError("");
 
-      const res = await axios.post(`${API}/auth/login`, {
-        email,
-        password,
+      const res = await axios.post(`${API}/auth/google`, {
+        token: cred.credential
       });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
 
-      // 🔥 role-based redirect
-      if (res.data.role === "ROLE_ADMIN") {
-        navigate("/admin");
-      } else {
-        navigate("/verify");
-      }
+      window.location.href = "/admin";
 
-    } catch (err) {
-      setMsg("Invalid credentials ❌");
-    } finally {
+    } catch {
+      setError("You are not authorized as admin");
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
+    <div className="login-container">
+
       <div className="login-card">
 
-        <h1>Blockchain Document Verification</h1>
-        <p className="subtitle">
-          Secure · Immutable · Trusted
+        <h1 className="title">🔐 Admin Portal</h1>
+        <p className="subtitle">Secure access for authorized users only</p>
+
+        {loading ? (
+          <div className="loader"></div>
+        ) : (
+          <GoogleLogin
+            onSuccess={onSuccess}
+            onError={() => setError("Google login failed")}
+          />
+        )}
+
+        {error && <p className="error-text">{error}</p>}
+
+        <p
+          className="verify-link"
+          onClick={() => (window.location.href = "/verify")}
+        >
+          Verify a document →
         </p>
-
-        <input
-          type="email"
-          placeholder="Admin email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button onClick={handleLogin} disabled={loading}>
-          {loading ? "Signing in..." : "Admin Login"}
-        </button>
-
-        {msg && <div className="error">{msg}</div>}
-
-        {/* 👇 PUBLIC VERIFY LINK */}
-        <div className="public-link">
-          <span>or</span>
-          <Link to="/verify">Verify a document without login</Link>
-        </div>
 
       </div>
     </div>

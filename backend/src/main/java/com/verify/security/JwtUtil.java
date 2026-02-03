@@ -19,34 +19,29 @@ public class JwtUtil {
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", role) // ✅ FIXED (NO double ROLE_)
+                .claim("role", "ROLE_" + role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String getEmail(String token) {
-        return parse(token).getBody().getSubject();
-    }
-
-    public String getRole(String token) {
-        return parse(token).getBody().get("role", String.class);
-    }
-
     public boolean validateToken(String token) {
         try {
-            parse(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
-    private Jws<Claims> parse(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
+    public String getEmail(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String getRole(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().get("role", String.class);
     }
 }

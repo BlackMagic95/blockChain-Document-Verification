@@ -1,96 +1,264 @@
-*{
-  margin:0;
-}
-.login-page {
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #020617, #000);
+/* =========================
+   FULL PAGE LAYOUT
+========================= */
+
+.login-container {
+  height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-family: Inter, system-ui, sans-serif;
-  color: #e5e7eb;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #141e30, #243b55);
+  font-family: "Segoe UI", sans-serif;
 }
+
+
+/* =========================
+   BACKGROUND GLOW BLOBS
+   (adds WOW effect)
+========================= */
+
+.login-container::before,
+.login-container::after {
+  content: "";
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+}
+
+.login-container::before {
+  background: #4fc3f7;
+  top: -100px;
+  left: -100px;
+}
+
+.login-container::after {
+  background: #7b61ff;
+  bottom: -120px;
+  right: -120px;
+}
+
+
+/* =========================
+   CARD (BIGGER + PREMIUM)
+========================= */
 
 .login-card {
-  width: 380px;
-  background: #020617;
-  border: 1px solid #1e293b;
-  border-radius: 20px;
-  padding: 36px;
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(20px);
+
+  padding: 70px 60px;
+  border-radius: 26px;
+
+  width: 460px;           /* BIGGER */
+  max-width: 92%;
+
+  text-align: center;
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
+
+  animation: fadeIn 0.6s ease;
+  transition: 0.35s ease;
 }
 
-.login-card h1 {
-  font-size: 22px;
-  text-align: center;
-  margin-bottom: 6px;
+/* floating hover effect */
+.login-card:hover {
+  transform: translateY(-8px) scale(1.01);
+}
+
+
+/* =========================
+   TEXT STYLING
+========================= */
+
+.title {
+  color: white;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  text-align: center;
-  color: #94a3b8;
-  margin-bottom: 24px;
+  color: #d6d6d6;
+  font-size: 15px;
+  margin-bottom: 40px;
+  opacity: 0.9;
 }
 
-.login-card input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 14px;
-  border-radius: 12px;
-  background: #020617;
-  border: 1px solid #334155;
-  color: #fff;
+
+/* =========================
+   GOOGLE BUTTON WRAPPER
+========================= */
+
+.google-btn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+
+/* =========================
+   ERROR TEXT
+========================= */
+
+.error-text {
+  color: #ff6b6b;
+  margin-top: 14px;
   font-size: 14px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
 }
 
-.login-card input:focus {
-  outline: none;
-  border-color: #6366f1;
-}
 
-.login-card button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
-  color: white;
-  margin-top: 8px;
-}
+/* =========================
+   VERIFY LINK (BUTTON STYLE)
+========================= */
 
-.login-card button:disabled {
-  opacity: 0.6;
-}
+.verify-link {
+  margin-top: 26px;
+  display: inline-block;
 
-.error {
-  margin-top: 12px;
-  background: rgba(239, 68, 68, 0.1);
-  color: #fecaca;
-  padding: 10px;
+  padding: 10px 18px;
   border-radius: 10px;
-  text-align: center;
+
+  background: rgba(79,195,247,0.12);
+  color: #4fc3f7;
+
   font-size: 13px;
+  cursor: pointer;
+  transition: 0.25s ease;
 }
 
-.public-link {
-  margin-top: 22px;
-  text-align: center;
-  font-size: 13px;
-  color: #94a3b8;
+.verify-link:hover {
+  background: rgba(79,195,247,0.25);
+  transform: translateY(-2px);
 }
 
-.public-link span {
-  display: block;
+
+/* =========================
+   LOADER
+========================= */
+
+.loader {
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top: 4px solid #4fc3f7;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  margin: auto;
+  animation: spin 0.9s linear infinite;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 45px 30px;
+    width: 95%;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+}
+/* =====================================
+   STATS ROW
+===================================== */
+
+.stats-row {
+  position: absolute;
+  bottom: 60px;
+
+  display: flex;
+  gap: 22px;
+}
+
+
+/* cards */
+
+.stat-card {
+  width: 190px;
+  padding: 22px;
+
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+
+  text-align: center;
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  transition: 0.25s ease;
+
+  color: white;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.13);
+}
+
+
+/* text */
+
+.stat-card h2 {
+  font-size: 28px;
   margin-bottom: 6px;
 }
 
-.public-link a {
-  color: #6366f1;
-  text-decoration: none;
+.stat-card h3 {
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.public-link a:hover {
-  text-decoration: underline;
+.stat-card p {
+  font-size: 12px;
+  color: #cfd8e3;
 }
+
+
+/* mobile */
+
+@media (max-width: 768px) {
+  .stats-row {
+    position: static;
+    margin-top: 30px;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+

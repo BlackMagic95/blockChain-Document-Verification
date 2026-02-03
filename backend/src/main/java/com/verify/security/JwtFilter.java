@@ -1,10 +1,7 @@
 package com.verify.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,36 +24,28 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain)
+            FilterChain chain)
             throws ServletException, IOException {
 
-        // 🔹 Skip auth endpoints
-        String path = request.getRequestURI();
-        if (path.startsWith("/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String authHeader = request.getHeader("Authorization");
 
-        String header = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+            String token = authHeader.substring(7);
 
             if (jwtUtil.validateToken(token)) {
 
                 String email = jwtUtil.getEmail(token);
-                String role = jwtUtil.getRole(token); // MUST be ROLE_ADMIN
+                String role = jwtUtil.getRole(token);
 
                 var auth = new UsernamePasswordAuthenticationToken(
-                        email,
-                        null,
+                        email, null,
                         List.of(new SimpleGrantedAuthority(role)));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
 
-        filterChain.doFilter(request, response);
-
+        chain.doFilter(request, response);
     }
 }

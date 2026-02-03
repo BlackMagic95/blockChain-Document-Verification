@@ -44,7 +44,7 @@ export default function VerifyPage() {
       }
 
       setFile(null);
-    } catch (err) {
+    } catch {
       setMsg("Verification error ❌");
       setType("error");
     } finally {
@@ -54,44 +54,41 @@ export default function VerifyPage() {
 
   return (
     <div className="verify-page">
-      <div className="verify-container">
 
-        {/* HEADER */}
+      <div className="verify-card">
+
         <div className="verify-header">
-          <h1>Verify Document</h1>
-          <p>Check document authenticity using blockchain</p>
+          <h1>📄 Document Verification</h1>
+          <p>Secure blockchain based authenticity check</p>
         </div>
 
-        {/* CARD */}
-        <div className="card">
+        <div
+          className={`upload-tile ${file ? "selected" : ""}`}
+          onClick={() => fileRef.current.click()}
+        >
+          <div className="plus">＋</div>
+          <p>{file ? file.name : "Click or drop your document here"}</p>
 
-          <div
-            className="upload-tile"
-            onClick={() => fileRef.current.click()}
-          >
-            <div className="plus">＋</div>
-            <p>{file ? file.name : "Click to upload document"}</p>
-            <input
-              ref={fileRef}
-              type="file"
-              hidden
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-          </div>
-
-          <button
-            className="primary-btn"
-            onClick={handleVerify}
-            disabled={loading}
-          >
-            {loading ? "Verifying..." : "Verify Document"}
-          </button>
-
-          {msg && <div className={`result ${type}`}>{msg}</div>}
-
+          <input
+            ref={fileRef}
+            type="file"
+            hidden
+            onChange={(e) => setFile(e.target.files[0])}
+          />
         </div>
+
+        <button
+          className="primary-btn"
+          onClick={handleVerify}
+          disabled={loading}
+        >
+          {loading ? "Verifying..." : "Verify Document"}
+        </button>
+
+        {msg && <div className={`result ${type}`}>{msg}</div>}
 
       </div>
+
     </div>
   );
 }
