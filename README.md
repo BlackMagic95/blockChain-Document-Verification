@@ -1,103 +1,275 @@
-# Blockchain Document Verification System
+# 🔐 Blockchain Document Verification System
 
-A blockchain-based platform for secure document registration and verification using cryptographic hashing and Ethereum smart contracts.
+<p align="center">
+
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Spring](https://img.shields.io/badge/Backend-SpringBoot-green)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
+![Ethereum](https://img.shields.io/badge/Blockchain-Ethereum-purple)
+![License](https://img.shields.io/badge/License-MIT-orange)
+
+</p>
 
 ---
-
-🔗 Ethereum · 🔐 SHA-256 · 🧾 Proof-of-Existence · 🌐 Web3
 
 ## 🚀 Overview
 
-This project implements a **proof-of-existence and document integrity verification system** using blockchain technology.
+A *decentralized, tamper-proof document verification platform* that uses:
 
-Users can:
+- SHA-256 hashing
+- Blockchain anchoring (Ethereum)
+- MongoDB metadata
+- Secure file storage
+- Google OAuth admin access
 
-- Register documents by storing their SHA-256 hash on the Ethereum blockchain
-- Verify documents by re-uploading and matching hashes
-- Detect tampering using immutable on-chain records
+This system ensures:
 
-The system ensures that documents cannot be altered without detection.
-
----
-
-## ✨ Features
-
-## 📸 Screenshots
-
-### Dashboard
-
-![Dashboard](screenshots/dashboard.png)
-
-### Register Document
-
-![Register](screenshots/register.png)
-
-### Verification Result
-
-![Verified](screenshots/verified.png)
-
-## 🧠 How It Works
-
-1. A document is uploaded via the web interface
-2. The backend computes a **SHA-256 cryptographic hash**
-3. The hash is stored immutably on the Ethereum blockchain via a smart contract
-4. For verification, the same document is uploaded again
-5. A new hash is computed and compared against stored records
-6. The system reports whether the document is **VERIFIED** or **TAMPERED**
-
----
-
-## 🧱 System Architecture
-
-- **Frontend:** User interface for uploading and verifying documents
-- **Backend:** Handles hashing, persistence, and blockchain interaction
-- **Blockchain:** Stores document hashes immutably using smart contracts
-
----
-
-## 🛠 Tech Stack
-
-- **Frontend:** React, CSS
-- **Backend:** Spring Boot, Java, Web3j
-- **Blockchain:** Ethereum (Sepolia Testnet)
-- **Smart Contracts:** Solidity
-- **Cryptography:** SHA-256
-- **Database:** H2 (in-memory)
+✅ No document tampering  
+✅ Immutable proof  
+✅ Transparent verification  
+✅ Trustless architecture  
 
 ---
 
 ## ✨ Features
 
-- Blockchain-backed document registration
-- Cryptographic integrity verification
-- Tamper detection
-- Modern dashboard UI with Register / Verify toggle
-- Blockchain explorer overview panel
+### 👨‍💼 Admin
+- Google login
+- Upload & register documents
+- Duplicate detection (hash-based)
+- Blockchain anchoring
+- View history dashboard
+- Live stats
+
+### 🌍 Public
+- Verify documents without login
+- Instant authenticity check
+- Timestamped blockchain proof
+
+### 📊 Analytics
+- Total registered documents
+- Total verifications
+- Real-time stats
 
 ---
 
-## 🔐 Security
+# 📸 Screenshots
 
-- Private keys are **not stored in the repository**
-- Blockchain credentials are loaded via **environment variables**
-- Only document hashes are stored on-chain (no raw files)
+## 🔐 Login Page
+
+<p align="center">
+  <img src="screenshots/login.png" width="800"/>
+</p>
 
 ---
 
-## ▶️ Run Locally
+## ✅ Verify Page
 
-### Backend
+<p align="center">
+  <img src="screenshots/verify.png" width="800"/>
+</p>
 
-```bash
+---
+
+## 📊 Admin Dashboard
+
+<p align="center">
+  <img src="screenshots/admin.png" width="800"/>
+</p>
+
+---
+
+# 🏗️ Architecture
+
+
+React Frontend
+      ↓
+Spring Boot Backend
+      ↓
+SHA-256 Hash
+      ↓
+MongoDB (metadata)
+      ↓
+Ethereum Smart Contract (hash stored)
+      ↓
+Cloudinary / IPFS (file storage)
+
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+- ReactJS
+- Axios
+- Google OAuth
+- Modern Glass UI
+
+## Backend
+- Spring Boot
+- MongoDB
+- JWT Auth
+- Cloudinary Storage
+
+## Blockchain
+- Ethereum (Sepolia)
+- Web3j
+- Smart Contracts
+
+---
+
+# ⚙️ How It Works
+
+## 📌 Register Flow
+
+Upload file
+   ↓
+Generate SHA-256 hash
+   ↓
+Save metadata (MongoDB)
+   ↓
+Store hash on Blockchain
+   ↓
+Success
+
+
+## 🔍 Verify Flow
+
+Upload file
+   ↓
+Generate hash
+   ↓
+Compare with DB
+   ↓
+Validate on blockchain
+   ↓
+Verified / Tampered
+
+
+---
+
+# 🔧 Local Setup
+
+## 1️⃣ Clone
+bash
+git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git
+cd blockChain-Document-Verification
+
+
+---
+
+## 2️⃣ Backend
+bash
 cd backend
-set PRIVATE_KEY=your_private_key_here
 ./gradlew bootRun
-```
 
-### Frontend
 
-```bash
+Runs at:
+
+http://localhost:8080
+
+
+---
+
+## 3️⃣ Frontend
+bash
 cd frontend
 npm install
-npm run dev
-```
+npm start
+
+
+Runs at:
+
+http://localhost:3000
+
+
+---
+
+# 🔑 Environment Variables
+
+### application.properties
+
+properties
+spring.data.mongodb.uri=YOUR_MONGO_URL
+
+blockchain.private-key=YOUR_PRIVATE_KEY
+blockchain.contract=YOUR_CONTRACT_ADDRESS
+blockchain.rpc=YOUR_RPC_URL
+
+google.client-id=YOUR_GOOGLE_CLIENT_ID
+
+
+---
+
+# 📡 API Endpoints
+
+## Auth
+POST /auth/google
+
+## Admin
+POST /upload
+GET /docs
+
+## Public
+POST /verify
+GET /stats
+
+---
+
+# 📈 Project Highlights
+
+✔ Blockchain anchored hashes  
+✔ Duplicate prevention  
+✔ Immutable verification  
+✔ Clean dashboard UI  
+✔ Real-time stats  
+✔ Ready for IPFS integration  
+✔ IEEE research ready  
+
+---
+
+# 🎯 Use Cases
+
+- Academic certificates
+- Government records
+- Legal contracts
+- HR onboarding
+- Compliance audits
+- Digital identity
+
+---
+
+# 🔮 Future Improvements
+
+- IPFS decentralized storage
+- Filecoin/Arweave support
+- Batch blockchain anchoring
+- Merkle tree optimization
+- Zero-knowledge proofs
+- Enterprise deployment
+- IEEE publication
+
+---
+
+# 👨‍💻 Author
+
+*Rohan Kumar*
+
+GitHub → https://github.com/BlackMagic95  
+LinkedIn → https://linkedin.com/in/rkrohankumar  
+
+---
+
+# ⭐ Support
+
+If you like this project:
+
+⭐ Star the repo  
+🍴 Fork it  
+🚀 Share it  
+
+---
+
+# 📜 License
+
+MIT License
