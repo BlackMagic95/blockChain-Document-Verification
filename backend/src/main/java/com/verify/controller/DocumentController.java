@@ -17,12 +17,20 @@ import java.util.*;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.crypto.*;
+import org.web3j.crypto.Credentials;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.abi.*;
-import org.web3j.abi.datatypes.*;
+
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.Type;
+
 import org.web3j.protocol.core.methods.response.*;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @CrossOrigin("*")
@@ -90,33 +98,40 @@ public class DocumentController {
     public Map<String, Object> upload(@RequestParam("file") MultipartFile file)
             throws Exception {
 
-        System.out.println("UPLOAD HIT"); // 🔥 debug
+        byte[] bytes = file.getBytes();
+        String hash = sha256(bytes);
 
-        String hash = sha256(file.getBytes());
-
+        /* 🔥 DUPLICATE CHECK */
         if (repo.findByHash(hash).isPresent()) {
-            return Map.of("status", "DUPLICATE");
+            return Map.of(
+                    "status", "DUPLICATE",
+                    "hash", hash);
         }
 
-        /* upload to cloudinary */
+        /* 🔥 Upload to Cloudinary */
         Map<?, ?> uploadResult = cloudinary.uploader().upload(
-                file.getBytes(),
+                bytes,
                 ObjectUtils.asMap("resource_type", "auto"));
 
         String fileUrl = uploadResult.get("secure_url").toString();
 
+        /* 🔥 Save to Mongo */
         Document d = new Document();
         d.setName(file.getOriginalFilename());
         d.setHash(hash);
         d.setFileUrl(fileUrl);
 
+        /* ⭐ REGISTER TIME FIX */
+        d.setCreatedAt(LocalDateTime.now());
+
         repo.save(d);
 
+        /* 🔥 Store on blockchain AFTER DB save */
         storeHashOnChain(hash);
 
         return Map.of(
                 "status", "REGISTERED",
-                "hash", hash, // ⭐ added
+                "hash", hash,
                 "id", d.getId(),
                 "fileUrl", fileUrl);
     }
@@ -159,36 +174,71 @@ public class DocumentController {
             return Map.of("status", "CHAIN_MISSING");
         }
 
+        /* ⭐ VERIFY TIME */
         Document d = docOpt.get();
         d.setVerifiedAt(LocalDateTime.now());
+
         repo.save(d);
+
+        ZoneId ist = ZoneId.of("Asia/Kolkata");
+
+        String formattedTime = d.getVerifiedAt()
+                .atZone(ZoneId.systemDefault())
+                .withZoneSameInstant(ist)
+                .format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a 'IST'"));
 
         return Map.of(
                 "status", "VERIFIED",
-                "verifiedAt", d.getVerifiedAt().toString());
+                "verifiedAt", formattedTime);
     }
 
     /* ================= LIST ================= */
     @GetMapping("/docs")
-    public List<Document> docs() {
-        System.out.println("DOCS HIT");
-        return repo.findAll();
+    public List<Map<String, Object>> docs() {
+
+        ZoneId ist = ZoneId.of("Asia/Kolkata");
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a 'IST'");
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Document d : repo.findAll(
+                org.springframework.data.domain.Sort.by(
+                        org.springframework.data.domain.Sort.Direction.DESC,
+                        "createdAt"))) {
+
+            String created = d.getCreatedAt() == null ? "—"
+                    : d.getCreatedAt()
+                            .atZone(ZoneId.systemDefault())
+                            .withZoneSameInstant(ist)
+                            .format(fmt);
+
+            String verified = d.getVerifiedAt() == null ? "—"
+                    : d.getVerifiedAt()
+                            .atZone(ZoneId.systemDefault())
+                            .withZoneSameInstant(ist)
+                            .format(fmt);
+
+            result.add(Map.of(
+                    "id", d.getId(),
+                    "name", d.getName(),
+                    "hash", d.getHash(),
+                    "fileUrl", d.getFileUrl(),
+                    "createdAt", created,
+                    "verifiedAt", verified));
+        }
+
+        return result;
     }
 
     /* ================= STATS ================= */
     @GetMapping("/stats")
     public Map<String, Object> stats() {
 
-        long total = repo.count();
-
-        long verified = repo.findAll()
-                .stream()
-                .filter(d -> d.getVerifiedAt() != null)
-                .count();
+        long totalDocs = repo.count();
+        long verifiedDocs = repo.countByVerifiedAtIsNotNull();
 
         return Map.of(
-                "totalDocs", total,
-                "verifiedDocs", verified,
-                "integrity", 100);
+                "totalDocs", totalDocs,
+                "verifiedDocs", verifiedDocs);
     }
 }

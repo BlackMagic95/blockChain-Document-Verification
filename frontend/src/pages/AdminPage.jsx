@@ -48,9 +48,11 @@ export default function AdminPage() {
         </div>
       </div>
 
+
       {/* UPLOAD CARD */}
       <div className="upload-card">
         <div className="upload-box">
+
           <label className="upload-plus">
             +
             <input
@@ -65,37 +67,42 @@ export default function AdminPage() {
             <p>SHA-256 hash will be stored on blockchain</p>
           </div>
 
-          <button onClick={handleUpload}>Register</button>
+          <button onClick={handleUpload}>
+            Register
+          </button>
         </div>
 
         {msg && <div className="status">{msg}</div>}
       </div>
+
 
       {/* DOCUMENTS */}
       <div className="docs-section">
         <h2>Registered Documents</h2>
 
         <div className="docs-table">
+
           <div className="docs-head">
             <span>Name</span>
             <span>Hash</span>
-            <span>Date</span>
+            <span>Date (IST)</span>
           </div>
 
           {docs.map((d) => (
             <div key={d.id} className="docs-row">
+
               <span>{d.name}</span>
-              <span className="hash">{d.hash}</span>
-             <span>
-  {d.createdAt
-    ? new Date(d.createdAt).toLocaleDateString()
-    : d.registeredAt
-    ? new Date(d.registeredAt).toLocaleDateString()
-    : "—"}
-</span>
+
+              <span className="hash">
+                {d.hash.slice(0, 14)}...
+              </span>
+
+              {/* ✅ DIRECT STRING (no parsing) */}
+              <span>{d.createdAt || "—"}</span>
 
             </div>
           ))}
+
         </div>
       </div>
 

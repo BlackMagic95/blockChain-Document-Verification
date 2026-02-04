@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface DocumentRepo extends MongoRepository<Document, String> {
 
     Optional<Document> findByHash(String hash);
+
+    long countByVerifiedAtIsNotNull();
 }

@@ -1,6 +1,6 @@
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Login.css";
 
 const API = "http://localhost:8080";
@@ -8,6 +8,27 @@ const API = "http://localhost:8080";
 export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  /* 🔥 NEW: stats state */
+  const [stats, setStats] = useState({
+    totalDocs: 0,
+    verifiedDocs: 0
+  });
+
+  /* 🔥 NEW: fetch stats on page load */
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(`${API}/stats`);
+        setStats(res.data);
+      } catch (err) {
+        console.log("Stats fetch failed");
+      }
+    };
+
+    fetchStats();
+  }, []);
+
 
   const onSuccess = async (cred) => {
     try {
@@ -56,6 +77,28 @@ export default function Login() {
         </p>
 
       </div>
+
+
+      {/* ======================
+          🔥 NEW STATS CARDS
+      ====================== */}
+
+      <div className="stats-row">
+
+        <div className="stat-card">
+          <span className="stat-icon">📄</span>
+          <h2>{stats.totalDocs}</h2>
+          <p>Registered Docs</p>
+        </div>
+
+        <div className="stat-card">
+          <span className="stat-icon">✅</span>
+          <h2>{stats.verifiedDocs}</h2>
+          <p>Verified Docs</p>
+        </div>
+
+      </div>
+
     </div>
   );
 }
