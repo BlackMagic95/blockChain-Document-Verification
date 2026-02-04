@@ -3,7 +3,7 @@ package com.verify.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @org.springframework.data.mongodb.core.mapping.Document(collection = "document")
 public class Document {
@@ -13,19 +13,19 @@ public class Document {
 
     private String name;
 
-    /* ⭐ prevents duplicates at DB level */
     @Indexed(unique = true)
     private String hash;
 
     private String fileUrl;
 
-    /* ⭐ REGISTER TIME (NEW) */
-    private LocalDateTime createdAt;
+    // ✅ Mongo-safe dates
+    private Instant createdAt;
+    private Instant verifiedAt;
 
-    /* ⭐ VERIFY TIME */
-    private LocalDateTime verifiedAt;
+    // ✅ counter
+    private long verificationCount = 0;
 
-    /* ================= GETTERS & SETTERS ================= */
+    /* getters setters */
 
     public String getId() {
         return id;
@@ -59,19 +59,27 @@ public class Document {
         this.fileUrl = fileUrl;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getVerifiedAt() {
+    public Instant getVerifiedAt() {
         return verifiedAt;
     }
 
-    public void setVerifiedAt(LocalDateTime verifiedAt) {
+    public void setVerifiedAt(Instant verifiedAt) {
         this.verifiedAt = verifiedAt;
+    }
+
+    public long getVerificationCount() {
+        return verificationCount;
+    }
+
+    public void setVerificationCount(long verificationCount) {
+        this.verificationCount = verificationCount;
     }
 }

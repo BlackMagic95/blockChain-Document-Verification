@@ -42,34 +42,41 @@
 
 
 /* =========================
-   CARD
+   MAIN VERIFY CARD (FIXED)
 ========================= */
 
-.verify-card {
-  width: 520px;
-  max-width: 92%;
+.verify-container {
+  width: 600px;
+  max-width: 95%;
 
-  padding: 60px;
+  padding: 70px 60px;
 
   border-radius: 26px;
 
-  background: rgba(255,255,255,0.09);
+  /* ⭐ stronger glass */
+  background: rgba(255,255,255,0.10);
   backdrop-filter: blur(20px);
 
-  border: 1px solid rgba(255,255,255,0.15);
+  /* ⭐ REAL BORDER (this is what you want) */
+  border: 1.8px solid rgba(255,255,255,0.25);
+
+  /* ⭐ depth separation */
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(255,255,255,0.06);
 
   text-align: center;
 
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.45);
-
-  animation: fadeIn 0.5s ease;
-  transition: 0.3s ease;
+  transition: 0.25s ease;
 }
 
-.verify-card:hover {
+.verify-container:hover {
   transform: translateY(-6px);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.65),
+    0 0 0 1px rgba(255,255,255,0.10);
 }
+
 
 
 /* =========================
@@ -90,38 +97,47 @@
 
 
 /* =========================
-   UPLOAD TILE
+   UPLOAD TILE (FIXED PERFECT CENTER + BORDER)
 ========================= */
-
 .upload-tile {
-  border: 2px dashed rgba(255,255,255,0.35);
-  border-radius: 18px;
+  position: relative;
 
-  padding: 40px;
-  margin-bottom: 25px;
+  padding: 60px 30px;
+  margin-bottom: 28px;
+
+  border-radius: 20px;
 
   cursor: pointer;
+  color: #e2e8f0;
 
-  color: #dcdcdc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+  text-align: center;
+
+  /* ⭐ REAL VISIBLE BORDER */
+  border: 2px dashed #94a3b8;
+
+  /* ⭐ background */
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(18px);
+
+  /* ⭐ EXTRA VISIBILITY (important) */
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.08),
+    0 10px 25px rgba(0,0,0,0.25);
 
   transition: 0.25s ease;
 }
 
 .upload-tile:hover {
   border-color: #4fc3f7;
-  background: rgba(79,195,247,0.1);
+  background: rgba(79,195,247,0.12);
 }
 
-.upload-tile.selected {
-  border-color: #4fc3f7;
-  background: rgba(79,195,247,0.18);
-}
-
-.plus {
-  font-size: 38px;
-  margin-bottom: 10px;
-  color: #4fc3f7;
-}
 
 
 /* =========================
@@ -154,7 +170,26 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+.plus {
+  display: flex;              /* ⭐ IMPORTANT */
+  align-items: center;
+  justify-content: center;
 
+  width: 60px;
+  height: 60px;
+
+  font-size: 40px;
+  font-weight: 700;
+
+  border-radius: 14px;
+
+  color: #4fc3f7;
+
+  /* ⭐ looks like icon button */
+  background: rgba(79,195,247,0.15);
+
+  margin: 0 auto;            /* ⭐ perfect center */
+}
 
 /* =========================
    RESULT BADGES
@@ -198,3 +233,7 @@
     transform: translateY(0);
   }
 }
+.upload-tile:hover .plus {
+  transform: scale(1.1);
+}
+

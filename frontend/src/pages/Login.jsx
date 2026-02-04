@@ -3,33 +3,71 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import "./Login.css";
 
+
 const API = "http://localhost:8080";
 
 export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /* 🔥 NEW: stats state */
+  const [dark, setDark] = useState(true);
+
   const [stats, setStats] = useState({
     totalDocs: 0,
-    verifiedDocs: 0
+    totalVerifications: 0
   });
 
-  /* 🔥 NEW: fetch stats on page load */
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await axios.get(`${API}/stats`);
-        setStats(res.data);
-      } catch (err) {
-        console.log("Stats fetch failed");
-      }
-    };
+  const [display, setDisplay] = useState({
+    totalDocs: 0,
+    totalVerifications: 0
+  });
 
+  const [history, setHistory] = useState([]);
+
+  /* ================= FETCH STATS ================= */
+  const fetchStats = async () => {
+  try {
+    const res = await axios.get(`${API}/stats`);
+
+    setStats(res.data);
+
+    // ⭐ store history for charts
+    setHistory((prev) => [
+      ...prev.slice(-9),
+      res.data.totalVerifications
+    ]);
+  } catch {}
+};
+
+
+  useEffect(() => {
     fetchStats();
+    const i = setInterval(fetchStats, 5000);
+    return () => clearInterval(i);
   }, []);
 
+  /* ================= ANIMATE COUNTERS ================= */
+  useEffect(() => {
+    const animate = (key) => {
+      let start = 0;
+      const end = stats[key];
+      const step = Math.ceil(end / 20);
 
+      const interval = setInterval(() => {
+        start += step;
+        if (start >= end) {
+          start = end;
+          clearInterval(interval);
+        }
+        setDisplay((p) => ({ ...p, [key]: start }));
+      }, 20);
+    };
+
+    animate("totalDocs");
+    animate("totalVerifications");
+  }, [stats]);
+
+  /* ================= LOGIN ================= */
   const onSuccess = async (cred) => {
     try {
       setLoading(true);
@@ -43,20 +81,33 @@ export default function Login() {
       localStorage.setItem("role", res.data.role);
 
       window.location.href = "/admin";
-
     } catch {
       setError("You are not authorized as admin");
       setLoading(false);
     }
   };
-
   return (
-    <div className="login-container">
+    <div className={`login-container ${dark ? "dark" : "light"}`}>
 
+      {/* ===== floating particles ===== */}
+      <div className="particles"></div>
+
+      {/* ===== theme toggle ===== */}
+      <button
+        className="theme-toggle"
+        onClick={() => setDark(!dark)}
+      >
+        {dark ? "☀ Light" : "🌙 Dark"}
+      </button>
+
+
+      {/* ================= LOGIN CARD ================= */}
       <div className="login-card">
 
         <h1 className="title">🔐 Admin Portal</h1>
-        <p className="subtitle">Secure access for authorized users only</p>
+        <p className="subtitle">
+          Secure blockchain document verification
+        </p>
 
         {loading ? (
           <div className="loader"></div>
@@ -69,35 +120,39 @@ export default function Login() {
 
         {error && <p className="error-text">{error}</p>}
 
-        <p
+        <div
           className="verify-link"
           onClick={() => (window.location.href = "/verify")}
         >
           Verify a document →
-        </p>
+        </div>
+      </div>
+
+
+      {/* ================= STATS ================= */}
+      <div className="stats-grid">
+
+        <div className="stat-card glow-blue">
+          <h2>{display.totalDocs}</h2>
+          <p>📄 Registered Docs</p>
+        </div>
+
+        <div className="stat-card glow-green">
+  <h2>{display.totalVerifications}</h2>
+<p>✅ Total Verifications</p>
+
+</div>
+
+
+        <div className="stat-card glow-purple">
+          <h2>{display.totalDocs}</h2>
+          <p>⛓ Blockchain Hashes</p>
+        </div>
 
       </div>
 
 
-      {/* ======================
-          🔥 NEW STATS CARDS
-      ====================== */}
 
-      <div className="stats-row">
-
-        <div className="stat-card">
-          <span className="stat-icon">📄</span>
-          <h2>{stats.totalDocs}</h2>
-          <p>Registered Docs</p>
-        </div>
-
-        <div className="stat-card">
-          <span className="stat-icon">✅</span>
-          <h2>{stats.verifiedDocs}</h2>
-          <p>Verified Docs</p>
-        </div>
-
-      </div>
 
     </div>
   );
