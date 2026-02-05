@@ -1,414 +1,260 @@
 # 🔐 Blockchain Document Verification System
 
-<p align="center">
+A secure, tamper-proof **Blockchain Based Document Verification Platform** built using  
+⚡ React + Spring Boot + MongoDB + Ethereum + Cloud Storage.
 
-![React](https://img.shields.io/badge/Frontend-React-blue)
-![Spring](https://img.shields.io/badge/Backend-SpringBoot-green)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
-![Ethereum](https://img.shields.io/badge/Blockchain-Ethereum-purple)
-![License](https://img.shields.io/badge/License-MIT-orange)
-
-</p>
+This system guarantees that once a document is registered, its integrity **cannot be altered or forged**.
 
 ---
 
-## 🚀 Overview
+## 🚀 Features
 
-<<<<<<< HEAD
-A *decentralized, tamper-proof document verification platform* that uses:
-=======
-A _decentralized, tamper-proof document verification platform_ that uses:
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
+### 👤 Admin
 
+- Google OAuth Login
+- Upload & register documents
 - SHA-256 hashing
-- Blockchain anchoring (Ethereum)
-- MongoDB metadata
-- Secure file storage
-- Google OAuth admin access
+- Store hash on Ethereum blockchain
+- File storage on Cloudinary
+- MongoDB history tracking
+- Dashboard with live stats
+- Toast notifications
+- Light / Dark theme toggle
+- Logout system
 
-This system ensures:
+### 🔍 Public Verification
 
-✅ No document tampering  
-✅ Immutable proof  
-✅ Transparent verification  
-<<<<<<< HEAD
-✅ Trustless architecture  
-=======
-✅ Trustless architecture
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-
----
-
-## ✨ Features
-
-### 👨‍💼 Admin
-<<<<<<< HEAD
-- Google login
-- Upload & register documents
-- Duplicate detection (hash-based)
-- Blockchain anchoring
-- View history dashboard
-- Live stats
-
-### 🌍 Public
-- Verify documents without login
+- No login required
+- Upload any document
 - Instant authenticity check
-- Timestamped blockchain proof
-
-### 📊 Analytics
-=======
-
-- Google login
-- Upload & register documents
-- Duplicate detection (hash-based)
-- Blockchain anchoring
-- View history dashboard
-- Live stats
-
-### 🌍 Public
-
-- Verify documents without login
-- Instant authenticity check
-- Timestamped blockchain proof
-
-### 📊 Analytics
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-- Total registered documents
-- Total verifications
-- Real-time stats
+- Blockchain validation
+- Tamper detection
 
 ---
 
-# 📸 Screenshots
+## 🧠 How It Works
 
-## 🔐 Login Page
+### Registration Flow
 
-<p align="center">
-  <img src="screenshots/login.png" width="800"/>
-</p>
+1. Upload file
+2. Generate SHA-256 hash
+3. Upload file to Cloudinary
+4. Save metadata in MongoDB
+5. Store hash on Ethereum blockchain
 
----
+### Verification Flow
 
-## ✅ Verify Page
-
-<p align="center">
-  <img src="screenshots/verify.png" width="800"/>
-</p>
-
----
-
-## 📊 Admin Dashboard
-
-<p align="center">
-  <img src="screenshots/admin.png" width="800"/>
-</p>
+1. Upload document
+2. Generate hash
+3. Compare with database
+4. Validate with blockchain
+5. Show VERIFIED / NOT REGISTERED
 
 ---
 
-# 🏗️ Architecture
-<<<<<<< HEAD
+## 🏗 Architecture
 
-
-React Frontend
+```
+User → React Frontend
       ↓
 Spring Boot Backend
       ↓
-SHA-256 Hash
-      ↓
-MongoDB (metadata)
-      ↓
-Ethereum Smart Contract (hash stored)
-      ↓
-Cloudinary / IPFS (file storage)
+MongoDB (metadata/history)
+Cloudinary (file storage)
+Ethereum Blockchain (hash storage)
+```
 
-=======
+### Why this architecture?
 
-React Frontend
-↓
-Spring Boot Backend
-↓
-SHA-256 Hash
-↓
-MongoDB (metadata)
-↓
-Ethereum Smart Contract (hash stored)
-↓
-Cloudinary / IPFS (file storage)
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
+| Component  | Purpose                |
+| ---------- | ---------------------- |
+| Blockchain | Tamper-proof integrity |
+| MongoDB    | Fast history & stats   |
+| Cloudinary | File hosting           |
+| SHA-256    | Unique fingerprint     |
 
 ---
 
-# 🛠️ Tech Stack
+## 🖼 Screenshots
 
-## Frontend
-<<<<<<< HEAD
-- ReactJS
+Create a folder:
+
+```
+/screenshots
+```
+
+Add:
+
+```
+login.png
+verify.png
+admin.png
+```
+
+They will appear below automatically.
+
+### Login
+
+![Login](./screenshots/login.png)
+
+### Verify
+
+![Verify](./screenshots/verify.png)
+
+### Admin
+
+![Admin](./screenshots/admin.png)
+
+---
+
+## ⚙️ Tech Stack
+
+### Frontend
+
+- React (Vite)
+- React Router
 - Axios
+- React Hot Toast
 - Google OAuth
-- Modern Glass UI
+- Modern CSS UI
 
-## Backend
-=======
+### Backend
 
-- ReactJS
-- Axios
-- Google OAuth
-- Modern Glass UI
-
-## Backend
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
 - Spring Boot
 - MongoDB
-- JWT Auth
+- Web3j
+- JWT Authentication
 - Cloudinary Storage
 
-## Blockchain
-<<<<<<< HEAD
-=======
+### Blockchain
 
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
 - Ethereum (Sepolia)
-- Web3j
 - Smart Contracts
+- SHA-256 hashing
 
 ---
 
-# ⚙️ How It Works
+## 🛠 Installation Guide
 
-## 📌 Register Flow
+### Clone
 
-Upload file
-<<<<<<< HEAD
-   ↓
-Generate SHA-256 hash
-   ↓
-Save metadata (MongoDB)
-   ↓
-Store hash on Blockchain
-   ↓
-Success
-
-
-## 🔍 Verify Flow
-
-Upload file
-   ↓
-Generate hash
-   ↓
-Compare with DB
-   ↓
-Validate on blockchain
-   ↓
-Verified / Tampered
-
-
-=======
-↓
-Generate SHA-256 hash
-↓
-Save metadata (MongoDB)
-↓
-Store hash on Blockchain
-↓
-Success
-
-## 🔍 Verify Flow
-
-Upload file
-↓
-Generate hash
-↓
-Compare with DB
-↓
-Validate on blockchain
-↓
-Verified / Tampered
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
----
-
-# 🔧 Local Setup
-
-## 1️⃣ Clone
-<<<<<<< HEAD
-=======
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-bash
-git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git
-cd blockChain-Document-Verification
-
-<<<<<<< HEAD
+```bash
+git clone https://github.com/BlackMagic95/blockchain-document-verification.git
+cd blockchain-document-verification
+```
 
 ---
 
-## 2️⃣ Backend
-=======
----
+### Backend
 
-## 2️⃣ Backend
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-bash
+```bash
 cd backend
 ./gradlew bootRun
+```
 
-<<<<<<< HEAD
+Add in `application.properties`:
 
-Runs at:
+```
+spring.data.mongodb.uri=YOUR_MONGO_URI
 
-http://localhost:8080
-
-
----
-
-## 3️⃣ Frontend
-=======
-Runs at:
-
-http://localhost:8080
-
----
-
-## 3️⃣ Frontend
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-bash
-cd frontend
-npm install
-npm start
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-Runs at:
-
-http://localhost:3000
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
----
-
-# 🔑 Environment Variables
-
-### application.properties
-
-properties
-spring.data.mongodb.uri=YOUR_MONGO_URL
+google.client-id=YOUR_GOOGLE_CLIENT_ID
 
 blockchain.private-key=YOUR_PRIVATE_KEY
 blockchain.contract=YOUR_CONTRACT_ADDRESS
 blockchain.rpc=YOUR_RPC_URL
 
-google.client-id=YOUR_GOOGLE_CLIENT_ID
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
----
-
-# 📡 API Endpoints
-
-## Auth
-<<<<<<< HEAD
-POST /auth/google
-
-## Admin
-=======
-
-POST /auth/google
-
-## Admin
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-POST /upload
-GET /docs
-
-## Public
-<<<<<<< HEAD
-=======
-
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
-POST /verify
-GET /stats
+cloudinary.cloud-name=XXX
+cloudinary.api-key=XXX
+cloudinary.api-secret=XXX
+```
 
 ---
 
-# 📈 Project Highlights
+### Frontend
 
-✔ Blockchain anchored hashes  
-✔ Duplicate prevention  
-✔ Immutable verification  
-✔ Clean dashboard UI  
-✔ Real-time stats  
-✔ Ready for IPFS integration  
-<<<<<<< HEAD
-✔ IEEE research ready  
-=======
-✔ IEEE research ready
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
----
+Open:
 
-# 🎯 Use Cases
-
-- Academic certificates
-- Government records
-- Legal contracts
-- HR onboarding
-- Compliance audits
-- Digital identity
+```
+http://localhost:5173
+```
 
 ---
 
-# 🔮 Future Improvements
+## 📊 Dashboard Stats
+
+- Total Registered Documents
+- Total Blockchain Hashes
+- Total Verifications
+- Real-time updates
+
+---
+
+## ✨ UI Highlights
+
+- Glassmorphism cards
+- Smooth animations
+- Light/Dark theme
+- Toast notifications
+- Responsive design
+- Professional dashboard layout
+
+---
+
+## 🔮 Future Improvements
 
 - IPFS decentralized storage
-- Filecoin/Arweave support
-- Batch blockchain anchoring
-- Merkle tree optimization
-- Zero-knowledge proofs
-- Enterprise deployment
-- IEEE publication
+- Drag & Drop upload
+- File preview
+- Audit logs
+- Docker deployment
+- Cloud hosting
+- Analytics dashboard
 
 ---
 
-# 👨‍💻 Author
+## 🎓 Research / IEEE Scope
 
-<<<<<<< HEAD
-*Rohan Kumar*
+This project demonstrates:
 
-GitHub → https://github.com/BlackMagic95  
-LinkedIn → https://linkedin.com/in/rkrohankumar  
-=======
-_Rohan Kumar_
+- Blockchain for document integrity
+- Hybrid cloud + decentralized architecture
+- Secure digital verification
+- Tamper-proof systems
+- Real-world scalability
 
-GitHub → https://github.com/BlackMagic95  
-LinkedIn → https://linkedin.com/in/rkrohankumar
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
+✅ Suitable for:
+
+- IEEE conference paper
+- Research publication
+- Final year project
+- Resume showcase
 
 ---
 
-# ⭐ Support
+## 👨‍💻 Author
+
+Rohan Kumar  
+B.Tech Electronics & Communication Engineering – BIT Mesra
+
+GitHub: https://github.com/BlackMagic95  
+LinkedIn: https://linkedin.com/in/rkrohankumar
+
+---
+
+## ⭐ Support
 
 If you like this project:
 
-⭐ Star the repo  
-🍴 Fork it  
-<<<<<<< HEAD
-🚀 Share it  
-=======
-🚀 Share it
->>>>>>> 410db3b (UI polish + verify styling + final fixes)
+- Star ⭐ the repo
+- Fork 🍴 it
+- Improve 🚀 it
 
 ---
 
-# 📜 License
-
-MIT License
+Built with ❤️ using Blockchain + Full Stack
