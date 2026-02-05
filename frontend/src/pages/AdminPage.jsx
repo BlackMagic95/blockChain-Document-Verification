@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api";
 import "./AdminPage.css";
+import toast from "react-hot-toast";
 
 export default function AdminPage() {
   const [file, setFile] = useState(null);
@@ -23,17 +24,21 @@ export default function AdminPage() {
     }
 
     try {
-      setMsg("Registering document...");
+      toast.loading("Registering document...");
       const form = new FormData();
       form.append("file", file);
 
       await api.post("/upload", form);
 
-      setMsg("Document registered successfully ✅");
+      toast.dismiss();
+toast.success("Document registered successfully ✅");
+
       setFile(null);
       loadDocs();
     } catch {
-      setMsg("Upload failed ❌");
+      toast.dismiss();
+toast.error("Upload failed ❌");
+
     }
   };
 

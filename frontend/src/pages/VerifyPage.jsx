@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import "./VerifyPage.css";
+import toast from "react-hot-toast";
 
 const API = "http://localhost:8080";
 
@@ -37,7 +38,7 @@ export default function VerifyPage() {
 
     try {
       setLoading(true);
-      setMsg("Verifying document integrity...");
+      toast.loading("Verifying document...");
       setType("info");
 
       const form = new FormData();
@@ -49,20 +50,26 @@ export default function VerifyPage() {
 
         // ⭐⭐ FIXED DATE HERE ⭐⭐
         const formattedTime = formatIST(res.data.verifiedAt);
-
-        setMsg(`VERIFIED ✅ (${formattedTime} IST)`);
+        toast.dismiss();
+toast.success(`Verified successfully ✅ (${formattedTime} IST)`);
         setType("success");
 
       } else if (res.data.status === "NOT_REGISTERED") {
-        setMsg("Document not registered ❌");
+        toast.dismiss();
+toast.error("Document not registered ❌");
+
         setType("error");
 
       } else if (res.data.status === "CHAIN_MISSING") {
-        setMsg("Blockchain record missing ⚠️");
+        toast.dismiss();
+toast.error("Blockchain record missing ⚠️");
+
         setType("error");
 
       } else {
-        setMsg("Verification failed");
+        toast.dismiss();
+toast.error("Verification failed ❌");
+
         setType("error");
       }
 

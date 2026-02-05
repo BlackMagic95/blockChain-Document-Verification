@@ -14,7 +14,11 @@
 
 ## 🚀 Overview
 
+<<<<<<< HEAD
 A *decentralized, tamper-proof document verification platform* that uses:
+=======
+A _decentralized, tamper-proof document verification platform_ that uses:
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 
 - SHA-256 hashing
 - Blockchain anchoring (Ethereum)
@@ -27,13 +31,18 @@ This system ensures:
 ✅ No document tampering  
 ✅ Immutable proof  
 ✅ Transparent verification  
+<<<<<<< HEAD
 ✅ Trustless architecture  
+=======
+✅ Trustless architecture
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 
 ---
 
 ## ✨ Features
 
 ### 👨‍💼 Admin
+<<<<<<< HEAD
 - Google login
 - Upload & register documents
 - Duplicate detection (hash-based)
@@ -47,6 +56,24 @@ This system ensures:
 - Timestamped blockchain proof
 
 ### 📊 Analytics
+=======
+
+- Google login
+- Upload & register documents
+- Duplicate detection (hash-based)
+- Blockchain anchoring
+- View history dashboard
+- Live stats
+
+### 🌍 Public
+
+- Verify documents without login
+- Instant authenticity check
+- Timestamped blockchain proof
+
+### 📊 Analytics
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 - Total registered documents
 - Total verifications
 - Real-time stats
@@ -80,6 +107,7 @@ This system ensures:
 ---
 
 # 🏗️ Architecture
+<<<<<<< HEAD
 
 
 React Frontend
@@ -94,24 +122,53 @@ Ethereum Smart Contract (hash stored)
       ↓
 Cloudinary / IPFS (file storage)
 
+=======
+
+React Frontend
+↓
+Spring Boot Backend
+↓
+SHA-256 Hash
+↓
+MongoDB (metadata)
+↓
+Ethereum Smart Contract (hash stored)
+↓
+Cloudinary / IPFS (file storage)
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 
 ---
 
 # 🛠️ Tech Stack
 
 ## Frontend
+<<<<<<< HEAD
 - ReactJS
 - Axios
 - Google OAuth
 - Modern Glass UI
 
 ## Backend
+=======
+
+- ReactJS
+- Axios
+- Google OAuth
+- Modern Glass UI
+
+## Backend
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 - Spring Boot
 - MongoDB
 - JWT Auth
 - Cloudinary Storage
 
 ## Blockchain
+<<<<<<< HEAD
+=======
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 - Ethereum (Sepolia)
 - Web3j
 - Smart Contracts
@@ -123,6 +180,7 @@ Cloudinary / IPFS (file storage)
 ## 📌 Register Flow
 
 Upload file
+<<<<<<< HEAD
    ↓
 Generate SHA-256 hash
    ↓
@@ -146,23 +204,58 @@ Validate on blockchain
 Verified / Tampered
 
 
+=======
+↓
+Generate SHA-256 hash
+↓
+Save metadata (MongoDB)
+↓
+Store hash on Blockchain
+↓
+Success
+
+## 🔍 Verify Flow
+
+Upload file
+↓
+Generate hash
+↓
+Compare with DB
+↓
+Validate on blockchain
+↓
+Verified / Tampered
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 ---
 
 # 🔧 Local Setup
 
 ## 1️⃣ Clone
+<<<<<<< HEAD
+=======
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 bash
 git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git
 cd blockChain-Document-Verification
 
+<<<<<<< HEAD
 
 ---
 
 ## 2️⃣ Backend
+=======
+---
+
+## 2️⃣ Backend
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 bash
 cd backend
 ./gradlew bootRun
 
+<<<<<<< HEAD
 
 Runs at:
 
@@ -172,17 +265,33 @@ http://localhost:8080
 ---
 
 ## 3️⃣ Frontend
+=======
+Runs at:
+
+http://localhost:8080
+
+---
+
+## 3️⃣ Frontend
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 bash
 cd frontend
 npm install
 npm start
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 Runs at:
 
 http://localhost:3000
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 ---
 
 # 🔑 Environment Variables
@@ -198,19 +307,34 @@ blockchain.rpc=YOUR_RPC_URL
 
 google.client-id=YOUR_GOOGLE_CLIENT_ID
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 ---
 
 # 📡 API Endpoints
 
 ## Auth
+<<<<<<< HEAD
 POST /auth/google
 
 ## Admin
+=======
+
+POST /auth/google
+
+## Admin
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 POST /upload
 GET /docs
 
 ## Public
+<<<<<<< HEAD
+=======
+
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 POST /verify
 GET /stats
 
@@ -224,7 +348,11 @@ GET /stats
 ✔ Clean dashboard UI  
 ✔ Real-time stats  
 ✔ Ready for IPFS integration  
+<<<<<<< HEAD
 ✔ IEEE research ready  
+=======
+✔ IEEE research ready
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 
 ---
 
@@ -253,10 +381,17 @@ GET /stats
 
 # 👨‍💻 Author
 
+<<<<<<< HEAD
 *Rohan Kumar*
 
 GitHub → https://github.com/BlackMagic95  
 LinkedIn → https://linkedin.com/in/rkrohankumar  
+=======
+_Rohan Kumar_
+
+GitHub → https://github.com/BlackMagic95  
+LinkedIn → https://linkedin.com/in/rkrohankumar
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 
 ---
 
@@ -266,7 +401,11 @@ If you like this project:
 
 ⭐ Star the repo  
 🍴 Fork it  
+<<<<<<< HEAD
 🚀 Share it  
+=======
+🚀 Share it
+>>>>>>> 410db3b (UI polish + verify styling + final fixes)
 
 ---
 

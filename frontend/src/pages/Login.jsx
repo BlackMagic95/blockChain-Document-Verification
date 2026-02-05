@@ -2,6 +2,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import "./Login.css";
+import toast from "react-hot-toast";
 
 
 const API = "http://localhost:8080";
@@ -82,7 +83,7 @@ export default function Login() {
 
       window.location.href = "/admin";
     } catch {
-      setError("You are not authorized as admin");
+      toast.error("Not authorized as admin");
       setLoading(false);
     }
   };
@@ -114,7 +115,7 @@ export default function Login() {
         ) : (
           <GoogleLogin
             onSuccess={onSuccess}
-            onError={() => setError("Google login failed")}
+            onError={() => toast.error("Google login failed")}
           />
         )}
 
