@@ -117,20 +117,20 @@ Ethereum Blockchain (hash storage)
 
 ## 🖼 Screenshots
 
-Create a folder:
+### 🔐 Login Page
 
-/screenshots
+![Login](./screenshots/login.png)
 
-Add:
+---
 
-login.png  
-verify.png  
-admin.png
+### 🔍 Document Verification
 
-Then use:
+![Verify](./screenshots/verify.png)
 
-![Login](./screenshots/login.png)  
-![Verify](./screenshots/verify.png)  
+---
+
+### 👤 Admin Dashboard
+
 ![Admin](./screenshots/admin.png)
 
 ---
