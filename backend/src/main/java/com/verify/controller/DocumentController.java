@@ -94,6 +94,8 @@ public class DocumentController {
         @PostMapping("/upload")
         public Map<String, Object> upload(@RequestParam("file") MultipartFile file)
                         throws Exception {
+                if (file.getSize() > 5_000_000)
+                        throw new RuntimeException("File too large");
 
                 byte[] bytes = file.getBytes();
                 String hash = sha256(bytes);

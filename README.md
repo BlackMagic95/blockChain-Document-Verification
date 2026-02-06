@@ -1,26 +1,34 @@
 # 🔐 Blockchain Document Verification System
 
 A secure, tamper-proof **Blockchain Based Document Verification Platform** built using  
-⚡ React + Spring Boot + MongoDB + Ethereum + Cloud Storage.
+⚡ React + Spring Boot + MongoDB + Ethereum + Cloud Storage
 
-This system guarantees that once a document is registered, its integrity **cannot be altered or forged**.
+This system guarantees that once a document is registered, its integrity **cannot be altered, forged, or tampered with**.
+
+Designed for colleges, universities, certificates, legal docs, and enterprise verification.
 
 ---
 
 ## 🚀 Features
 
-### 👤 Admin
+### 👤 Admin Panel
 
 - Google OAuth Login
+- Secure JWT authentication
 - Upload & register documents
 - SHA-256 hashing
 - Store hash on Ethereum blockchain
 - File storage on Cloudinary
 - MongoDB history tracking
 - Dashboard with live stats
+- CSV export of registered documents
+- File type validation (PDF/JPG/PNG/DOC)
+- File size limit protection (5MB)
 - Toast notifications
 - Light / Dark theme toggle
 - Logout system
+
+---
 
 ### 🔍 Public Verification
 
@@ -29,26 +37,54 @@ This system guarantees that once a document is registered, its integrity **canno
 - Instant authenticity check
 - Blockchain validation
 - Tamper detection
+- Real-time result display
+
+---
+
+## 🔐 Security Enhancements
+
+- Private keys moved to .env
+- Secrets not committed to GitHub
+- JWT protected APIs
+- Backend file validation
+- Try/Catch for blockchain failures
+- Clean .gitignore (node_modules removed)
+
+---
+
+## 🧪 Testing & Dev Tools
+
+- JUnit tests (controller endpoints)
+- Swagger / OpenAPI documentation
+- API testing UI
+- Structured error handling
+- Clean logging
+
+Swagger URL:
+http://localhost:8080/swagger-ui.html
 
 ---
 
 ## 🧠 How It Works
 
-### Registration Flow
+### 📌 Registration Flow
 
 1. Upload file
 2. Generate SHA-256 hash
-3. Upload file to Cloudinary
-4. Save metadata in MongoDB
-5. Store hash on Ethereum blockchain
+3. Upload file → Cloudinary
+4. Save metadata → MongoDB
+5. Store hash → Ethereum blockchain
+6. Return success response
 
-### Verification Flow
+---
+
+### 📌 Verification Flow
 
 1. Upload document
 2. Generate hash
 3. Compare with database
 4. Validate with blockchain
-5. Show VERIFIED / NOT REGISTERED
+5. Show VERIFIED / NOT REGISTERED / TAMPERED
 
 ---
 
@@ -57,21 +93,25 @@ This system guarantees that once a document is registered, its integrity **canno
 ```
 User → React Frontend
       ↓
-Spring Boot Backend
+Spring Boot Backend (REST APIs)
       ↓
 MongoDB (metadata/history)
 Cloudinary (file storage)
 Ethereum Blockchain (hash storage)
 ```
 
+---
+
 ### Why this architecture?
 
 | Component  | Purpose                |
 | ---------- | ---------------------- |
 | Blockchain | Tamper-proof integrity |
-| MongoDB    | Fast history & stats   |
-| Cloudinary | File hosting           |
+| MongoDB    | Fast queries & history |
+| Cloudinary | Secure file hosting    |
 | SHA-256    | Unique fingerprint     |
+| JWT        | Secure authentication  |
+| Swagger    | API documentation      |
 
 ---
 
@@ -79,37 +119,25 @@ Ethereum Blockchain (hash storage)
 
 Create a folder:
 
-```
 /screenshots
-```
 
 Add:
 
-```
-login.png
-verify.png
+login.png  
+verify.png  
 admin.png
-```
 
-They will appear below automatically.
+Then use:
 
-### Login
-
-![Login](./screenshots/login.png)
-
-### Verify
-
-![Verify](./screenshots/verify.png)
-
-### Admin
-
+![Login](./screenshots/login.png)  
+![Verify](./screenshots/verify.png)  
 ![Admin](./screenshots/admin.png)
 
 ---
 
 ## ⚙️ Tech Stack
 
-### Frontend
+### 🎨 Frontend
 
 - React (Vite)
 - React Router
@@ -118,18 +146,20 @@ They will appear below automatically.
 - Google OAuth
 - Modern CSS UI
 
-### Backend
+### ⚙️ Backend
 
 - Spring Boot
 - MongoDB
 - Web3j
 - JWT Authentication
 - Cloudinary Storage
+- Swagger (OpenAPI)
+- JUnit Testing
 
-### Blockchain
+### ⛓ Blockchain
 
-- Ethereum (Sepolia)
-- Smart Contracts
+- Ethereum (Sepolia Testnet)
+- Smart Contracts (Solidity)
 - SHA-256 hashing
 
 ---
@@ -145,32 +175,42 @@ cd blockchain-document-verification
 
 ---
 
-### Backend
+## 🔐 Environment Variables (IMPORTANT)
+
+Create `.env` inside backend:
+
+```
+BLOCKCHAIN_PRIVATE_KEY=xxx
+BLOCKCHAIN_CONTRACT=xxx
+BLOCKCHAIN_RPC=xxx
+
+CLOUDINARY_NAME=xxx
+CLOUDINARY_KEY=xxx
+CLOUDINARY_SECRET=xxx
+
+MONGO_URI=xxx
+JWT_SECRET=xxx
+GOOGLE_CLIENT_ID=xxx
+```
+
+---
+
+## ▶ Backend
 
 ```bash
 cd backend
 ./gradlew bootRun
 ```
 
-Add in `application.properties`:
+Runs on:
+http://localhost:8080
 
-```
-spring.data.mongodb.uri=YOUR_MONGO_URI
-
-google.client-id=YOUR_GOOGLE_CLIENT_ID
-
-blockchain.private-key=YOUR_PRIVATE_KEY
-blockchain.contract=YOUR_CONTRACT_ADDRESS
-blockchain.rpc=YOUR_RPC_URL
-
-cloudinary.cloud-name=XXX
-cloudinary.api-key=XXX
-cloudinary.api-secret=XXX
-```
+Swagger:
+http://localhost:8080/swagger-ui.html
 
 ---
 
-### Frontend
+## ▶ Frontend
 
 ```bash
 cd frontend
@@ -179,10 +219,7 @@ npm run dev
 ```
 
 Open:
-
-```
 http://localhost:5173
-```
 
 ---
 
@@ -192,6 +229,7 @@ http://localhost:5173
 - Total Blockchain Hashes
 - Total Verifications
 - Real-time updates
+- CSV Export
 
 ---
 
@@ -212,9 +250,10 @@ http://localhost:5173
 - Drag & Drop upload
 - File preview
 - Audit logs
+- Bulk upload
 - Docker deployment
+- CI/CD pipeline
 - Cloud hosting
-- Analytics dashboard
 
 ---
 
@@ -228,7 +267,7 @@ This project demonstrates:
 - Tamper-proof systems
 - Real-world scalability
 
-✅ Suitable for:
+Suitable for:
 
 - IEEE conference paper
 - Research publication
@@ -251,9 +290,9 @@ LinkedIn: https://linkedin.com/in/rkrohankumar
 
 If you like this project:
 
-- Star ⭐ the repo
-- Fork 🍴 it
-- Improve 🚀 it
+Star ⭐ the repo  
+Fork 🍴 it  
+Improve 🚀 it
 
 ---
 
