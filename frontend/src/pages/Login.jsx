@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 import "./Login.css";
 import toast from "react-hot-toast";
 
-
 const API = "http://localhost:8080";
 
 export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [dark, setDark] = useState(true);
 
   const [stats, setStats] = useState({
@@ -23,23 +21,13 @@ export default function Login() {
     totalVerifications: 0
   });
 
-  const [history, setHistory] = useState([]);
-
   /* ================= FETCH STATS ================= */
   const fetchStats = async () => {
-  try {
-    const res = await axios.get(`${API}/stats`);
-
-    setStats(res.data);
-
-    // ⭐ store history for charts
-    setHistory((prev) => [
-      ...prev.slice(-9),
-      res.data.totalVerifications
-    ]);
-  } catch {}
-};
-
+    try {
+      const res = await axios.get(`${API}/stats`);
+      setStats(res.data);
+    } catch {}
+  };
 
   useEffect(() => {
     fetchStats();
@@ -72,7 +60,6 @@ export default function Login() {
   const onSuccess = async (cred) => {
     try {
       setLoading(true);
-      setError("");
 
       const res = await axios.post(`${API}/auth/google`, {
         token: cred.credential
@@ -87,13 +74,12 @@ export default function Login() {
       setLoading(false);
     }
   };
+
   return (
     <div className={`login-container ${dark ? "dark" : "light"}`}>
 
-      {/* ===== floating particles ===== */}
       <div className="particles"></div>
 
-      {/* ===== theme toggle ===== */}
       <button
         className="theme-toggle"
         onClick={() => setDark(!dark)}
@@ -101,11 +87,15 @@ export default function Login() {
         {dark ? "☀ Light" : "🌙 Dark"}
       </button>
 
-
       {/* ================= LOGIN CARD ================= */}
       <div className="login-card">
 
         <h1 className="title">🔐 Admin Portal</h1>
+
+        <div className="status-badge">
+          🟢 System Online
+        </div>
+
         <p className="subtitle">
           Secure blockchain document verification
         </p>
@@ -129,31 +119,28 @@ export default function Login() {
         </div>
       </div>
 
-
       {/* ================= STATS ================= */}
       <div className="stats-grid">
 
         <div className="stat-card glow-blue">
+          <div className="stat-icon">📄</div>
           <h2>{display.totalDocs}</h2>
-          <p>📄 Registered Docs</p>
+          <p>Registered Docs</p>
         </div>
 
         <div className="stat-card glow-green">
-  <h2>{display.totalVerifications}</h2>
-<p>✅ Total Verifications</p>
-
-</div>
-
+          <div className="stat-icon">✅</div>
+          <h2>{display.totalVerifications}</h2>
+          <p>Total Verifications</p>
+        </div>
 
         <div className="stat-card glow-purple">
+          <div className="stat-icon">⛓</div>
           <h2>{display.totalDocs}</h2>
-          <p>⛓ Blockchain Hashes</p>
+          <p>Blockchain Hashes</p>
         </div>
 
       </div>
-
-
-
 
     </div>
   );

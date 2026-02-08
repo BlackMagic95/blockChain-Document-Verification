@@ -3,7 +3,7 @@
 .dark {
   --bg1: #0f172a;
   --bg2: #1e293b;
-  --card: rgba(15, 23, 42, 0.92); /* darker for contrast */
+  --card: rgba(15, 23, 42, 0.92);
   --text: #ffffff;
 }
 
@@ -12,18 +12,6 @@
   --bg2: #cbd5e1;
   --card: rgba(255,255,255,0.96);
   --text: #0f172a;
-}
-
-.download-btn {
-  display: block;
-  margin-top: 15px;
-  padding: 10px;
-  text-align: center;
-  background: #4caf50;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
 }
 
 /* ================= BACKGROUND ================= */
@@ -45,14 +33,12 @@
   animation: gradientMove 14s ease infinite;
 }
 
-/* ⭐ DARK OVERLAY FOR READABILITY */
+/* dark overlay */
 .login-container::after {
   content: "";
   position: absolute;
   inset: 0;
-
-  background: rgba(0,0,0,0.55); /* magic layer */
-
+  background: rgba(0,0,0,0.55);
   pointer-events: none;
   z-index: 0;
 }
@@ -62,7 +48,6 @@
   50% { background-position: 100% 50% }
   100% { background-position: 0% 50% }
 }
-
 
 /* ================= PARTICLES ================= */
 
@@ -78,12 +63,10 @@
   width: 200%;
   height: 200%;
 
-  background-image:
-    radial-gradient(white 1px, transparent 1px);
-
+  background-image: radial-gradient(white 1px, transparent 1px);
   background-size: 60px 60px;
-  opacity: 0.04;
 
+  opacity: 0.04;
   animation: moveStars 60s linear infinite;
 }
 
@@ -91,7 +74,6 @@
   from { transform: translate(0,0); }
   to { transform: translate(-200px,-200px); }
 }
-
 
 /* ================= THEME TOGGLE ================= */
 
@@ -107,11 +89,10 @@
 
   border: none;
   background: rgba(255,255,255,0.15);
-
   color: white;
+
   cursor: pointer;
 }
-
 
 /* ================= LOGIN CARD ================= */
 
@@ -130,20 +111,24 @@
 
   border: 1px solid rgba(255,255,255,0.08);
 
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.65);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+
+  transition: 0.3s;
 }
 
+/* subtle premium hover */
+.login-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.75);
+}
 
-/* ================= TEXT FIXES ================= */
+/* ================= TEXT ================= */
 
 .title {
   font-size: 34px;
   font-weight: 800;
-
   color: white;
-
-  text-shadow: 0 2px 12px rgba(0,0,0,0.8); /* ⭐ key fix */
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8);
 }
 
 .subtitle {
@@ -155,6 +140,15 @@
   color: #ff6b6b;
 }
 
+/* ================= STATUS BADGE ================= */
+
+.status-badge {
+  margin: 10px 0 20px;
+  font-size: 13px;
+  color: #22c55e;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 
 /* ================= VERIFY BUTTON ================= */
 
@@ -179,21 +173,28 @@
   box-shadow: 0 0 20px rgba(56,189,248,0.7);
 }
 
-
-/* ================= STATS ================= */
+/* ================= STATS GRID (FIXED) ================= */
+/* ⭐ THIS IS THE IMPORTANT FIX */
 
 .stats-grid {
   z-index: 2;
-
   margin-top: 50px;
 
   display: grid;
-  grid-template-columns: repeat(3, 250px);
+
+  /* responsive horizontal layout */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
   gap: 28px;
+
+  width: 80%;
+  max-width: 900px;
 }
 
+/* ================= STAT CARDS ================= */
+
 .stat-card {
-  background: rgba(15,23,42,0.85); /* darker */
+  background: rgba(15,23,42,0.85);
   backdrop-filter: blur(18px);
 
   padding: 40px;
@@ -213,8 +214,12 @@
   font-size: 40px;
 }
 
-
-
+/* icons */
+.stat-icon {
+  font-size: 26px;
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
 
 /* ================= LOADER ================= */
 
