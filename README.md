@@ -1,84 +1,63 @@
-# 🔐 Blockchain Document Verification System
+# 🔐 Blockchain Document Verification System (IPFS + Blockchain Powered)
 
-A secure, tamper-proof **Blockchain Based Document Verification Platform** built using  
-⚡ React + Spring Boot + MongoDB + Ethereum + Cloud Storage
+A secure, tamper-proof **Web3 Document Verification Platform** built using:
 
-This system guarantees that once a document is registered, its integrity **cannot be altered, forged, or tampered with**.
+⚡ React + Spring Boot + MongoDB + Ethereum + IPFS (Pinata)
 
-Designed for colleges, universities, certificates, legal docs, and enterprise verification.
+This system ensures that once a document is registered, its integrity **cannot be altered, forged, or tampered with**.
+
+Instead of traditional cloud storage, files are stored on **decentralized IPFS**, and their **SHA-256 hash is permanently stored on blockchain** for trustless verification.
+
+Perfect for:
+• Certificates
+• Academic records
+• Legal documents
+• Enterprises
+• Research projects
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-### 👤 Admin Panel
+## 👤 Admin Panel
 
-- Google OAuth Login
-- Secure JWT authentication
+- Google OAuth login
+- JWT authentication
 - Upload & register documents
 - SHA-256 hashing
+- Store files on IPFS (Pinata)
 - Store hash on Ethereum blockchain
-- File storage on Cloudinary
-- MongoDB history tracking
-- Dashboard with live stats
-- CSV export of registered documents
-- File type validation (PDF/JPG/PNG/DOC)
-- File size limit protection (5MB)
+- MongoDB metadata/history
+- Dashboard with stats
+- CSV export
+- File validation (PDF/JPG/PNG/DOC)
+- 5MB file limit
+- Light/Dark theme
 - Toast notifications
-- Light / Dark theme toggle
-- Logout system
 
----
-
-### 🔍 Public Verification
+## 🔍 Public Verification
 
 - No login required
-- Upload any document
+- Upload document
 - Instant authenticity check
 - Blockchain validation
 - Tamper detection
-- Real-time result display
+- Real-time result
 
 ---
 
-## 🔐 Security Enhancements
+# 🧠 How It Works
 
-- Private keys moved to .env
-- Secrets not committed to GitHub
-- JWT protected APIs
-- Backend file validation
-- Try/Catch for blockchain failures
-- Clean .gitignore (node_modules removed)
-
----
-
-## 🧪 Testing & Dev Tools
-
-- JUnit tests (controller endpoints)
-- Swagger / OpenAPI documentation
-- API testing UI
-- Structured error handling
-- Clean logging
-
-Swagger URL:
-http://localhost:8080/swagger-ui.html
-
----
-
-## 🧠 How It Works
-
-### 📌 Registration Flow
+## Registration Flow
 
 1. Upload file
 2. Generate SHA-256 hash
-3. Upload file → Cloudinary
-4. Save metadata → MongoDB
-5. Store hash → Ethereum blockchain
-6. Return success response
+3. Upload file → IPFS (Pinata)
+4. Receive CID
+5. Save CID + metadata → MongoDB
+6. Store hash → Ethereum blockchain
 
----
-
-### 📌 Verification Flow
+## Verification Flow
 
 1. Upload document
 2. Generate hash
@@ -88,212 +67,184 @@ http://localhost:8080/swagger-ui.html
 
 ---
 
-## 🏗 Architecture
+# 🏗 Architecture
 
-```
-User → React Frontend
-      ↓
-Spring Boot Backend (REST APIs)
-      ↓
-MongoDB (metadata/history)
-Cloudinary (file storage)
+User  
+↓  
+React Frontend  
+↓  
+Spring Boot Backend  
+↓  
+MongoDB (metadata/history)  
+IPFS (file storage)  
 Ethereum Blockchain (hash storage)
-```
 
 ---
 
-### Why this architecture?
+# 🌐 Why IPFS Instead of Cloud?
 
-| Component  | Purpose                |
-| ---------- | ---------------------- |
-| Blockchain | Tamper-proof integrity |
-| MongoDB    | Fast queries & history |
-| Cloudinary | Secure file hosting    |
-| SHA-256    | Unique fingerprint     |
-| JWT        | Secure authentication  |
-| Swagger    | API documentation      |
+Traditional Cloud Storage ❌  
+Decentralized Storage (IPFS) ✅
 
----
+Benefits:
 
-## 🖼 Screenshots
-
-### 🔐 Login Page
-
-![Login](./screenshots/login.png)
+- Tamper-proof
+- Content-addressable (CID)
+- No vendor lock-in
+- Permanent storage
+- Works even if backend is offline
+- Ideal for blockchain apps
 
 ---
 
-### 🔍 Document Verification
+# 🛠 Tech Stack
 
-![Verify](./screenshots/verify.png)
-
----
-
-### 👤 Admin Dashboard
-
-![Admin](./screenshots/admin.png)
-
----
-
-## ⚙️ Tech Stack
-
-### 🎨 Frontend
+## Frontend
 
 - React (Vite)
-- React Router
 - Axios
-- React Hot Toast
+- React Router
 - Google OAuth
-- Modern CSS UI
+- React Hot Toast
 
-### ⚙️ Backend
+## Backend
 
 - Spring Boot
 - MongoDB
 - Web3j
-- JWT Authentication
-- Cloudinary Storage
+- JWT Security
+- Pinata IPFS integration
 - Swagger (OpenAPI)
-- JUnit Testing
+- JUnit
 
-### ⛓ Blockchain
+## Blockchain
 
-- Ethereum (Sepolia Testnet)
-- Smart Contracts (Solidity)
+- Ethereum (Sepolia)
+- Solidity Smart Contract
 - SHA-256 hashing
 
 ---
 
-## 🛠 Installation Guide
+# 📡 API Endpoints
 
-### Clone
-
-```bash
-git clone https://github.com/BlackMagic95/blockchain-document-verification.git
-cd blockchain-document-verification
-```
-
----
-
-## 🔐 Environment Variables (IMPORTANT)
-
-Create `.env` inside backend:
-
-```
-BLOCKCHAIN_PRIVATE_KEY=xxx
-BLOCKCHAIN_CONTRACT=xxx
-BLOCKCHAIN_RPC=xxx
-
-CLOUDINARY_NAME=xxx
-CLOUDINARY_KEY=xxx
-CLOUDINARY_SECRET=xxx
-
-MONGO_URI=xxx
-JWT_SECRET=xxx
-GOOGLE_CLIENT_ID=xxx
-```
-
----
-
-## ▶ Backend
-
-```bash
-cd backend
-./gradlew bootRun
-```
-
-Runs on:
-http://localhost:8080
+POST /upload → Register document  
+POST /verify → Verify document  
+GET /docs → List documents  
+GET /stats → Dashboard stats
 
 Swagger:
 http://localhost:8080/swagger-ui.html
 
 ---
 
-## ▶ Frontend
+# 🌐 Access Files via IPFS
 
-```bash
-cd frontend
-npm install
+After upload you receive:
+
+CID
+
+Open in browser:
+
+https://gateway.pinata.cloud/ipfs/<CID>
+
+Files remain accessible even if backend is stopped.
+
+---
+
+# ⚙️ Installation Guide
+
+## Clone
+
+git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git  
+cd blockChain-Document-Verification
+
+---
+
+## Backend Setup
+
+Create `.env` inside backend:
+
+BLOCKCHAIN_PRIVATE_KEY=xxx  
+BLOCKCHAIN_CONTRACT=xxx  
+BLOCKCHAIN_RPC=xxx
+
+PINATA_JWT=xxx
+
+MONGO_URI=xxx  
+JWT_SECRET=xxx  
+GOOGLE_CLIENT_ID=xxx
+
+Run backend:
+
+cd backend  
+./gradlew bootRun
+
+Server:
+http://localhost:8080
+
+---
+
+## Frontend Setup
+
+cd frontend  
+npm install  
 npm run dev
-```
 
 Open:
 http://localhost:5173
 
 ---
 
-## 📊 Dashboard Stats
+# 📊 Dashboard Stats
 
-- Total Registered Documents
-- Total Blockchain Hashes
+- Total Documents
+- Blockchain Hashes
 - Total Verifications
 - Real-time updates
-- CSV Export
+- CSV export
 
 ---
 
-## ✨ UI Highlights
+# 🔒 Security
 
-- Glassmorphism cards
-- Smooth animations
-- Light/Dark theme
-- Toast notifications
-- Responsive design
-- Professional dashboard layout
+- JWT protected APIs
+- File validation
+- Private keys stored in .env
+- No secrets committed
+- Immutable IPFS storage
+- Blockchain integrity guarantee
 
 ---
 
-## 🔮 Future Improvements
+# 🔮 Future Improvements
 
-- IPFS decentralized storage
-- Drag & Drop upload
-- File preview
-- Audit logs
+- Self-hosted IPFS node
+- File encryption
+- Drag & drop upload
 - Bulk upload
 - Docker deployment
-- CI/CD pipeline
-- Cloud hosting
+- CI/CD
+- Smart contract auto-verification
 
 ---
 
-## 🎓 Research / IEEE Scope
-
-This project demonstrates:
-
-- Blockchain for document integrity
-- Hybrid cloud + decentralized architecture
-- Secure digital verification
-- Tamper-proof systems
-- Real-world scalability
-
-Suitable for:
-
-- IEEE conference paper
-- Research publication
-- Final year project
-- Resume showcase
-
----
-
-## 👨‍💻 Author
+# 👨‍💻 Author
 
 Rohan Kumar  
-B.Tech Electronics & Communication Engineering – BIT Mesra
+B.Tech ECE – BIT Mesra
 
 GitHub: https://github.com/BlackMagic95  
 LinkedIn: https://linkedin.com/in/rkrohankumar
 
 ---
 
-## ⭐ Support
+# ⭐ Support
 
 If you like this project:
-
-Star ⭐ the repo  
-Fork 🍴 it  
-Improve 🚀 it
+Star ⭐  
+Fork 🍴  
+Contribute 🚀
 
 ---
 
-Built with ❤️ using Blockchain + Full Stack
+Built with ❤️ using Spring Boot + IPFS + Blockchain

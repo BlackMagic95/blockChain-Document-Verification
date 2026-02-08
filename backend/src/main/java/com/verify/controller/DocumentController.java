@@ -1,5 +1,7 @@
 package com.verify.controller;
 
+import com.verify.services.PinataService;
+
 import com.verify.entity.Document;
 import com.verify.repo.DocumentRepo;
 
@@ -8,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
+// import com.cloudinary.Cloudinary;
+// import com.cloudinary.utils.ObjectUtils;
 
 import java.security.MessageDigest;
 import java.util.*;
@@ -37,8 +39,11 @@ public class DocumentController {
         @Autowired
         private DocumentRepo repo;
 
+        // @Autowired
+        // private Cloudinary cloudinary;
+
         @Autowired
-        private Cloudinary cloudinary;
+        private PinataService pinataService;
 
         @Value("${blockchain.private-key}")
         private String PRIVATE_KEY;
@@ -94,6 +99,7 @@ public class DocumentController {
         @PostMapping("/upload")
         public Map<String, Object> upload(@RequestParam("file") MultipartFile file)
                         throws Exception {
+
                 if (file.getSize() > 5_000_000)
                         throw new RuntimeException("File too large");
 
@@ -107,19 +113,17 @@ public class DocumentController {
                                         "hash", hash);
                 }
 
-                Map<?, ?> uploadResult = cloudinary.uploader().upload(
-                                bytes,
-                                ObjectUtils.asMap("resource_type", "auto"));
+                /* ===== PINATA UPLOAD ===== */
+                String cid = pinataService.upload(file);
 
-                String fileUrl = uploadResult.get("secure_url").toString();
+                String fileUrl = "https://gateway.pinata.cloud/ipfs/" + cid;
 
                 Document d = new Document();
                 d.setName(file.getOriginalFilename());
                 d.setHash(hash);
-                d.setFileUrl(fileUrl);
-
-                /* IST created time */
+                d.setFileUrl(fileUrl); // still works same way
                 d.setCreatedAt(Instant.now());
+
                 repo.save(d);
 
                 storeHashOnChain(hash);
@@ -127,8 +131,9 @@ public class DocumentController {
                 return Map.of(
                                 "status", "REGISTERED",
                                 "hash", hash,
-                                "id", d.getId(),
-                                "fileUrl", fileUrl);
+                                "cid", cid,
+                                "fileUrl", fileUrl,
+                                "id", d.getId());
         }
 
         /* ================= VERIFY ================= */
