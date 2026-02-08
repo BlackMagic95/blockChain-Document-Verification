@@ -4,9 +4,13 @@ import "./AdminPage.css";
 import toast from "react-hot-toast";
 
 export default function AdminPage() {
+
   const [file, setFile] = useState(null);
   const [docs, setDocs] = useState([]);
   const [msg, setMsg] = useState("");
+
+  // ⭐ NEW
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadDocs();
@@ -16,103 +20,127 @@ export default function AdminPage() {
     const res = await api.get("/docs");
     setDocs(res.data || []);
   };
-const handleLogout = () => {
-  localStorage.clear();
-  toast.success("Logged out successfully 👋");
-  setTimeout(() => {
-    window.location.href = "/";
-  }, 800);
-};
 
+  const handleLogout = () => {
+    localStorage.clear();
+    toast.success("Logged out successfully 👋");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 800);
+  };
+
+
+  /* ================= UPLOAD ================= */
   const handleUpload = async () => {
+
     if (!file) {
       setMsg("Please select a file");
       return;
     }
+
     const allowedTypes = [
-    "application/pdf",
-    "image/jpeg",
-    "image/png",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  ];
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
 
-  const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
 
-  if (!allowedTypes.includes(file.type)) {
-    toast.error("Only PDF / Image / DOC allowed");
-    return;
-  }
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only PDF / Image / DOC allowed");
+      return;
+    }
 
-  if (file.size > maxSize) {
-    toast.error("Max file size is 5MB");
-    return;
-  }
+    if (file.size > maxSize) {
+      toast.error("Max file size is 5MB");
+      return;
+    }
+
     try {
+
+      setLoading(true); // ⭐ prevent double click
       toast.loading("Registering document...");
+
       const form = new FormData();
       form.append("file", file);
 
-      await api.post("/upload", form);
+      const res = await api.post("/upload", form);
 
-      toast.dismiss();
-toast.success("Document registered successfully ✅");
+toast.dismiss();
 
-      setFile(null);
-      loadDocs();
+if (res.data.status === "REGISTERED") {
+  toast.success("Document registered successfully ✅");
+  setFile(null);
+  loadDocs();
+}
+
+else if (res.data.status === "DUPLICATE") {
+  toast.error("Duplicate file already exists ⚠️");
+}
+
+
     } catch {
-      toast.dismiss();
-toast.error("Upload failed ❌");
 
+      toast.dismiss();
+      toast.error("Upload failed ❌");
+
+    } finally {
+
+      setLoading(false); // ⭐ re-enable button
     }
   };
+
+
   /* ================= EXPORT CSV ================= */
-const exportCSV = () => {
-  if (!docs.length) {
-    toast.error("No documents to export");
-    return;
-  }
+  const exportCSV = () => {
 
-  const headers = ["Name", "Hash", "Registered At (IST)"];
+    if (!docs.length) {
+      toast.error("No documents to export");
+      return;
+    }
 
-  const rows = docs.map((d) => [
-    d.name,
-    d.hash,
-    d.createdAt || "—"
-  ]);
+    const headers = ["Name", "Hash", "Registered At (IST)"];
 
-  const csv =
-    [headers, ...rows]
-      .map((r) => r.join(","))
-      .join("\n");
+    const rows = docs.map((d) => [
+      d.name,
+      d.hash,
+      d.createdAt || "—"
+    ]);
 
-  const blob = new Blob([csv], {
-    type: "text/csv;charset=utf-8;"
-  });
+    const csv =
+      [headers, ...rows]
+        .map((r) => r.join(","))
+        .join("\n");
 
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "documents.csv";
-  link.click();
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;"
+    });
 
-  toast.success("CSV downloaded 📥");
-};
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "documents.csv";
+    link.click();
+
+    toast.success("CSV downloaded 📥");
+  };
+
 
   return (
     <div className="admin-page">
 
       {/* HEADER */}
       <div className="admin-header">
-  <div>
-    <h1>Admin Dashboard</h1>
-    <p>Authorized document registration</p>
-  </div>
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Authorized document registration</p>
+        </div>
 
-  <button className="logout-btn" onClick={handleLogout}>
-    Logout
-  </button>
-</div>
-
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
 
 
       {/* UPLOAD CARD */}
@@ -134,15 +162,21 @@ const exportCSV = () => {
           </div>
 
           <div className="upload-actions">
-  <button className="register-btn" onClick={handleUpload}>
-    Register
-  </button>
 
-  <button className="export-btn" onClick={exportCSV}>
-     Export CSV ⬇
-  </button>
-</div>
+            {/* ⭐ BUTTON DISABLED */}
+            <button
+              className="register-btn"
+              onClick={handleUpload}
+              disabled={loading}
+            >
+              {loading ? "Registering..." : "Register"}
+            </button>
 
+            <button className="export-btn" onClick={exportCSV}>
+              Export CSV ⬇
+            </button>
+
+          </div>
         </div>
 
         {msg && <div className="status">{msg}</div>}
@@ -163,16 +197,9 @@ const exportCSV = () => {
 
           {docs.map((d) => (
             <div key={d.id} className="docs-row">
-
               <span>{d.name}</span>
-
-              <span className="hash">
-                {d.hash.slice(0, 14)}...
-              </span>
-
-              {/* ✅ DIRECT STRING (no parsing) */}
+              <span className="hash">{d.hash.slice(0, 14)}...</span>
               <span>{d.createdAt || "—"}</span>
-
             </div>
           ))}
 

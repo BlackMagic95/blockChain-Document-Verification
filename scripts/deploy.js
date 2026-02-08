@@ -1,12 +1,12 @@
 async function main() {
 
-  const Contract = await ethers.getContractFactory("Verification");
+  const Contract = await ethers.getContractFactory("DocumentVerification");
 
   const contract = await Contract.deploy();
 
-  await contract.deployed();
+  await contract.deployed(); // ✅ v5 fix
 
-  console.log("✅ Contract deployed to:", contract.address);
+  console.log("Deployed to:", contract.address);
 }
 
-main().catch(console.error);
+main();

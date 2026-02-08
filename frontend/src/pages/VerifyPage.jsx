@@ -6,15 +6,22 @@ import toast from "react-hot-toast";
 const API = "http://localhost:8080";
 
 export default function VerifyPage() {
+
   const [file, setFile] = useState(null);
   const [msg, setMsg] = useState("");
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ⭐ NEW
+  const [downloadUrl, setDownloadUrl] = useState("");
+
   const fileRef = useRef();
+
 
   /* ================= IST FORMATTER ================= */
   const formatIST = (isoString) => {
+    if (!isoString) return "";
+
     const date = new Date(isoString);
 
     return date.toLocaleString("en-IN", {
@@ -28,8 +35,10 @@ export default function VerifyPage() {
     });
   };
 
+
   /* ================= VERIFY ================= */
   const handleVerify = async () => {
+
     if (!file) {
       setMsg("Please select a document");
       setType("error");
@@ -39,50 +48,68 @@ export default function VerifyPage() {
     try {
       setLoading(true);
       toast.loading("Verifying document...");
-      setType("info");
+      setDownloadUrl(""); // reset previous link
 
       const form = new FormData();
       form.append("file", file);
 
       const res = await axios.post(`${API}/verify`, form);
+      const status = res.data.status;
 
-      if (res.data.status === "VERIFIED") {
+      toast.dismiss();
 
-        // ⭐⭐ FIXED DATE HERE ⭐⭐
+
+      /* ===== HYBRID STATUS HANDLING ===== */
+
+      if (status === "VERIFIED") {
+
         const formattedTime = formatIST(res.data.verifiedAt);
-        toast.dismiss();
-toast.success(`Verified successfully ✅ (${formattedTime} IST)`);
+
+        toast.success(`Verified successfully ✅ (${formattedTime} IST)`);
+
+        setMsg("Mongo + Blockchain verified");
         setType("success");
 
-      } else if (res.data.status === "NOT_REGISTERED") {
-        toast.dismiss();
-toast.error("Document not registered ❌");
+        // ⭐ SET DOWNLOAD LINK
+        setDownloadUrl(res.data.fileUrl);
+      }
 
+      else if (status === "TAMPERED_DB") {
+        toast.error("⚠ Database mismatch detected (tampered)");
+        setMsg("Database record corrupted");
         setType("error");
+      }
 
-      } else if (res.data.status === "CHAIN_MISSING") {
-        toast.dismiss();
-toast.error("Blockchain record missing ⚠️");
+      else if (status === "BLOCKCHAIN_ONLY") {
+        toast("Exists on blockchain but DB missing ⚠️", { icon: "⚠️" });
+        setMsg("Blockchain verified only");
+        setType("info");
+      }
 
+      else if (status === "NOT_REGISTERED") {
+        toast.error("Document not registered ❌");
+        setMsg("Not registered");
         setType("error");
+      }
 
-      } else {
-        toast.dismiss();
-toast.error("Verification failed ❌");
-
+      else {
+        toast.error("Verification failed ❌");
         setType("error");
       }
 
       setFile(null);
 
     } catch {
-      setMsg("Verification error ❌");
+      toast.dismiss();
+      toast.error("Verification error ❌");
+      setMsg("Verification error");
       setType("error");
 
     } finally {
       setLoading(false);
     }
   };
+
 
   /* ================= UI ================= */
   return (
@@ -111,6 +138,7 @@ toast.error("Verification failed ❌");
             />
           </div>
 
+
           <button
             className="primary-btn"
             onClick={handleVerify}
@@ -118,6 +146,20 @@ toast.error("Verification failed ❌");
           >
             {loading ? "Verifying..." : "Verify Document"}
           </button>
+
+
+          {/* ⭐ DOWNLOAD BUTTON */}
+          {downloadUrl && (
+            <a
+              href={downloadUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="download-btn"
+            >
+              ⬇ Download Verified File
+            </a>
+          )}
+
 
           {msg && <div className={`result ${type}`}>{msg}</div>}
 

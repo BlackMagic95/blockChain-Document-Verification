@@ -80,7 +80,7 @@ public class DocumentController {
 
                 Function function = new Function(
                                 "storeHash",
-                                List.of(new Utf8String(hash), new Utf8String(hash)),
+                                List.of(new Utf8String(hash)),
                                 List.of());
 
                 String encoded = FunctionEncoder.encode(function);
@@ -92,7 +92,22 @@ public class DocumentController {
                                 encoded,
                                 java.math.BigInteger.ZERO);
 
-                System.out.println("Blockchain TX: " + tx.getTransactionHash());
+                String txHash = tx.getTransactionHash();
+
+                System.out.println("Blockchain TX: " + txHash);
+                System.out.println("Waiting for mining... ⏳");
+
+                /* ⭐ WAIT UNTIL MINED (CRITICAL FIX) */
+                var web3 = getWeb3();
+
+                var receipt = web3.ethGetTransactionReceipt(txHash).send();
+
+                while (receipt.getTransactionReceipt().isEmpty()) {
+                        Thread.sleep(1500);
+                        receipt = web3.ethGetTransactionReceipt(txHash).send();
+                }
+
+                System.out.println("TX MINED ✅");
         }
 
         /* ================= REGISTER ================= */
@@ -105,6 +120,7 @@ public class DocumentController {
 
                 byte[] bytes = file.getBytes();
                 String hash = sha256(bytes);
+                System.out.println("UPLOAD HASH: " + hash);
 
                 /* Duplicate check */
                 if (repo.findByHash(hash).isPresent()) {
@@ -127,6 +143,7 @@ public class DocumentController {
                 repo.save(d);
 
                 storeHashOnChain(hash);
+                System.out.println("STORE CONTRACT: " + CONTRACT);
 
                 return Map.of(
                                 "status", "REGISTERED",
@@ -136,6 +153,34 @@ public class DocumentController {
                                 "id", d.getId());
         }
 
+        /* ================= BLOCKCHAIN VERIFY ================= */
+        private boolean existsOnChain(String hash) throws Exception {
+
+                Function function = new Function(
+                                "isValid", // ⭐ FIXED NAME
+                                List.of(new Utf8String(hash)),
+                                List.of(new org.web3j.abi.TypeReference<org.web3j.abi.datatypes.Bool>() {
+                                }));
+                System.out.println("VERIFY CONTRACT: " + CONTRACT);
+
+                String encoded = FunctionEncoder.encode(function);
+
+                var response = getWeb3().ethCall(
+                                org.web3j.protocol.core.methods.request.Transaction
+                                                .createEthCallTransaction(null, CONTRACT, encoded),
+                                org.web3j.protocol.core.DefaultBlockParameterName.LATEST)
+                                .send();
+
+                List<org.web3j.abi.datatypes.Type> decoded = org.web3j.abi.FunctionReturnDecoder.decode(
+                                response.getValue(),
+                                function.getOutputParameters());
+
+                if (decoded.isEmpty())
+                        return false;
+
+                return (Boolean) decoded.get(0).getValue();
+        }
+
         /* ================= VERIFY ================= */
         @PostMapping("/verify")
         public Map<String, String> verify(@RequestParam("file") MultipartFile file)
@@ -143,23 +188,42 @@ public class DocumentController {
 
                 String uploadedHash = sha256(file.getBytes());
 
-                Optional<Document> docOpt = repo.findByHash(uploadedHash);
+                boolean dbMatch = repo.findByHash(uploadedHash).isPresent();
+                boolean chainMatch = existsOnChain(uploadedHash);
+                System.out.println("VERIFY HASH: " + uploadedHash);
 
-                if (docOpt.isEmpty()) {
-                        return Map.of("status", "NOT_REGISTERED");
+                /* ===== BOTH MATCH (ideal) ===== */
+                if (dbMatch && chainMatch) {
+
+                        Document d = repo.findByHash(uploadedHash).get();
+
+                        d.setVerifiedAt(Instant.now());
+                        d.setVerificationCount(d.getVerificationCount() + 1);
+                        repo.save(d);
+
+                        return Map.of(
+                                        "status", "VERIFIED",
+                                        "verifiedAt", d.getVerifiedAt().toString(),
+                                        "fileUrl", d.getFileUrl());
                 }
 
-                Document d = docOpt.get();
+                /* ===== DB ONLY (tampered blockchain) ===== */
+                if (dbMatch && !chainMatch) {
+                        return Map.of(
+                                        "status", "TAMPERED_DB",
+                                        "message", "Found in DB but missing on blockchain");
+                }
 
-                d.setVerifiedAt(Instant.now());
+                /* ===== CHAIN ONLY (DB lost but safe) ===== */
+                if (!dbMatch && chainMatch) {
+                        return Map.of(
+                                        "status", "BLOCKCHAIN_ONLY",
+                                        "message", "Exists on blockchain but not DB");
+                }
 
-                d.setVerificationCount(d.getVerificationCount() + 1);
-
-                repo.save(d);
-
+                /* ===== NOT FOUND ===== */
                 return Map.of(
-                                "status", "VERIFIED",
-                                "verifiedAt", d.getVerifiedAt().toString());
+                                "status", "NOT_REGISTERED");
         }
 
         /* ================= LIST ================= */
