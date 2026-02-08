@@ -4,15 +4,15 @@ A secure, tamper-proof **Web3 Document Verification Platform** built using:
 
 ⚡ React + Spring Boot + MongoDB + Ethereum + IPFS (Pinata)
 
-This system ensures that once a document is registered, its integrity **cannot be altered, forged, or tampered with**.
+Files are stored on **decentralized IPFS**, and their **SHA-256 hash is permanently stored on blockchain** for trustless verification.
 
-Instead of traditional cloud storage, files are stored on **decentralized IPFS**, and their **SHA-256 hash is permanently stored on blockchain** for trustless verification.
+Once registered, documents **cannot be altered or forged**.
 
 Perfect for:
-• Certificates
-• Academic records
-• Legal documents
-• Enterprises
+• Certificates  
+• Academic records  
+• Legal docs  
+• Enterprises  
 • Research projects
 
 ---
@@ -27,13 +27,11 @@ Perfect for:
 - SHA-256 hashing
 - Store files on IPFS (Pinata)
 - Store hash on Ethereum blockchain
-- MongoDB metadata/history
+- MongoDB history tracking
 - Dashboard with stats
 - CSV export
-- File validation (PDF/JPG/PNG/DOC)
-- 5MB file limit
+- File validation + 5MB limit
 - Light/Dark theme
-- Toast notifications
 
 ## 🔍 Public Verification
 
@@ -42,7 +40,6 @@ Perfect for:
 - Instant authenticity check
 - Blockchain validation
 - Tamper detection
-- Real-time result
 
 ---
 
@@ -54,14 +51,14 @@ Perfect for:
 2. Generate SHA-256 hash
 3. Upload file → IPFS (Pinata)
 4. Receive CID
-5. Save CID + metadata → MongoDB
-6. Store hash → Ethereum blockchain
+5. Save CID → MongoDB
+6. Store hash → Blockchain
 
 ## Verification Flow
 
-1. Upload document
+1. Upload file
 2. Generate hash
-3. Compare with database
+3. Compare with DB
 4. Validate with blockchain
 5. Show VERIFIED / NOT REGISTERED / TAMPERED
 
@@ -81,19 +78,33 @@ Ethereum Blockchain (hash storage)
 
 ---
 
-# 🌐 Why IPFS Instead of Cloud?
+# 🖼 Screenshots
 
-Traditional Cloud Storage ❌  
-Decentralized Storage (IPFS) ✅
+## 🔐 Login Page
 
-Benefits:
+![Login](./screenshots/login.png)
 
-- Tamper-proof
-- Content-addressable (CID)
-- No vendor lock-in
-- Permanent storage
-- Works even if backend is offline
-- Ideal for blockchain apps
+## 🔍 Document Verification
+
+![Verify](./screenshots/verify.png)
+
+## 👤 Admin Dashboard
+
+![Dashboard](./screenshots/admin.png)
+
+---
+
+# 🌐 IPFS File Access
+
+After upload you receive:
+
+CID
+
+Open in browser:
+
+https://gateway.pinata.cloud/ipfs/<CID>
+
+Files remain accessible even if backend is offline.
 
 ---
 
@@ -115,7 +126,6 @@ Benefits:
 - JWT Security
 - Pinata IPFS integration
 - Swagger (OpenAPI)
-- JUnit
 
 ## Blockchain
 
@@ -127,27 +137,13 @@ Benefits:
 
 # 📡 API Endpoints
 
-POST /upload → Register document  
-POST /verify → Verify document  
-GET /docs → List documents  
-GET /stats → Dashboard stats
+POST /upload → Register  
+POST /verify → Verify  
+GET /docs → List  
+GET /stats → Stats
 
 Swagger:
 http://localhost:8080/swagger-ui.html
-
----
-
-# 🌐 Access Files via IPFS
-
-After upload you receive:
-
-CID
-
-Open in browser:
-
-https://gateway.pinata.cloud/ipfs/<CID>
-
-Files remain accessible even if backend is stopped.
 
 ---
 
@@ -160,9 +156,9 @@ cd blockChain-Document-Verification
 
 ---
 
-## Backend Setup
+## Backend
 
-Create `.env` inside backend:
+Create `.env`:
 
 BLOCKCHAIN_PRIVATE_KEY=xxx  
 BLOCKCHAIN_CONTRACT=xxx  
@@ -174,17 +170,14 @@ MONGO_URI=xxx
 JWT_SECRET=xxx  
 GOOGLE_CLIENT_ID=xxx
 
-Run backend:
+Run:
 
 cd backend  
 ./gradlew bootRun
 
-Server:
-http://localhost:8080
-
 ---
 
-## Frontend Setup
+## Frontend
 
 cd frontend  
 npm install  
@@ -195,22 +188,11 @@ http://localhost:5173
 
 ---
 
-# 📊 Dashboard Stats
-
-- Total Documents
-- Blockchain Hashes
-- Total Verifications
-- Real-time updates
-- CSV export
-
----
-
 # 🔒 Security
 
 - JWT protected APIs
+- Private keys hidden in .env
 - File validation
-- Private keys stored in .env
-- No secrets committed
 - Immutable IPFS storage
 - Blockchain integrity guarantee
 
@@ -221,29 +203,16 @@ http://localhost:5173
 - Self-hosted IPFS node
 - File encryption
 - Drag & drop upload
-- Bulk upload
 - Docker deployment
 - CI/CD
-- Smart contract auto-verification
 
 ---
 
 # 👨‍💻 Author
 
 Rohan Kumar  
-B.Tech ECE – BIT Mesra
-
 GitHub: https://github.com/BlackMagic95  
 LinkedIn: https://linkedin.com/in/rkrohankumar
-
----
-
-# ⭐ Support
-
-If you like this project:
-Star ⭐  
-Fork 🍴  
-Contribute 🚀
 
 ---
 
