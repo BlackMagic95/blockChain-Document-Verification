@@ -1,14 +1,20 @@
-# Use lightweight Java 17 image
-FROM eclipse-temurin:17-jdk-jammy
+# ================= BUILD STAGE =================
+FROM gradle:8.5-jdk17 AS builder
 
-# App directory
 WORKDIR /app
 
-# Copy built jar
-COPY build/libs/*.jar app.jar
+COPY . .
 
-# Expose Spring port
+RUN gradle clean build -x test
+
+
+# ================= RUN STAGE =================
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+COPY --from=builder /app/build/libs/*.jar app.jar
+
 EXPOSE 8080
 
-# Run app
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
