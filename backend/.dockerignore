@@ -1,0 +1,29 @@
+
+.gradle/
+node_modules/
+.git/
+.env
+# ================= BACKEND =================
+backend/.gradle/
+backend/out/
+
+# ================= FRONTEND =================
+frontend/node_modules/
+frontend/dist/
+
+# ================= BLOCKCHAIN =================
+artifacts/
+cache/
+
+# ================= OS / IDE =================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ================= ENV =================
+.env
+node_modules/
+# Spring config
+backend/src/main/resources/application.properties
+backend/bin/main/application.propertiesn
