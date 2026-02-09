@@ -32,7 +32,11 @@ import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = {
+                "http://localhost:5173",
+                "https://your-app.vercel.app"
+})
+
 @RequestMapping("/")
 public class DocumentController {
 

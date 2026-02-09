@@ -13,7 +13,11 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "https://your-app.vercel.app"
+})
+
 public class AuthController {
 
     private final JwtUtil jwtUtil;
