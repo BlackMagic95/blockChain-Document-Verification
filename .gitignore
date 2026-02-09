@@ -64,3 +64,6 @@ temp/
 # ================= MAC / WINDOWS JUNK =================
 *.swp
 *.swo
+!backend/gradlew
+!backend/gradlew.bat
+!backend/gradle/
