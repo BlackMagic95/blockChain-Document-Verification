@@ -5,6 +5,6 @@ WORKDIR /app/backend
 COPY . .
 
 RUN chmod +x gradlew
-RUN ./gradlew build
+RUN ./gradlew clean build -x test
 
 CMD ["java","-jar","build/libs/*.jar"]
