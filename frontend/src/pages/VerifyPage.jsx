@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import "./VerifyPage.css";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const API = "http://localhost:8080";
 
@@ -35,6 +36,7 @@ export default function VerifyPage() {
     });
   };
 
+const navigate = useNavigate();
 
   /* ================= VERIFY ================= */
   const handleVerify = async () => {
@@ -115,6 +117,15 @@ export default function VerifyPage() {
   return (
     <div className="verify-page">
       <div className="verify-container">
+
+  {/* BACK BUTTON */}
+  <button
+    className="back-btn"
+    onClick={() => navigate("/")}
+  >
+    ← Back
+  </button>
+
 
         <div className="verify-header">
           <h1>Verify Document</h1>

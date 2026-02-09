@@ -33,64 +33,41 @@ export default function AdminPage() {
   /* ================= UPLOAD ================= */
   const handleUpload = async () => {
 
-    if (!file) {
-      setMsg("Please select a file");
-      return;
+  if (!file) {
+    toast.error("Please select a file");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const form = new FormData();
+    form.append("file", file);
+
+    // ⭐ create loading toast and keep its id
+    const toastId = toast.loading("Registering on blockchain ⛓️...");
+
+    const res = await api.post("/upload", form);
+
+    // ⭐ remove ONLY loading toast
+    toast.dismiss(toastId);
+
+    if (res.data.status === "DUPLICATE") {
+      toast.error("Duplicate file already exists ⚠️");
+    } else {
+      toast.success("Document registered successfully ✅");
+      setFile(null);
+      loadDocs();
     }
 
-    const allowedTypes = [
-      "application/pdf",
-      "image/jpeg",
-      "image/png",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ];
-
-    const maxSize = 5 * 1024 * 1024;
-
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Only PDF / Image / DOC allowed");
-      return;
-    }
-
-    if (file.size > maxSize) {
-      toast.error("Max file size is 5MB");
-      return;
-    }
-
-    try {
-
-      setLoading(true); // ⭐ prevent double click
-      toast.loading("Registering document...");
-
-      const form = new FormData();
-      form.append("file", file);
-
-      const res = await api.post("/upload", form);
-
-toast.dismiss();
-
-if (res.data.status === "REGISTERED") {
-  toast.success("Document registered successfully ✅");
-  setFile(null);
-  loadDocs();
-}
-
-else if (res.data.status === "DUPLICATE") {
-  toast.error("Duplicate file already exists ⚠️");
-}
+  } catch {
+    toast.error("Upload failed ❌");
+  } finally {
+    setLoading(false);
+  }
+};
 
 
-    } catch {
-
-      toast.dismiss();
-      toast.error("Upload failed ❌");
-
-    } finally {
-
-      setLoading(false); // ⭐ re-enable button
-    }
-  };
 
 
   /* ================= EXPORT CSV ================= */

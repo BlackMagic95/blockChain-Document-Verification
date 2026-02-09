@@ -78,14 +78,6 @@ export default function Login() {
   return (
     <div className={`login-container ${dark ? "dark" : "light"}`}>
 
-      <div className="particles"></div>
-
-      <button
-        className="theme-toggle"
-        onClick={() => setDark(!dark)}
-      >
-        {dark ? "☀ Light" : "🌙 Dark"}
-      </button>
 
       {/* ================= LOGIN CARD ================= */}
       <div className="login-card">
