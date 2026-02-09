@@ -1,15 +1,18 @@
-# ================= BUILD STAGE =================
-FROM gradle:8.5-jdk17 AS builder
+# ---------- Build stage ----------
+FROM eclipse-temurin:17-jdk-jammy AS builder
 
 WORKDIR /app
 
+# copy project
 COPY . .
 
-RUN gradle clean build -x test
+# use gradle wrapper (NOT gradle)
+RUN chmod +x gradlew
+RUN ./gradlew clean bootJar -x test
 
 
-# ================= RUN STAGE =================
-FROM eclipse-temurin:17-jdk-jammy
+# ---------- Run stage ----------
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
@@ -17,4 +20,4 @@ COPY --from=builder /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
