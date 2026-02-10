@@ -34,7 +34,8 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 @RestController
 @CrossOrigin(origins = {
                 "http://localhost:5173",
-                "https://blockchain-document-verification-1.onrender.com"
+                "https://blockchain-document-verification-1.onrender.com",
+                "https://block-chain-document-verification-cyan.vercel.app/"
 })
 
 @RequestMapping("/")
