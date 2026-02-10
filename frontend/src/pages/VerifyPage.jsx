@@ -4,7 +4,7 @@ import "./VerifyPage.css";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const API = "http://localhost:8080";
+const API = "https://blockchain-document-verification.onrender.com";
 
 export default function VerifyPage() {
 
