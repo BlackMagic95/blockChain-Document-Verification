@@ -1,3 +1,9 @@
+/* ================= GLOBAL SAFETY ================= */
+* {
+  box-sizing: border-box;
+}
+
+
 /* ================= THEME COLORS ================= */
 
 .dark {
@@ -12,11 +18,13 @@
 
 
 /* =================================================
-   BACKGROUND  ⭐ SAME AS VERIFY PAGE (CLEAN)
+   BACKGROUND
 ================================================= */
 
 .login-container {
-  height: 100vh;
+  min-height: 100vh;        /* ⭐ changed from height */
+  padding: 20px;           /* ⭐ mobile spacing */
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,7 +39,7 @@
 }
 
 
-/* glow blobs (same style as verify page) */
+/* glow blobs */
 .login-container::before,
 .login-container::after {
   content: "";
@@ -65,7 +73,6 @@
   position: absolute;
   top: 20px;
   right: 20px;
-
   z-index: 3;
 
   padding: 8px 14px;
@@ -81,13 +88,15 @@
 
 
 /* =================================================
-   LOGIN CARD (GLASS STYLE MATCH VERIFY)
+   LOGIN CARD
 ================================================= */
 
 .login-card {
   z-index: 2;
 
-  width: 430px;
+  width: 95%;           /* ⭐ responsive */
+  max-width: 430px;
+
   padding: 60px;
 
   border-radius: 26px;
@@ -107,12 +116,8 @@
   transition: 0.25s ease;
 }
 
-/* subtle premium hover */
 .login-card:hover {
   transform: translateY(-6px);
-  box-shadow:
-    0 40px 100px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(255, 255, 255, 0.10);
 }
 
 
@@ -151,7 +156,7 @@
 
 
 /* =================================================
-   VERIFY BUTTON LINK
+   VERIFY LINK
 ================================================= */
 
 .verify-link {
@@ -173,7 +178,6 @@
 
 .verify-link:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
 }
 
 
@@ -183,13 +187,14 @@
 
 .stats-grid {
   z-index: 2;
+
   margin-top: 50px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px;
 
-  width: 80%;
+  width: 95%;            /* ⭐ mobile safe */
   max-width: 900px;
 }
 
@@ -222,7 +227,6 @@
 .stat-icon {
   font-size: 26px;
   margin-bottom: 10px;
-  opacity: 0.85;
 }
 
 
@@ -230,9 +234,13 @@
    RESPONSIVE
 ================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+
+  .stats-grid {
+    grid-template-columns: 1fr;  /* ⭐ stack */
+  }
+
   .login-card {
-    width: 90%;
     padding: 40px 25px;
   }
 }

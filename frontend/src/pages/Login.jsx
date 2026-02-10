@@ -95,10 +95,17 @@ export default function Login() {
         {loading ? (
           <div className="loader"></div>
         ) : (
-          <GoogleLogin
-            onSuccess={onSuccess}
-            onError={() => toast.error("Google login failed")}
-          />
+          <div style={{ display: "flex", justifyContent: "center" }}>
+  <GoogleLogin
+    onSuccess={onSuccess}
+    onError={() => toast.error("Google login failed")}
+    theme="outline"
+    size="large"
+    shape="pill"
+    width="300"
+  />
+</div>
+
         )}
 
         {error && <p className="error-text">{error}</p>}

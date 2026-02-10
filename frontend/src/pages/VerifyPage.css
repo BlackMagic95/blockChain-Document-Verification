@@ -1,9 +1,17 @@
+/* ================= GLOBAL SAFETY ================= */
+* {
+  box-sizing: border-box;
+}
+
+
 /* =========================
    PAGE BACKGROUND
 ========================= */
 
 .verify-page {
-  height: 100vh;
+  min-height: 100vh;   /* ⭐ changed from height */
+  padding: 20px;       /* ⭐ mobile spacing */
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +24,7 @@
 }
 
 
-/* glow blobs (same theme as login) */
+/* glow blobs */
 .verify-page::before,
 .verify-page::after {
   content: "";
@@ -42,41 +50,33 @@
 
 
 /* =========================
-   MAIN VERIFY CARD (FIXED)
+   MAIN VERIFY CARD
 ========================= */
 
 .verify-container {
-  width: 600px;
-  max-width: 95%;
+  width: 95%;        /* ⭐ responsive */
+  max-width: 600px;
 
   padding: 70px 60px;
 
   border-radius: 26px;
 
-  /* ⭐ stronger glass */
   background: rgba(255,255,255,0.10);
   backdrop-filter: blur(20px);
 
-  /* ⭐ REAL BORDER (this is what you want) */
   border: 1.8px solid rgba(255,255,255,0.25);
 
-  /* ⭐ depth separation */
   box-shadow:
     0 30px 80px rgba(0,0,0,0.55),
     0 0 0 1px rgba(255,255,255,0.06);
 
   text-align: center;
-
   transition: 0.25s ease;
 }
 
 .verify-container:hover {
   transform: translateY(-6px);
-  box-shadow:
-    0 40px 100px rgba(0,0,0,0.65),
-    0 0 0 1px rgba(255,255,255,0.10);
 }
-
 
 
 /* =========================
@@ -97,8 +97,9 @@
 
 
 /* =========================
-   UPLOAD TILE (FIXED PERFECT CENTER + BORDER)
+   UPLOAD TILE
 ========================= */
+
 .upload-tile {
   position: relative;
 
@@ -118,14 +119,11 @@
   gap: 10px;
   text-align: center;
 
-  /* ⭐ REAL VISIBLE BORDER */
   border: 2px dashed #94a3b8;
 
-  /* ⭐ background */
   background: rgba(255,255,255,0.06);
   backdrop-filter: blur(18px);
 
-  /* ⭐ EXTRA VISIBILITY (important) */
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,0.08),
     0 10px 25px rgba(0,0,0,0.25);
@@ -135,13 +133,11 @@
 
 .upload-tile:hover {
   border-color: #4fc3f7;
-  background: rgba(79,195,247,0.12);
 }
 
 
-
 /* =========================
-   BUTTON
+   BUTTONS
 ========================= */
 
 .primary-btn {
@@ -158,20 +154,10 @@
   color: white;
 
   cursor: pointer;
-  transition: 0.25s ease;
 }
 
-.primary-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-
-.primary-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 .plus {
-  display: flex;              /* ⭐ IMPORTANT */
+  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -184,15 +170,14 @@
   border-radius: 14px;
 
   color: #4fc3f7;
-
-  /* ⭐ looks like icon button */
   background: rgba(79,195,247,0.15);
 
-  margin: 0 auto;            /* ⭐ perfect center */
+  margin: 0 auto;
 }
 
+
 /* =========================
-   RESULT BADGES
+   RESULT
 ========================= */
 
 .result {
@@ -203,47 +188,13 @@
   font-weight: 600;
 }
 
-.result.success {
-  background: rgba(76, 175, 80, 0.15);
-  color: #4caf50;
-}
-
-.result.error {
-  background: rgba(255, 107, 107, 0.15);
-  color: #ff6b6b;
-}
-
-.result.info {
-  background: rgba(79,195,247,0.15);
-  color: #4fc3f7;
-}
-
 
 /* =========================
-   ANIMATION
-========================= */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.upload-tile:hover .plus {
-  transform: scale(1.1);
-}
-
-/* =========================
-   DOWNLOAD BUTTON (FIXED)
+   DOWNLOAD BUTTON
 ========================= */
 
 .download-btn {
   display: block;
-
   margin-top: 18px;
   padding: 12px;
 
@@ -257,22 +208,10 @@
 
   color: white;
 
-  /* same gradient theme as primary button */
   background: linear-gradient(135deg, #22c55e, #16a34a);
-
-  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
-
-  transition: 0.25s ease;
 }
 
-.download-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.45);
-}
 
-.download-btn:active {
-  transform: scale(0.98);
-}
 /* =========================
    BACK BUTTON
 ========================= */
@@ -298,11 +237,25 @@
   backdrop-filter: blur(10px);
 
   border: 1px solid rgba(255,255,255,0.25);
-
-  transition: 0.2s ease;
 }
 
-.back-btn:hover {
-  background: rgba(79,195,247,0.25);
-  transform: translateY(-2px);
+
+/* =========================
+   MOBILE FIXES
+========================= */
+
+@media (max-width: 600px) {
+
+  .verify-container {
+    padding: 40px 24px; /* ⭐ smaller padding */
+  }
+
+  .upload-tile {
+    padding: 40px 20px;
+  }
+
+  .back-btn {
+    top: 12px;
+    left: 12px;
+  }
 }
