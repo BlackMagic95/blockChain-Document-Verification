@@ -1,23 +1,35 @@
-# 🔐 Blockchain Document Verification System (IPFS + Blockchain Powered)
+# 🔐 Blockchain Document Verification System
 
 A secure, tamper-proof **Web3 Document Verification Platform** built using:
 
-⚡ React + Spring Boot + MongoDB + Ethereum + IPFS (Pinata)
+⚡ React + Spring Boot + MongoDB + Ethereum + IPFS
 
-Files are stored on **decentralized IPFS**, and their **SHA-256 hash is permanently stored on blockchain** for trustless verification.
+Documents are stored on **decentralized IPFS**, while their **SHA-256 hash is permanently stored on the blockchain** for trustless verification.
 
-Once registered, documents **cannot be altered or forged**.
+Once registered, files **cannot be altered or forged**.
 
 Perfect for:
 • Certificates  
 • Academic records  
-• Legal docs  
+• Legal documents  
 • Enterprises  
 • Research projects
 
 ---
 
-# 🚀 Features
+# 🌐 Live Demo
+
+Frontend (Vercel)  
+https://block-chain-document-verification-phi.vercel.app
+
+Backend API (Render)  
+https://blockchain-document-verification.onrender.com/docs
+
+> Note: Backend may take ~30 seconds to wake up (free tier sleep)
+
+---
+
+# ✨ Features
 
 ## 👤 Admin Panel
 
@@ -28,9 +40,10 @@ Perfect for:
 - Store files on IPFS (Pinata)
 - Store hash on Ethereum blockchain
 - MongoDB history tracking
-- Dashboard with stats
+- Dashboard with live stats
 - CSV export
-- File validation + 5MB limit
+- File validation (5MB limit)
+- Responsive UI (mobile friendly)
 - Light/Dark theme
 
 ## 🔍 Public Verification
@@ -51,7 +64,7 @@ Perfect for:
 2. Generate SHA-256 hash
 3. Upload file → IPFS (Pinata)
 4. Receive CID
-5. Save CID → MongoDB
+5. Save metadata → MongoDB
 6. Store hash → Blockchain
 
 ## Verification Flow
@@ -68,13 +81,11 @@ Perfect for:
 
 User  
 ↓  
-React Frontend  
+React Frontend (Vercel)  
 ↓  
-Spring Boot Backend  
+Spring Boot Backend (Render)  
 ↓  
-MongoDB (metadata/history)  
-IPFS (file storage)  
-Ethereum Blockchain (hash storage)
+MongoDB + IPFS + Ethereum Blockchain
 
 ---
 
@@ -84,7 +95,7 @@ Ethereum Blockchain (hash storage)
 
 ![Login](./screenshots/login.png)
 
-## 🔍 Document Verification
+## 🔍 Verification Page
 
 ![Verify](./screenshots/verify.png)
 
@@ -94,14 +105,11 @@ Ethereum Blockchain (hash storage)
 
 ---
 
-# 🌐 IPFS File Access
+# 🌐 IPFS Access
 
-After upload you receive:
+After upload you receive a CID.
 
-CID
-
-Open in browser:
-
+Open directly:
 https://gateway.pinata.cloud/ipfs/<CID>
 
 Files remain accessible even if backend is offline.
@@ -117,15 +125,16 @@ Files remain accessible even if backend is offline.
 - React Router
 - Google OAuth
 - React Hot Toast
+- Custom Glass UI CSS
 
 ## Backend
 
 - Spring Boot
 - MongoDB
-- Web3j
 - JWT Security
-- Pinata IPFS integration
-- Swagger (OpenAPI)
+- Web3j
+- Pinata IPFS
+- Swagger / OpenAPI
 
 ## Blockchain
 
@@ -133,14 +142,21 @@ Files remain accessible even if backend is offline.
 - Solidity Smart Contract
 - SHA-256 hashing
 
+## DevOps
+
+- Docker
+- Vercel
+- Render
+- GitHub
+
 ---
 
 # 📡 API Endpoints
 
 POST /upload → Register  
 POST /verify → Verify  
-GET /docs → List  
-GET /stats → Stats
+GET /docs → List documents  
+GET /stats → System stats
 
 Swagger:
 http://localhost:8080/swagger-ui.html
@@ -162,10 +178,8 @@ Create `.env`:
 
 BLOCKCHAIN_PRIVATE_KEY=xxx  
 BLOCKCHAIN_CONTRACT=xxx  
-BLOCKCHAIN_RPC=xxx
-
-PINATA_JWT=xxx
-
+BLOCKCHAIN_RPC=xxx  
+PINATA_JWT=xxx  
 MONGO_URI=xxx  
 JWT_SECRET=xxx  
 GOOGLE_CLIENT_ID=xxx
@@ -175,6 +189,9 @@ Run:
 cd backend  
 ./gradlew bootRun
 
+Backend runs at:
+http://localhost:8080
+
 ---
 
 ## Frontend
@@ -183,18 +200,26 @@ cd frontend
 npm install  
 npm run dev
 
-Open:
+Frontend runs at:
 http://localhost:5173
+
+---
+
+# 🐳 Docker (Optional)
+
+docker build -t verify-backend .  
+docker run -p 8080:8080 --env-file backend/.env verify-backend
 
 ---
 
 # 🔒 Security
 
 - JWT protected APIs
-- Private keys hidden in .env
-- File validation
+- Private keys stored in environment variables
+- File size validation
 - Immutable IPFS storage
 - Blockchain integrity guarantee
+- Admin-only upload endpoints
 
 ---
 
@@ -202,9 +227,10 @@ http://localhost:5173
 
 - Self-hosted IPFS node
 - File encryption
+- Multi-admin roles
+- Smart contract events
 - Drag & drop upload
-- Docker deployment
-- CI/CD
+- CI/CD pipeline
 
 ---
 
@@ -216,4 +242,4 @@ LinkedIn: https://linkedin.com/in/rkrohankumar
 
 ---
 
-Built with ❤️ using Spring Boot + IPFS + Blockchain
+⭐ If you like this project, give it a star!
