@@ -16,7 +16,7 @@ import java.util.Set;
 @CrossOrigin(origins = {
         "http://localhost:5173",
         "https://blockchain-document-verification-1.onrender.com",
-        "https://block-chain-document-verification-cyan.vercel.app/"
+        "https://block-chain-document-verification-cyan.vercel.app"
 })
 
 public class AuthController {
