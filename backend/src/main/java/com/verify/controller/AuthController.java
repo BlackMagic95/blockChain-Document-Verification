@@ -13,11 +13,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "https://blockchain-document-verification-1.onrender.com",
-        "https://block-chain-document-verification-cyan.vercel.app"
-})
+@CrossOrigin("*")
 
 public class AuthController {
 
