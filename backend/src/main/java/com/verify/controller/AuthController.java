@@ -15,7 +15,7 @@ import java.util.Set;
 @RequestMapping("/auth")
 @CrossOrigin(origins = {
         "http://localhost:5173",
-        "https://your-app.vercel.app"
+        "https://blockchain-document-verification-1.onrender.com"
 })
 
 public class AuthController {

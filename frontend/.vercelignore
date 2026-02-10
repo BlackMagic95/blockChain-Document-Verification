@@ -1,0 +1,7 @@
+backend
+node_modules
+.git
+.gradle
+build
+Dockerfile
+docker-compose.yml
