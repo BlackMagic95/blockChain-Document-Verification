@@ -6,6 +6,8 @@ backend/out/
 # ================= FRONTEND =================
 frontend/node_modules/
 frontend/dist/
+frontend/.vite/
+frontend/.cache/
 
 # ================= BLOCKCHAIN =================
 artifacts/
@@ -17,33 +19,8 @@ Thumbs.db
 .vscode/
 .idea/
 
-# ================= ENV =================
-.env
-node_modules/
-# Spring config
-backend/src/main/resources/application.properties
-
-
-# ================= DOCKER =================
-docker-compose.override.yml
-*.log
-
-# ================= BUILD FILES =================
-*.class
-*.jar
-*.war
-*.iml
-*.cache
-
-# Gradle
-.gradle/
-build/
-
-# ================= FRONTEND EXTRA =================
-frontend/.vite/
-frontend/.cache/
-
 # ================= ENV / SECRETS =================
+.env
 .env.*
 *.env
 *.pem
@@ -52,18 +29,30 @@ frontend/.cache/
 secrets/
 credentials/
 
-# ================= SPRING =================
-application-*.properties
-application-*.yml
+# ================= DOCKER =================
+docker-compose.override.yml
+*.log
+
+# ================= BUILD FILES =================
+*.class
+*.war
+*.iml
+*.cache
+
+# Gradle
+.gradle/
+build/
 
 # ================= TEST / TEMP =================
 tmp/
 temp/
 *.tmp
 
-# ================= MAC / WINDOWS JUNK =================
+# ================= MAC / WINDOWS =================
 *.swp
 *.swo
+
+# Keep gradle wrapper
 !backend/gradlew
 !backend/gradlew.bat
 !backend/gradle/
