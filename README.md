@@ -4,27 +4,29 @@
 ![Java](https://img.shields.io/badge/Java-17-orange)
 ![Spring Boot](https://img.shields.io/badge/SpringBoot-3.x-brightgreen)
 ![React](https://img.shields.io/badge/React-18-blue)
-![Blockchain](https://img.shields.io/badge/Blockchain-Ethereum-purple)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
+![Ethereum](https://img.shields.io/badge/Blockchain-Ethereum-purple)
 ![IPFS](https://img.shields.io/badge/Storage-IPFS-black)
 ![Docker](https://img.shields.io/badge/Deploy-Docker-blue)
 ![Status](https://img.shields.io/badge/Build-Stable-success)
 
-A secure, tamper-proof **Web3 Document Verification Platform** using:
+A secure, tamper-proof **Web3 Document Verification Platform** built using:
 
 ⚡ React + Spring Boot + MongoDB + Ethereum + IPFS + AES Encryption
 
 ---
 
-## 🌟 What makes this project special?
+## 🌟 Overview
 
-This system provides:
+This system verifies document authenticity using **Blockchain integrity + Decentralized storage + Encryption**.
 
-✅ Blockchain integrity  
-✅ Decentralized storage (IPFS)  
-✅ AES encryption (privacy protection)  
-✅ JWT security  
-✅ Admin-only uploads  
-✅ Secure backend decryption downloads
+Instead of trusting a centralized server:
+
+- Files → encrypted → stored on IPFS
+- Hash → stored permanently on blockchain
+- Verification → trustless & tamper-proof
+
+Even if someone gets the CID, **they cannot read the file** because it is AES encrypted.
 
 ---
 
@@ -32,34 +34,28 @@ This system provides:
 
 ### Frontend (Vercel)
 
-Hosted on :contentReference[oaicite:0]{index=0}  
 https://block-chain-document-verification-phi.vercel.app
 
-### Backend (Render)
+### Backend API (Render)
 
-Hosted on :contentReference[oaicite:1]{index=1}  
 https://blockchain-document-verification.onrender.com/docs
 
-> Free tier may take ~30 seconds to wake
+> Backend may take ~30 seconds to wake (free tier)
 
 ---
 
 # 🏗 System Architecture
 
-::contentReference[oaicite:2]{index=2}
-
-### Flow
-
 ```
 User
    ↓
-React Frontend
+React Frontend (Vercel)
    ↓
-Spring Boot Backend
+Spring Boot Backend (Render)
    ↓
 MongoDB (metadata)
 IPFS (encrypted file)
-Ethereum (hash)
+Ethereum Blockchain (hash)
 ```
 
 ---
@@ -73,8 +69,9 @@ Ethereum (hash)
 - Upload & register documents
 - SHA-256 hashing
 - AES encryption before IPFS upload 🔐
-- Store files on IPFS (Pinata)
+- Store encrypted files on IPFS
 - Store hash on Ethereum blockchain
+- MongoDB history tracking
 - CSV export
 - Stats dashboard
 - Responsive UI
@@ -85,13 +82,14 @@ Ethereum (hash)
 
 - No login required
 - Upload document
+- Instant authenticity check
 - Blockchain validation
 - Tamper detection
 - Secure decrypted download
 
 ---
 
-# 🔐 Security (Major Highlight)
+# 🔐 Security Highlights
 
 ### Encryption Layer
 
@@ -105,36 +103,43 @@ Upload to IPFS
 CID (encrypted only)
 ```
 
-Even if someone knows CID:
+Even if CID is public:
 
-❌ cannot read file  
+❌ file cannot be opened  
 ✅ only backend decrypts
 
-👉 prevents data leaks
+Prevents:
+
+- data leaks
+- unauthorized access
+- direct IPFS viewing
 
 ---
 
 # 🧠 How It Works
 
-## Registration
+## Registration Flow
 
 1. Upload file
-2. Generate SHA-256
-3. Encrypt (AES)
-4. Upload encrypted → IPFS
+2. Generate SHA-256 hash
+3. Encrypt file using AES
+4. Upload encrypted file → IPFS
 5. Save metadata → MongoDB
 6. Store hash → Blockchain
 
-## Verification
+## Verification Flow
 
 1. Upload file
-2. Hash match
-3. Check blockchain
-4. If valid → secure backend download
+2. Generate hash
+3. Compare with MongoDB
+4. Validate on blockchain
+5. If valid → secure decrypted download
 
 ---
 
 # 🖼 Screenshots
+
+> Make sure these images exist inside `/screenshots`
 
 ## 🔐 Login Page
 
@@ -154,30 +159,27 @@ Even if someone knows CID:
 
 ## Frontend
 
-- :contentReference[oaicite:6]{index=6}
-- Vite
+- React (Vite)
 - Axios
 - React Router
-- Toast notifications
+- Google OAuth
+- React Hot Toast
 
 ## Backend
 
-- :contentReference[oaicite:7]{index=7}
-- :contentReference[oaicite:8]{index=8}
+- Spring Boot
+- MongoDB
 - JWT Security
 - Web3j
+- Pinata IPFS
 - AES Encryption
-- Swagger
+- Swagger / OpenAPI
 
 ## Blockchain
 
-- :contentReference[oaicite:9]{index=9} (Sepolia)
-- Solidity
-- SHA-256
-
-## Storage
-
-- :contentReference[oaicite:10]{index=10} (Pinata)
+- Ethereum (Sepolia Testnet)
+- Solidity Smart Contract
+- SHA-256 hashing
 
 ## DevOps
 
@@ -196,7 +198,7 @@ Even if someone knows CID:
 | POST   | /verify        | Verify document           |
 | GET    | /download/{id} | Secure decrypted download |
 | GET    | /docs          | List documents            |
-| GET    | /stats         | Stats                     |
+| GET    | /stats         | System stats              |
 
 Swagger:
 
@@ -217,9 +219,9 @@ cd blockChain-Document-Verification
 
 ---
 
-## Backend
+## Backend Setup
 
-Create `.env`
+Create `.env`:
 
 ```env
 BLOCKCHAIN_PRIVATE_KEY=xxx
@@ -238,9 +240,11 @@ cd backend
 ./gradlew bootRun
 ```
 
+Backend → http://localhost:8080
+
 ---
 
-## Frontend
+## Frontend Setup
 
 ```bash
 cd frontend
@@ -248,12 +252,21 @@ npm install
 npm run dev
 ```
 
+Frontend → http://localhost:5173
+
 ---
 
 # 🐳 Docker
 
+Build:
+
 ```bash
 docker build -t verify-backend .
+```
+
+Run:
+
+```bash
 docker run -p 8080:8080 --env-file .env verify-backend
 ```
 
@@ -270,14 +283,14 @@ docker run -p 8080:8080 --env-file .env verify-backend
 
 ---
 
-# 🔮 Future Scope
+# 🔮 Future Improvements
 
 - Multi-admin roles (RBAC)
 - Bulk verification
 - Merkle tree batching
 - Smart contract events
-- Self-hosted IPFS
-- CI/CD
+- Self-hosted IPFS node
+- CI/CD pipeline
 
 ---
 
@@ -288,4 +301,4 @@ GitHub: https://github.com/BlackMagic95
 
 ---
 
-⭐ If this project helped you, please star the repo!
+⭐ If this project helped you, please give it a star!
