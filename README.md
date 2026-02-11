@@ -1,31 +1,66 @@
 # 🔐 Blockchain Document Verification System
 
-A secure, tamper-proof **Web3 Document Verification Platform** built using:
+![License](https://img.shields.io/badge/license-MIT-green)
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/SpringBoot-3.x-brightgreen)
+![React](https://img.shields.io/badge/React-18-blue)
+![Blockchain](https://img.shields.io/badge/Blockchain-Ethereum-purple)
+![IPFS](https://img.shields.io/badge/Storage-IPFS-black)
+![Docker](https://img.shields.io/badge/Deploy-Docker-blue)
+![Status](https://img.shields.io/badge/Build-Stable-success)
 
-⚡ React + Spring Boot + MongoDB + Ethereum + IPFS
+A secure, tamper-proof **Web3 Document Verification Platform** using:
 
-Documents are stored on **decentralized IPFS**, while their **SHA-256 hash is permanently stored on the blockchain** for trustless verification.
+⚡ React + Spring Boot + MongoDB + Ethereum + IPFS + AES Encryption
 
-Once registered, files **cannot be altered or forged**.
+---
 
-Perfect for:
-• Certificates  
-• Academic records  
-• Legal documents  
-• Enterprises  
-• Research projects
+## 🌟 What makes this project special?
+
+This system provides:
+
+✅ Blockchain integrity  
+✅ Decentralized storage (IPFS)  
+✅ AES encryption (privacy protection)  
+✅ JWT security  
+✅ Admin-only uploads  
+✅ Secure backend decryption downloads
 
 ---
 
 # 🌐 Live Demo
 
-Frontend (Vercel)  
+### Frontend (Vercel)
+
+Hosted on :contentReference[oaicite:0]{index=0}  
 https://block-chain-document-verification-phi.vercel.app
 
-Backend API (Render)  
+### Backend (Render)
+
+Hosted on :contentReference[oaicite:1]{index=1}  
 https://blockchain-document-verification.onrender.com/docs
 
-> Note: Backend may take ~30 seconds to wake up (free tier sleep)
+> Free tier may take ~30 seconds to wake
+
+---
+
+# 🏗 System Architecture
+
+::contentReference[oaicite:2]{index=2}
+
+### Flow
+
+```
+User
+   ↓
+React Frontend
+   ↓
+Spring Boot Backend
+   ↓
+MongoDB (metadata)
+IPFS (encrypted file)
+Ethereum (hash)
+```
 
 ---
 
@@ -37,55 +72,65 @@ https://blockchain-document-verification.onrender.com/docs
 - JWT authentication
 - Upload & register documents
 - SHA-256 hashing
+- AES encryption before IPFS upload 🔐
 - Store files on IPFS (Pinata)
 - Store hash on Ethereum blockchain
-- MongoDB history tracking
-- Dashboard with live stats
 - CSV export
-- File validation (5MB limit)
-- Responsive UI (mobile friendly)
-- Light/Dark theme
+- Stats dashboard
+- Responsive UI
+
+---
 
 ## 🔍 Public Verification
 
 - No login required
 - Upload document
-- Instant authenticity check
 - Blockchain validation
 - Tamper detection
+- Secure decrypted download
+
+---
+
+# 🔐 Security (Major Highlight)
+
+### Encryption Layer
+
+```
+Original File
+     ↓
+AES Encrypt
+     ↓
+Upload to IPFS
+     ↓
+CID (encrypted only)
+```
+
+Even if someone knows CID:
+
+❌ cannot read file  
+✅ only backend decrypts
+
+👉 prevents data leaks
 
 ---
 
 # 🧠 How It Works
 
-## Registration Flow
+## Registration
 
 1. Upload file
-2. Generate SHA-256 hash
-3. Upload file → IPFS (Pinata)
-4. Receive CID
+2. Generate SHA-256
+3. Encrypt (AES)
+4. Upload encrypted → IPFS
 5. Save metadata → MongoDB
 6. Store hash → Blockchain
 
-## Verification Flow
+## Verification
 
 1. Upload file
-2. Generate hash
-3. Compare with DB
-4. Validate with blockchain
-5. Show VERIFIED / NOT REGISTERED / TAMPERED
-
----
-
-# 🏗 Architecture
-
-User  
-↓  
-React Frontend (Vercel)  
-↓  
-Spring Boot Backend (Render)  
-↓  
-MongoDB + IPFS + Ethereum Blockchain
+2. Hash match
+3. Check blockchain
+4. If valid → secure backend download
 
 ---
 
@@ -105,141 +150,142 @@ MongoDB + IPFS + Ethereum Blockchain
 
 ---
 
-# 🌐 IPFS Access
-
-After upload you receive a CID.
-
-Open directly:
-https://gateway.pinata.cloud/ipfs/<CID>
-
-Files remain accessible even if backend is offline.
-
----
-
 # 🛠 Tech Stack
 
 ## Frontend
 
-- React (Vite)
+- :contentReference[oaicite:6]{index=6}
+- Vite
 - Axios
 - React Router
-- Google OAuth
-- React Hot Toast
-- Custom Glass UI CSS
+- Toast notifications
 
 ## Backend
 
-- Spring Boot
-- MongoDB
+- :contentReference[oaicite:7]{index=7}
+- :contentReference[oaicite:8]{index=8}
 - JWT Security
 - Web3j
-- Pinata IPFS
-- Swagger / OpenAPI
+- AES Encryption
+- Swagger
 
 ## Blockchain
 
-- Ethereum (Sepolia)
-- Solidity Smart Contract
-- SHA-256 hashing
+- :contentReference[oaicite:9]{index=9} (Sepolia)
+- Solidity
+- SHA-256
+
+## Storage
+
+- :contentReference[oaicite:10]{index=10} (Pinata)
 
 ## DevOps
 
 - Docker
-- Vercel
 - Render
+- Vercel
 - GitHub
 
 ---
 
 # 📡 API Endpoints
 
-POST /upload → Register  
-POST /verify → Verify  
-GET /docs → List documents  
-GET /stats → System stats
+| Method | Endpoint       | Description               |
+| ------ | -------------- | ------------------------- |
+| POST   | /upload        | Register document (Admin) |
+| POST   | /verify        | Verify document           |
+| GET    | /download/{id} | Secure decrypted download |
+| GET    | /docs          | List documents            |
+| GET    | /stats         | Stats                     |
 
 Swagger:
+
+```
 http://localhost:8080/swagger-ui.html
+```
 
 ---
 
-# ⚙️ Installation Guide
+# ⚙️ Local Setup
 
 ## Clone
 
-git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git  
+```bash
+git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git
 cd blockChain-Document-Verification
+```
 
 ---
 
 ## Backend
 
-Create `.env`:
+Create `.env`
 
-BLOCKCHAIN_PRIVATE_KEY=xxx  
-BLOCKCHAIN_CONTRACT=xxx  
-BLOCKCHAIN_RPC=xxx  
-PINATA_JWT=xxx  
-MONGO_URI=xxx  
-JWT_SECRET=xxx  
-GOOGLE_CLIENT_ID=xxx
+```env
+BLOCKCHAIN_PRIVATE_KEY=xxx
+BLOCKCHAIN_CONTRACT=xxx
+BLOCKCHAIN_RPC=xxx
+PINATA_JWT=xxx
+MONGO_URI=xxx
+JWT_SECRET=xxx
+AES_SECRET=your_32_char_secret_key
+```
 
 Run:
 
-cd backend  
+```bash
+cd backend
 ./gradlew bootRun
-
-Backend runs at:
-http://localhost:8080
+```
 
 ---
 
 ## Frontend
 
-cd frontend  
-npm install  
+```bash
+cd frontend
+npm install
 npm run dev
-
-Frontend runs at:
-http://localhost:5173
+```
 
 ---
 
-# 🐳 Docker (Optional)
+# 🐳 Docker
 
-docker build -t verify-backend .  
-docker run -p 8080:8080 --env-file backend/.env verify-backend
+```bash
+docker build -t verify-backend .
+docker run -p 8080:8080 --env-file .env verify-backend
+```
 
 ---
 
-# 🔒 Security
+# 🔒 Security Model
 
 - JWT protected APIs
-- Private keys stored in environment variables
-- File size validation
-- Immutable IPFS storage
-- Blockchain integrity guarantee
-- Admin-only upload endpoints
+- Admin-only uploads
+- AES encrypted IPFS files
+- Blockchain immutability
+- Environment-based secrets
+- Secure download gateway
 
 ---
 
-# 🔮 Future Improvements
+# 🔮 Future Scope
 
-- Self-hosted IPFS node
-- File encryption
-- Multi-admin roles
+- Multi-admin roles (RBAC)
+- Bulk verification
+- Merkle tree batching
 - Smart contract events
-- Drag & drop upload
-- CI/CD pipeline
+- Self-hosted IPFS
+- CI/CD
 
 ---
 
 # 👨‍💻 Author
 
 Rohan Kumar  
-GitHub: https://github.com/BlackMagic95  
-LinkedIn: https://linkedin.com/in/rkrohankumar
+GitHub: https://github.com/BlackMagic95
 
 ---
 
-⭐ If you like this project, give it a star!
+⭐ If this project helped you, please star the repo!
