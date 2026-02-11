@@ -227,3 +227,46 @@
     font-size: 13px;
   }
 }
+/* ===============================
+   PLUS UPLOAD BUTTON (FIX)
+=============================== */
+/* ===============================
+   PLUS UPLOAD BUTTON (PERFECT CENTER + RESPONSIVE)
+=============================== */
+
+.upload-plus {
+  display: flex;                 /* center magic */
+  align-items: center;
+  justify-content: center;
+
+  min-width: 56px;
+  min-height: 56px;
+
+  padding: 0;                   /* remove weird spacing */
+  line-height: 1;               /* prevent text shift */
+
+  font-size: 28px;
+  font-weight: 700;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+
+  color: #e5e7eb;
+
+  cursor: pointer;
+
+  user-select: none;
+
+  transition: all 0.25s ease;
+}
+
+/* perfect hover */
+.upload-plus:hover {
+  background: #38bdf8;
+  border-color: #38bdf8;
+  color: white;
+  transform: scale(1.06);
+  box-shadow: 0 10px 22px rgba(56, 189, 248, 0.35);
+}

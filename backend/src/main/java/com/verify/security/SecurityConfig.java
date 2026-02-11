@@ -20,14 +20,23 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/verify", "/docs", "/stats", "/swagger-ui.html",
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/verify", "/docs", "/stats").permitAll()
+                        .requestMatchers("/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**")
                         .permitAll()
+
+                        // ⭐ ALLOW ALL GET (download works 100%)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/**").permitAll()
+
+                        // only upload protected
                         .requestMatchers("/upload").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
+
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -15,15 +15,22 @@ public class PinataService {
 
         private final OkHttpClient client = new OkHttpClient();
 
+        /* ================= NORMAL UPLOAD ================= */
+
         public String upload(MultipartFile file) throws Exception {
 
-                RequestBody fileBody = RequestBody.create(file.getBytes());
+                return uploadBytes(file.getBytes());
+        }
+
+        /* ================= ENCRYPTED UPLOAD ================= */
+
+        public String uploadBytes(byte[] data) throws Exception {
+
+                RequestBody fileBody = RequestBody.create(data);
 
                 MultipartBody body = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
-                                .addFormDataPart("file",
-                                                file.getOriginalFilename(),
-                                                fileBody)
+                                .addFormDataPart("file", "encrypted.bin", fileBody)
                                 .build();
 
                 Request request = new Request.Builder()

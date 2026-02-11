@@ -180,13 +180,37 @@
    RESULT
 ========================= */
 
+/* ===== RESULT BOX ===== */
 .result {
-  margin-top: 20px;
-  padding: 10px;
+  margin-top: 16px;
+  padding: 12px 16px;
   border-radius: 10px;
-  font-size: 14px;
   font-weight: 600;
+  text-align: center;
+  border: 2px solid transparent;
 }
+
+/* success */
+.result.success {
+  background: #e6f9ee;
+  color: #0f9d58;
+  border-color: #0f9d58;
+}
+
+/* error */
+.result.error {
+  background: #ffecec;
+  color: #d93025;
+  border-color: #d93025;
+}
+
+/* info */
+.result.info {
+  background: #e8f0fe;
+  color: #1a73e8;
+  border-color: #1a73e8;
+}
+
 
 
 /* =========================

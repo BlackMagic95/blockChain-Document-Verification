@@ -1,9 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: "https://blockchain-document-verification.onrender.com"
-
-,
+ baseURL:  "https://blockchain-document-verification.onrender.com",
   withCredentials: false
 });
 

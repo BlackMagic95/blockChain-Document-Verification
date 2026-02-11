@@ -17,6 +17,8 @@ public class Document {
     private String hash;
 
     private String fileUrl;
+    // 🔐 NEW → encryption info
+    private String encryptionType = "NONE"; // NONE or AES
 
     // ✅ Mongo-safe dates
     private Instant createdAt;
@@ -82,4 +84,13 @@ public class Document {
     public void setVerificationCount(long verificationCount) {
         this.verificationCount = verificationCount;
     }
+
+    public String getEncryptionType() {
+        return encryptionType == null ? "NONE" : encryptionType;
+    }
+
+    public void setEncryptionType(String encryptionType) {
+        this.encryptionType = encryptionType;
+    }
+
 }

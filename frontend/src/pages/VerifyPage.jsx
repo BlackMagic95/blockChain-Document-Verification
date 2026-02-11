@@ -13,10 +13,11 @@ export default function VerifyPage() {
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ⭐ NEW
+  // ⭐ download link from backend (/download/id)
   const [downloadUrl, setDownloadUrl] = useState("");
 
   const fileRef = useRef();
+  const navigate = useNavigate();
 
 
   /* ================= IST FORMATTER ================= */
@@ -36,7 +37,6 @@ export default function VerifyPage() {
     });
   };
 
-const navigate = useNavigate();
 
   /* ================= VERIFY ================= */
   const handleVerify = async () => {
@@ -50,18 +50,17 @@ const navigate = useNavigate();
     try {
       setLoading(true);
       toast.loading("Verifying document...");
-      setDownloadUrl(""); // reset previous link
+      setDownloadUrl("");
 
       const form = new FormData();
       form.append("file", file);
 
       const res = await axios.post(`${API}/verify`, form);
+
       const status = res.data.status;
 
       toast.dismiss();
 
-
-      /* ===== HYBRID STATUS HANDLING ===== */
 
       if (status === "VERIFIED") {
 
@@ -72,12 +71,12 @@ const navigate = useNavigate();
         setMsg("Mongo + Blockchain verified");
         setType("success");
 
-        // ⭐ SET DOWNLOAD LINK
+        // ⭐ store backend path (/download/id)
         setDownloadUrl(res.data.fileUrl);
       }
 
       else if (status === "TAMPERED_DB") {
-        toast.error("⚠ Database mismatch detected (tampered)");
+        toast.error("⚠ Database mismatch detected");
         setMsg("Database record corrupted");
         setType("error");
       }
@@ -106,8 +105,8 @@ const navigate = useNavigate();
       toast.error("Verification error ❌");
       setMsg("Verification error");
       setType("error");
-
-    } finally {
+    }
+    finally {
       setLoading(false);
     }
   };
@@ -118,13 +117,13 @@ const navigate = useNavigate();
     <div className="verify-page">
       <div className="verify-container">
 
-  {/* BACK BUTTON */}
-  <button
-    className="back-btn"
-    onClick={() => navigate("/")}
-  >
-    ← Back
-  </button>
+        {/* BACK BUTTON */}
+        <button
+          className="back-btn"
+          onClick={() => navigate("/")}
+        >
+          ← Back
+        </button>
 
 
         <div className="verify-header">
@@ -134,6 +133,7 @@ const navigate = useNavigate();
 
         <div className="card">
 
+          {/* Upload tile */}
           <div
             className="upload-tile"
             onClick={() => fileRef.current.click()}
@@ -150,6 +150,7 @@ const navigate = useNavigate();
           </div>
 
 
+          {/* Verify button */}
           <button
             className="primary-btn"
             onClick={handleVerify}
@@ -159,12 +160,13 @@ const navigate = useNavigate();
           </button>
 
 
-          {/* ⭐ DOWNLOAD BUTTON */}
+          {/* ================= DOWNLOAD BUTTON ================= */}
           {downloadUrl && (
             <a
-              href={downloadUrl}
+              href={`${API}${downloadUrl}`}   // ⭐⭐⭐ FIXED HERE
               target="_blank"
               rel="noreferrer"
+              download
               className="download-btn"
             >
               ⬇ Download Verified File
