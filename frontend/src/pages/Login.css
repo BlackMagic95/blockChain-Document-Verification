@@ -1,246 +1,661 @@
-/* ================= GLOBAL SAFETY ================= */
+/* ================= GOOGLE FONTS ================= */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+/* ================= CSS VARIABLES ================= */
+:root {
+  --primary: #00ff88;
+  --primary-dim: #00cc6a;
+  --secondary: #0a84ff;
+  --accent: #ff2d55;
+  --bg-dark: #0a0e14;
+  --bg-surface: #151922;
+  --bg-elevated: #1f2937;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --success: #10b981;
+  --error: #ef4444;
+  --glow-primary: rgba(0, 255, 136, 0.4);
+  --glow-secondary: rgba(10, 132, 255, 0.4);
+}
+
+/* ================= BASE STYLES ================= */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-
-/* ================= THEME COLORS ================= */
-
-.dark {
-  --card: rgba(15, 23, 42, 0.92);
-  --text: #ffffff;
+body {
+  font-family: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  background: var(--bg-dark);
 }
 
-.light {
-  --card: rgba(255, 255, 255, 0.95);
-  --text: #0f172a;
-}
-
-
-/* =================================================
-   BACKGROUND
-================================================= */
-
+/* ================= ANIMATED BACKGROUND ================= */
 .login-container {
-  min-height: 100vh;        /* ⭐ changed from height */
-  padding: 20px;           /* ⭐ mobile spacing */
-
+  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-
-  font-family: "Segoe UI", sans-serif;
-
-  background: linear-gradient(135deg, #141e30, #243b55);
-
+  justify-content: center;
+  padding: 1.5rem;
   position: relative;
   overflow: hidden;
+  background: radial-gradient(ellipse at top, #0f1419, #0a0e14),
+              radial-gradient(ellipse at bottom, #1a1f2e, #0a0e14);
 }
 
-
-/* glow blobs */
-.login-container::before,
-.login-container::after {
-  content: "";
+/* Animated hexagonal grid pattern */
+.login-container::before {
+  content: '';
   position: absolute;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.35;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.03) 2px, rgba(0, 255, 136, 0.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.03) 2px, rgba(0, 255, 136, 0.03) 4px),
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(10, 132, 255, 0.02) 2px, rgba(10, 132, 255, 0.02) 4px);
+  background-size: 60px 60px, 60px 60px, 84px 84px;
+  animation: gridFlow 30s linear infinite;
   z-index: 0;
 }
 
-.login-container::before {
-  background: #4fc3f7;
-  top: -120px;
-  left: -120px;
+@keyframes gridFlow {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(60px, 60px) rotate(0.5deg);
+  }
 }
 
+/* Animated gradient orbs - more dramatic */
 .login-container::after {
-  background: #7b61ff;
-  bottom: -120px;
-  right: -120px;
-}
-
-
-/* =================================================
-   THEME TOGGLE
-================================================= */
-
-.theme-toggle {
+  content: '';
   position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 3;
-
-  padding: 8px 14px;
-  border-radius: 10px;
-
-  border: none;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-
-  cursor: pointer;
-  backdrop-filter: blur(10px);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, var(--glow-primary) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse-orb 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
+@keyframes pulse-orb {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
 
-/* =================================================
-   LOGIN CARD
-================================================= */
+/* Additional floating orbs */
+.login-container .orb-decoration {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
 
+.login-container .orb-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--glow-secondary) 0%, transparent 70%);
+  top: -200px;
+  right: -100px;
+  animation: float-orb-1 15s ease-in-out infinite;
+}
+
+.login-container .orb-2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(255, 45, 85, 0.3) 0%, transparent 70%);
+  bottom: -150px;
+  left: -100px;
+  animation: float-orb-2 20s ease-in-out infinite;
+}
+
+@keyframes float-orb-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(50px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-30px, 30px) scale(0.9);
+  }
+}
+
+@keyframes float-orb-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate(-40px, 40px) scale(1.15) rotate(180deg);
+  }
+}
+
+/* ================= LOGIN CARD ================= */
 .login-card {
-  z-index: 2;
-
-  width: 95%;           /* ⭐ responsive */
-  max-width: 430px;
-
-  padding: 60px;
-
-  border-radius: 26px;
-
-  background: rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(20px);
-
-  border: 1.8px solid rgba(255, 255, 255, 0.25);
-
-  text-align: center;
-  color: var(--text);
-
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
-
-  transition: 0.25s ease;
+  background: linear-gradient(135deg, rgba(21, 25, 34, 0.9) 0%, rgba(15, 20, 25, 0.95) 100%);
+  backdrop-filter: blur(40px) saturate(180%);
+  border: 2px solid rgba(0, 255, 136, 0.15);
+  border-radius: 28px;
+  padding: 2.5rem 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(0, 255, 136, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 10;
+  animation: card-entrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-bottom: 1.5rem;
 }
 
-.login-card:hover {
-  transform: translateY(-6px);
+@keyframes card-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
+/* Animated border glow */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    var(--primary),
+    var(--secondary),
+    var(--accent),
+    var(--primary)
+  );
+  background-size: 300% 300%;
+  border-radius: 32px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: gradient-rotate 8s ease infinite;
+}
 
-/* =================================================
-   TEXT
-================================================= */
+@keyframes gradient-rotate {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
 
+.login-card:hover::before {
+  opacity: 0.6;
+}
+
+/* Removed shimmer effect to prevent flicker */
+
+/* ================= TITLE ================= */
 .title {
-  font-size: 34px;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: title-glow 4s ease infinite;
+  letter-spacing: -1px;
+  text-shadow: 0 0 40px var(--glow-primary);
+  position: relative;
 }
 
-.subtitle {
-  color: #d6d6d6;
-  margin-bottom: 25px;
-  font-size: 14px;
+@keyframes title-glow {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.2);
+  }
 }
 
-.error-text {
-  color: #ff6b6b;
+/* Decorative element under title */
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  animation: line-expand 2s ease-in-out infinite;
 }
 
+@keyframes line-expand {
+  0%, 100% {
+    width: 60px;
+    opacity: 0.5;
+  }
+  50% {
+    width: 100px;
+    opacity: 1;
+  }
+}
 
-/* =================================================
-   STATUS BADGE
-================================================= */
-
+/* ================= STATUS BADGE ================= */
 .status-badge {
-  margin: 12px 0 20px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #22c55e;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  color: var(--success);
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 1rem auto 1rem;
+  display: block;
+  width: fit-content;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  animation: badge-pulse 3s ease-in-out infinite;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+  }
+}
 
-/* =================================================
-   VERIFY LINK
-================================================= */
+/* Animated dot before badge text */
+.status-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--success);
+  animation: dot-blink 2s ease-in-out infinite;
+}
 
+@keyframes dot-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ================= SUBTITLE ================= */
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* ================= LOADER ================= */
+.loader {
+  width: 56px;
+  height: 56px;
+  border: 5px solid rgba(0, 255, 136, 0.1);
+  border-top-color: var(--primary);
+  border-right-color: var(--secondary);
+  border-radius: 50%;
+  animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  margin: 2rem auto;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= GOOGLE LOGIN BUTTON STYLING ================= */
+.login-card > div[style*="display: flex"] {
+  margin: 1.5rem 0;
+}
+
+/* ================= ERROR TEXT ================= */
+.error-text {
+  color: var(--error);
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+  font-weight: 500;
+  animation: error-shake 0.5s ease;
+}
+
+@keyframes error-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+/* ================= VERIFY LINK ================= */
 .verify-link {
-  margin-top: 20px;
-  display: inline-block;
-
-  padding: 10px 18px;
-
-  background: linear-gradient(135deg, #4fc3f7, #7b61ff);
-
-  border-radius: 10px;
-
-  color: white;
-  font-weight: 600;
-
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: 0.25s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08) 0%, rgba(10, 132, 255, 0.08) 100%);
+  border: 1.5px solid rgba(0, 255, 136, 0.2);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
 }
+
+/* Removed shimmer effect */
 
 .verify-link:hover {
-  transform: translateY(-3px);
+  color: var(--primary);
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(10, 132, 255, 0.15) 100%);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 255, 136, 0.3);
 }
 
+.verify-link:active {
+  transform: translateY(0);
+}
 
-/* =================================================
-   STATS GRID
-================================================= */
-
+/* ================= STATS GRID ================= */
 .stats-grid {
-  z-index: 2;
-
-  margin-top: 50px;
-
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-
-  width: 95%;            /* ⭐ mobile safe */
-  max-width: 900px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 1000px;
+  z-index: 10;
+  position: relative;
 }
 
+/* Stagger animation for stats cards */
+.stats-grid .stat-card:nth-child(1) {
+  animation: stat-entrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+}
 
-/* =================================================
-   STAT CARDS
-================================================= */
+.stats-grid .stat-card:nth-child(2) {
+  animation: stat-entrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
+}
 
+.stats-grid .stat-card:nth-child(3) {
+  animation: stat-entrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s backwards;
+}
+
+@keyframes stat-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================= STAT CARD ================= */
 .stat-card {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(18px);
-
-  padding: 40px;
+  background: linear-gradient(135deg, rgba(21, 25, 34, 0.8) 0%, rgba(15, 20, 25, 0.9) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
-
+  padding: 2rem 1.5rem;
   text-align: center;
-  color: white;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
 
-  transition: 0.25s;
+/* Gradient overlay on hover */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
 }
 
 .stat-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-12px) scale(1.03);
+  border-color: var(--primary);
 }
 
-.stat-card h2 {
-  font-size: 40px;
+.stat-card:hover::before {
+  opacity: 1;
 }
 
+/* Glow effects with distinct colors */
+.glow-blue {
+  box-shadow: 0 4px 20px rgba(10, 132, 255, 0.2);
+}
+
+.glow-blue:hover {
+  box-shadow: 
+    0 8px 40px rgba(10, 132, 255, 0.5),
+    0 0 60px rgba(10, 132, 255, 0.3),
+    inset 0 1px 0 rgba(10, 132, 255, 0.2);
+}
+
+.glow-green {
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+}
+
+.glow-green:hover {
+  box-shadow: 
+    0 8px 40px rgba(16, 185, 129, 0.5),
+    0 0 60px rgba(16, 185, 129, 0.3),
+    inset 0 1px 0 rgba(16, 185, 129, 0.2);
+}
+
+.glow-purple {
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
+}
+
+.glow-purple:hover {
+  box-shadow: 
+    0 8px 40px rgba(168, 85, 247, 0.5),
+    0 0 60px rgba(168, 85, 247, 0.3),
+    inset 0 1px 0 rgba(168, 85, 247, 0.2);
+}
+
+/* ================= STAT ICON ================= */
 .stat-icon {
-  font-size: 26px;
-  margin-bottom: 10px;
+  font-size: 2.75rem;
+  margin-bottom: 1rem;
+  animation: icon-float 3s ease-in-out infinite;
+  display: inline-block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
 }
 
+@keyframes icon-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
 
-/* =================================================
-   RESPONSIVE
-================================================= */
+.stat-card:hover .stat-icon {
+  animation: icon-bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
 
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    transform: translateY(-15px) scale(1.1);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg) scale(1.15);
+  }
+  75% {
+    transform: translateY(-12px) rotate(-5deg) scale(1.1);
+  }
+}
+
+/* ================= STAT VALUES ================= */
+.stat-card h2 {
+  font-family: 'Space Mono', monospace;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 20px rgba(0, 255, 136, 0.4);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.stat-card p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: 'Syne', sans-serif;
+}
+
+/* ================= DECORATIVE ELEMENTS ================= */
+/* Add floating particles effect */
+@keyframes particles {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
+/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
+  .login-card {
+    padding: 2.5rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 24px;
+  }
+
+  .title {
+    font-size: 2.25rem;
+  }
 
   .stats-grid {
-    grid-template-columns: 1fr;  /* ⭐ stack */
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .stat-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .stat-card h2 {
+    font-size: 2.5rem;
+  }
+
+  .stat-icon {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
   }
 
   .login-card {
-    padding: 40px 25px;
+    padding: 2rem 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .stat-card h2 {
+    font-size: 2.25rem;
+  }
+}
+
+/* ================= ACCESSIBILITY ================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

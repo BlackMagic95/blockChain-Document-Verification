@@ -9,7 +9,6 @@ const API = "https://blockchain-document-verification.onrender.com";
 export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [dark, setDark] = useState(true);
 
   const [stats, setStats] = useState({
     totalDocs: 0,
@@ -76,8 +75,10 @@ export default function Login() {
   };
 
   return (
-    <div className={`login-container ${dark ? "dark" : "light"}`}>
-
+    <div className="login-container">
+      {/* Decorative floating orbs */}
+      <div className="orb-decoration orb-1"></div>
+      <div className="orb-decoration orb-2"></div>
 
       {/* ================= LOGIN CARD ================= */}
       <div className="login-card">
@@ -85,27 +86,26 @@ export default function Login() {
         <h1 className="title">🔐 Admin Portal</h1>
 
         <div className="status-badge">
-          🟢 System Online
+          System Online
         </div>
 
         <p className="subtitle">
-          Secure blockchain document verification
+          Secure blockchain document verification system
         </p>
 
         {loading ? (
           <div className="loader"></div>
         ) : (
           <div style={{ display: "flex", justifyContent: "center" }}>
-  <GoogleLogin
-    onSuccess={onSuccess}
-    onError={() => toast.error("Google login failed")}
-    theme="outline"
-    size="large"
-    shape="pill"
-    width="300"
-  />
-</div>
-
+            <GoogleLogin
+              onSuccess={onSuccess}
+              onError={() => toast.error("Google login failed")}
+              theme="filled_black"
+              size="large"
+              shape="pill"
+              width="320"
+            />
+          </div>
         )}
 
         {error && <p className="error-text">{error}</p>}
@@ -123,19 +123,19 @@ export default function Login() {
 
         <div className="stat-card glow-blue">
           <div className="stat-icon">📄</div>
-          <h2>{display.totalDocs}</h2>
+          <h2>{display.totalDocs.toLocaleString()}</h2>
           <p>Registered Docs</p>
         </div>
 
         <div className="stat-card glow-green">
           <div className="stat-icon">✅</div>
-          <h2>{display.totalVerifications}</h2>
+          <h2>{display.totalVerifications.toLocaleString()}</h2>
           <p>Total Verifications</p>
         </div>
 
         <div className="stat-card glow-purple">
-          <div className="stat-icon">⛓</div>
-          <h2>{display.totalDocs}</h2>
+          <div className="stat-icon">⛓️</div>
+          <h2>{display.totalDocs.toLocaleString()}</h2>
           <p>Blockchain Hashes</p>
         </div>
 
