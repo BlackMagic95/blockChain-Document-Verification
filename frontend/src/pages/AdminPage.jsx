@@ -9,7 +9,7 @@ export default function AdminPage() {
   const [docs, setDocs] = useState([]);
   const [msg, setMsg] = useState("");
 
-  // ⭐ NEW
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -44,12 +44,12 @@ export default function AdminPage() {
     const form = new FormData();
     form.append("file", file);
 
-    // ⭐ create loading toast and keep its id
+    
     const toastId = toast.loading("Registering on blockchain ⛓️...");
 
     const res = await api.post("/upload", form);
 
-    // ⭐ remove ONLY loading toast
+    
     toast.dismiss(toastId);
 
     if (res.data.status === "DUPLICATE") {
