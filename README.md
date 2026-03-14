@@ -2,55 +2,69 @@
 
 # 🔐 Blockchain Document Verification System
 
-### Trustless • Tamper-Proof • Decentralized
+### Trustless · Tamper-Proof · Decentralized
 
-![Java](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot](https://img.shields.io/badge/SpringBoot-3.x-brightgreen)
-![React](https://img.shields.io/badge/React-18-blue)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
-![Ethereum](https://img.shields.io/badge/Ethereum-Sepolia-purple)
-![IPFS](https://img.shields.io/badge/IPFS-Decentralized-black)
+[![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=openjdk)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen?style=flat-square&logo=springboot)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://react.dev/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=flat-square&logo=mongodb)](https://www.mongodb.com/)
+[![Ethereum](https://img.shields.io/badge/Ethereum-Sepolia-purple?style=flat-square&logo=ethereum)](https://sepolia.etherscan.io/)
+[![IPFS](https://img.shields.io/badge/IPFS-Pinata-65C2CB?style=flat-square&logo=ipfs)](https://pinata.cloud/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-black?style=flat-square&logo=vercel)](https://your-app.vercel.app)
 
-A **secure Web3 document verification platform** that ensures authenticity of certificates and official documents using **blockchain immutability, decentralized storage, and cryptographic hashing**.
+**A secure Web3 document verification platform** that ensures authenticity of certificates and official documents using blockchain immutability, decentralized storage, and cryptographic hashing.
+
+[🚀 Live Demo](https://block-chain-document-verification-phi.vercel.app/) · [📖 API Docs (Swagger)](https://blockchain-document-verification.onrender.com/swagger-ui.html) · [📜 Smart Contract on Etherscan](https://sepolia.etherscan.io/address/0xB56D9F4309CAF0C20f52FBF3C14e0653A9Ed50AC)
 
 </div>
 
 ---
 
-# 📌 Problem
+## 📌 Problem
 
 Traditional document verification systems suffer from:
 
-• Centralized databases  
-• Easily forgeable certificates  
-• Manual verification processes  
-• High trust dependency  
-• Slow institutional validation
+- **Centralized databases** — single point of failure and trust
+- **Easily forgeable certificates** — no cryptographic proof of authenticity
+- **Manual verification processes** — slow, expensive, institution-dependent
+- **High trust dependency** — relies on goodwill of a central authority
+- **Slow institutional validation** — days or weeks for certificate checks
 
-Fake certificates are becoming increasingly common.
+Fake certificates are increasingly common and costly to detect at scale.
 
 ---
 
-# 💡 Solution
+## 💡 Solution
 
 This platform introduces **trustless document verification** by combining:
 
-| Technology     | Purpose                          |
-| -------------- | -------------------------------- |
-| Blockchain     | Immutable document hash registry |
-| IPFS           | Decentralized file storage       |
-| AES Encryption | Secure document protection       |
-| SHA-256        | Cryptographic fingerprint        |
-| MongoDB        | Metadata management              |
-| JWT Auth       | Secure access control            |
+| Technology  | Purpose                          |
+| ----------- | -------------------------------- |
+| Blockchain  | Immutable document hash registry |
+| IPFS        | Decentralized encrypted storage  |
+| AES-256     | Secure document encryption       |
+| SHA-256     | Cryptographic fingerprint        |
+| MongoDB     | Metadata & access management     |
+| JWT + OAuth | Secure session management        |
 
 This eliminates the need for a central authority to verify documents.
 
 ---
 
-# ⚙️ Core Workflow
+## 🌐 Live Demo
 
-## Document Registration Flow
+> **Frontend:** [https://your-app.vercel.app](https://block-chain-document-verification-phi.vercel.app/)
+> **Backend API:** [https://your-backend.onrender.com](https://blockchain-document-verification.onrender.com)
+> **Swagger UI:** [https://your-backend.onrender.com/swagger-ui.html](https://blockchain-document-verification.onrender.com)
+
+> ⚠️ The demo uses the **Ethereum Sepolia Testnet**. No real ETH is required.
+
+---
+
+## ⚙️ Core Workflow
+
+### Document Registration Flow
 
 ```
 Admin Uploads Document
@@ -59,18 +73,16 @@ SHA-256 Hash Generated
         ↓
 AES-256 Encryption
         ↓
-Encrypted File Uploaded to IPFS
+Encrypted File Uploaded to IPFS (via Pinata)
         ↓
-CID Stored in MongoDB
+IPFS CID Stored in MongoDB
         ↓
-Hash Registered on Ethereum Blockchain
+Hash Registered on Ethereum Sepolia (Smart Contract)
         ↓
-Document Permanently Verifiable
+Document Permanently Verifiable on Blockchain
 ```
 
----
-
-## Document Verification Flow
+### Document Verification Flow
 
 ```
 User Uploads Document
@@ -79,23 +91,25 @@ System Generates SHA-256 Hash
         ↓
 Check MongoDB Database
         ↓
-Verify Hash on Blockchain
+Verify Hash on Blockchain (Smart Contract Call)
         ↓
 Compare Hashes
         ↓
 Return Verification Result
 ```
 
-Possible results:
+**Possible results:**
 
-• VERIFIED  
-• TAMPERED_DB  
-• BLOCKCHAIN_ONLY  
-• NOT_REGISTERED
+| Status            | Meaning                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| `VERIFIED`        | Hash matches in both MongoDB and Blockchain ✅                 |
+| `TAMPERED_DB`     | Blockchain hash exists but DB record is modified or missing ⚠️ |
+| `BLOCKCHAIN_ONLY` | Hash exists only on blockchain, DB record not found 🔍         |
+| `NOT_REGISTERED`  | Document not found in either system ❌                         |
 
 ---
 
-# 🏗 System Architecture
+## 🏗 System Architecture
 
 ```
                 ┌───────────────┐
@@ -104,131 +118,40 @@ Possible results:
                         │
                         ▼
               ┌─────────────────┐
-              │  React Frontend │
+              │  React Frontend │  (Vite + TailwindCSS)
               └────────┬────────┘
-                       │ API
+                       │ REST API
                        ▼
              ┌───────────────────┐
-             │ Spring Boot Server│
+             │ Spring Boot Server│  (Java 17, JWT Auth)
              └───────┬───────────┘
                      │
         ┌────────────┼─────────────┐
         ▼            ▼             ▼
-   MongoDB        IPFS         Ethereum
-  (Metadata)   (Encrypted)   (Hash Registry)
+   MongoDB        IPFS           Ethereum
+  (Metadata)   (Pinata CDN)    (Sepolia Testnet)
+                Encrypted       Hash Registry
+                Documents       Smart Contract
 ```
 
 ---
 
-# 🔐 Security Architecture
+## 🔐 Security Architecture
 
-Security is implemented in **multiple layers**.
+Security is implemented in **multiple independent layers**:
 
-### Authentication
-
-Google OAuth + JWT
-
-### Encryption
-
-AES-256 encryption before file upload
-
-### Hashing
-
-SHA-256 cryptographic fingerprint
-
-### Blockchain Integrity
-
-Ethereum smart contract stores hashes
-
-### Decentralized Storage
-
-IPFS stores encrypted files
+| Layer                  | Implementation                                   |
+| ---------------------- | ------------------------------------------------ |
+| Authentication         | Google OAuth 2.0 + JWT tokens                    |
+| File Encryption        | AES-256 before upload to IPFS                    |
+| Document Fingerprint   | SHA-256 hash (unique per document)               |
+| Blockchain Integrity   | Ethereum smart contract — immutable hash storage |
+| Decentralized Storage  | IPFS via Pinata — no single point of failure     |
+| Multi-Tenant Isolation | collegeId-scoped MongoDB queries + JWT claims    |
 
 ---
 
-# 👨‍💼 Admin Portal
-
-Authorized institutions can register documents.
-
-Features:
-
-• Google OAuth login  
-• JWT session authentication  
-• Document upload system  
-• SHA-256 hashing  
-• AES encryption  
-• Blockchain registration  
-• CSV export  
-• Document management dashboard
-
----
-
-# 🛡 Super Admin Panel
-
-Super Admin controls access to the platform.
-
-Capabilities:
-
-• Approve college access requests  
-• Reject suspicious institutions  
-• Monitor platform activity  
-• Manage issuer accounts
-
----
-
-# 🏫 College Onboarding System
-
-Institutions must apply before gaining access.
-
-```
-College submits request
-        ↓
-Stored as PENDING
-        ↓
-Super Admin review
-        ↓
-APPROVED or REJECTED
-        ↓
-Approved college receives access
-```
-
-This prevents unauthorized organizations from issuing documents.
-
----
-
-# 🏢 Multi-Tenant College Isolation
-
-The platform supports **multiple institutions securely**.
-
-```
-College A → sees only A documents
-College B → sees only B documents
-Super Admin → sees everything
-```
-
-Implemented using:
-
-• collegeId metadata  
-• scoped MongoDB queries  
-• JWT-based authentication
-
----
-
-# 🌐 Public Verification
-
-Anyone can verify documents **without logging in**.
-
-Steps:
-
-1. Upload document
-2. System generates hash
-3. Compare with database
-4. Validate against blockchain
-5. Show authenticity result
-
----
-
-# 📸 Screenshots
+## 📸 Screenshots
 
 ### Login Page
 
@@ -252,71 +175,99 @@ Steps:
 
 ---
 
-# 🧰 Tech Stack
+## 🏫 College Onboarding System
 
-## Frontend
+Institutions must apply before gaining access. This prevents unauthorized organizations from issuing verifiable documents.
 
-React  
-Vite  
-Axios  
-TailwindCSS
-
----
-
-## Backend
-
-Spring Boot  
-Java 17  
-JWT Authentication  
-Swagger API Docs
+```
+College submits access request
+        ↓
+Status stored as PENDING
+        ↓
+Super Admin reviews request
+        ↓
+APPROVED or REJECTED
+        ↓
+Approved college receives portal access
+```
 
 ---
 
-## Blockchain
+## 🏢 Multi-Tenant College Isolation
 
-Solidity Smart Contract  
-Web3j  
-Ethereum Sepolia Testnet
+```
+College A → sees only College A documents
+College B → sees only College B documents
+Super Admin → sees everything across all colleges
+```
 
----
-
-## Storage
-
-IPFS (Pinata)
+Implemented using `collegeId` in JWT claims + scoped MongoDB queries. No cross-tenant data leakage.
 
 ---
 
-## Database
+## 📜 Smart Contract
 
-MongoDB
+> **Network:** Ethereum Sepolia Testnet
+> **Contract Address:** [`0xB56D9F4309CAF0C20f52FBF3C14e0653A9Ed50AC`](https://sepolia.etherscan.io/address/0xB56D9F4309CAF0C20f52FBF3C14e0653A9Ed50AC)
 
----
+The Solidity smart contract exposes two functions:
 
-## Deployment
+```solidity
+// Register a document hash on-chain
+function registerDocument(string memory docHash) public onlyAuthorized
 
-Frontend → Vercel  
-Backend → Render
-
-CI/CD → GitHub push deployment
-
----
-
-# 📡 API Endpoints
-
-| Method | Endpoint        | Description             |
-| ------ | --------------- | ----------------------- |
-| POST   | /upload         | register document       |
-| POST   | /verify         | verify document         |
-| GET    | /docs           | list registered docs    |
-| GET    | /download/{id}  | download decrypted file |
-| GET    | /stats          | platform statistics     |
-| POST   | /access/request | college access request  |
+// Check if a document hash is registered
+function verifyDocument(string memory docHash) public view returns (bool)
+```
 
 ---
 
-# 🚀 Quick Start
+## 🧰 Tech Stack
 
-## Clone Repository
+### Frontend
+
+- **React 18** + **Vite**
+- **TailwindCSS** for styling
+- **Axios** for API calls
+
+### Backend
+
+- **Spring Boot 3.x** (Java 17)
+- **JWT Authentication**
+- **Swagger / OpenAPI** — [View Docs](https://your-backend.onrender.com/swagger-ui.html)
+
+### Blockchain
+
+- **Solidity** Smart Contract
+- **Web3j** (Java Ethereum library)
+- **Ethereum Sepolia Testnet**
+
+### Storage & Database
+
+- **IPFS via Pinata** — decentralized file storage
+- **MongoDB** — metadata, access control, college records
+
+### Deployment
+
+- **Frontend** → Vercel (auto-deploy on push to `main`)
+- **Backend** → Render (auto-deploy on push to `main`)
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Java 17+
+- Node.js 18+
+- MongoDB (local or Atlas)
+- A [Pinata](https://pinata.cloud/) account (free tier works)
+- A [Google Cloud](https://console.cloud.google.com/) OAuth 2.0 app
+- An Ethereum wallet with Sepolia testnet ETH ([faucet](https://sepoliafaucet.com/))
+
+---
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git
@@ -325,69 +276,153 @@ cd blockChain-Document-Verification
 
 ---
 
-## Backend Setup
+### 2. Environment Setup
 
-```
-cd backend
-./gradlew bootRun
+Copy the example env file and fill in your credentials:
+
+```bash
+cp backend/.env.example backend/.env
 ```
 
-Backend runs at:
+**`backend/.env`** — all required variables:
 
-```
-http://localhost:8080
+```env
+# MongoDB
+MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/docverify
+
+# JWT
+JWT_SECRET=your_super_secret_key_at_least_32_chars
+JWT_EXPIRY_MS=86400000
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# IPFS / Pinata
+PINATA_API_KEY=your_pinata_api_key
+PINATA_SECRET_KEY=your_pinata_secret_key
+
+# AES Encryption
+AES_SECRET_KEY=your_32_char_aes_encryption_key!!
+
+# Ethereum / Web3j
+WEB3J_RPC_URL=https://sepolia.infura.io/v3/your_infura_project_id
+CONTRACT_ADDRESS=0xYOUR_DEPLOYED_CONTRACT_ADDRESS
+WALLET_PRIVATE_KEY=your_ethereum_wallet_private_key
+
+# Super Admin
+SUPER_ADMIN_EMAIL=admin@yourdomain.com
 ```
 
 ---
 
-## Frontend Setup
+### 3. Backend Setup
 
+```bash
+cd backend
+./gradlew bootRun
 ```
+
+Backend runs at: `http://localhost:8080`
+Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+---
+
+### 4. Frontend Setup
+
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Frontend runs at:
-
-```
-http://localhost:5173
-```
+Frontend runs at: `http://localhost:5173`
 
 ---
 
-# 🐳 Docker (Optional)
+### 5. Deploy Smart Contract (optional — already deployed on Sepolia)
 
+```bash
+cd blockchain
+npm install
+npx hardhat run scripts/deploy.js --network sepolia
 ```
+
+Update `CONTRACT_ADDRESS` in your `.env` with the newly deployed address.
+
+---
+
+## 🐳 Docker (Optional)
+
+```bash
 docker build -t doc-verification .
-docker run -p 8080:8080 doc-verification
+docker run -p 8080:8080 --env-file backend/.env doc-verification
 ```
 
 ---
 
-# 📊 Project Highlights
+## 📡 API Reference
 
-This project demonstrates:
+Full interactive docs: [`/swagger-ui.html`](https://your-backend.onrender.com/swagger-ui.html)
 
-• Blockchain integration  
-• Web3 architecture  
-• Cryptographic security  
-• Decentralized storage  
-• Multi-tenant SaaS architecture  
-• Modern full-stack development  
-• CI/CD deployment pipelines
+| Method | Endpoint              | Auth Required  | Description                      |
+| ------ | --------------------- | -------------- | -------------------------------- |
+| POST   | `/upload`             | ✅ Admin       | Register and encrypt a document  |
+| POST   | `/verify`             | ❌ Public      | Verify a document's authenticity |
+| GET    | `/docs`               | ✅ Admin       | List all registered documents    |
+| GET    | `/download/{id}`      | ✅ Admin       | Download decrypted document      |
+| GET    | `/stats`              | ✅ Admin       | Platform-wide statistics         |
+| POST   | `/access/request`     | ❌ Public      | Submit college access request    |
+| GET    | `/admin/requests`     | ✅ Super Admin | View all pending requests        |
+| POST   | `/admin/approve/{id}` | ✅ Super Admin | Approve a college request        |
+| POST   | `/admin/reject/{id}`  | ✅ Super Admin | Reject a college request         |
 
 ---
 
-# 👨‍💻 Author
+## 📊 Project Highlights
+
+This project demonstrates end-to-end proficiency in:
+
+- **Web3 / Blockchain integration** — Solidity + Web3j + Sepolia testnet
+- **Cryptographic security** — AES-256 encryption + SHA-256 hashing
+- **Decentralized storage** — IPFS via Pinata
+- **Multi-tenant SaaS architecture** — college-scoped data isolation
+- **Modern full-stack development** — React + Spring Boot
+- **OAuth2 + JWT** — production-grade auth flow
+- **CI/CD pipelines** — Vercel + Render auto-deployment
+
+---
+
+## 🔮 Known Limitations & Future Improvements
+
+- **Gas fees**: Each document registration costs a small amount of Sepolia ETH. On mainnet this would require real ETH — a meta-transaction or L2 solution (e.g. Polygon) would reduce costs significantly.
+- **IPFS pinning**: Free Pinata tier has upload limits. Production would need a paid plan or self-hosted IPFS node.
+- **Batch registration**: Currently registers one document at a time. A batch endpoint would improve admin UX for large institutions.
+- **Mobile app**: Verification could be done via a simple mobile app using QR codes on printed certificates.
+- **ZK Proofs**: Future versions could use zero-knowledge proofs to verify document properties without revealing the document itself.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
 
 **Rohan Kumar**
 
-GitHub  
-https://github.com/BlackMagic95
+[![GitHub](https://img.shields.io/badge/GitHub-BlackMagic95-181717?style=flat-square&logo=github)](https://github.com/BlackMagic95)
 
 ---
 
-# ⭐ Support
+## ⭐ Support
 
-If you found this project useful, please give it a **star ⭐ on GitHub**.
+If you found this project useful, please consider giving it a **star ⭐ on GitHub** — it helps others discover it!
+
+---
+
+<div align="center">
+<sub>Built with ☕ Java, ⚛️ React, and ⛓️ Ethereum</sub>
+</div>
