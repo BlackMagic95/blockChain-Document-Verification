@@ -20,7 +20,6 @@ export default function Login() {
     totalVerifications: 0
   });
 
-  /* ================= FETCH STATS ================= */
   const fetchStats = async () => {
     try {
       const res = await axios.get(`${API}/stats`);
@@ -34,7 +33,6 @@ export default function Login() {
     return () => clearInterval(i);
   }, []);
 
-  /* ================= ANIMATE COUNTERS ================= */
   useEffect(() => {
     const animate = (key) => {
       let start = 0;
@@ -55,7 +53,6 @@ export default function Login() {
     animate("totalVerifications");
   }, [stats]);
 
-  /* ================= LOGIN ================= */
   const onSuccess = async (cred) => {
     try {
       setLoading(true);
@@ -64,25 +61,34 @@ export default function Login() {
         token: cred.credential
       });
 
+      if (res.data.status === "PENDING_APPROVAL") {
+        localStorage.setItem("pendingGoogleToken", cred.credential);
+        localStorage.setItem("pendingEmail", res.data.email || "");
+        toast("Please submit your college access request");
+        window.location.href = "/college-request";
+        return;
+      }
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
 
-      window.location.href = "/admin";
+      if (res.data.role === "SUPER_ADMIN") {
+        window.location.href = "/super-admin";
+      } else {
+        window.location.href = "/admin";
+      }
     } catch {
-      toast.error("Not authorized as admin");
+      toast.error("Not authorized");
       setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
-      {/* Decorative floating orbs */}
       <div className="orb-decoration orb-1"></div>
       <div className="orb-decoration orb-2"></div>
 
-      {/* ================= LOGIN CARD ================= */}
       <div className="login-card">
-
         <h1 className="title">🔐 Admin Portal</h1>
 
         <div className="status-badge">
@@ -118,9 +124,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* ================= STATS ================= */}
       <div className="stats-grid">
-
         <div className="stat-card glow-blue">
           <div className="stat-icon">📄</div>
           <h2>{display.totalDocs.toLocaleString()}</h2>
@@ -138,9 +142,7 @@ export default function Login() {
           <h2>{display.totalDocs.toLocaleString()}</h2>
           <p>Blockchain Hashes</p>
         </div>
-
       </div>
-
     </div>
   );
 }

@@ -1,0 +1,397 @@
+/* ================= GOOGLE FONTS ================= */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+/* ================= CSS VARIABLES ================= */
+:root {
+  --primary: #00ff88;
+  --primary-dim: #00cc6a;
+  --secondary: #0a84ff;
+  --accent: #ff2d55;
+  --bg-dark: #0a0e14;
+  --bg-surface: #151922;
+  --bg-elevated: #1f2937;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --success: #10b981;
+  --error: #ef4444;
+  --glow-primary: rgba(0, 255, 136, 0.4);
+  --glow-secondary: rgba(10, 132, 255, 0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  background: var(--bg-dark);
+}
+
+/* ================= PAGE WRAPPER ================= */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at top, #0f1419, #0a0e14),
+              radial-gradient(ellipse at bottom, #1a1f2e, #0a0e14);
+}
+
+/* Animated grid — identical to Login.css */
+.register-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.03) 2px, rgba(0,255,136,0.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,255,136,0.03) 2px, rgba(0,255,136,0.03) 4px),
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(10,132,255,0.02) 2px, rgba(10,132,255,0.02) 4px);
+  background-size: 60px 60px, 60px 60px, 84px 84px;
+  animation: gridFlow 30s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gridFlow {
+  0%   { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(60px,60px) rotate(0.5deg); }
+}
+
+.register-page::after {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, var(--glow-primary) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulseOrb 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes pulseOrb {
+  0%, 100% { opacity: 0.15; transform: translate(-50%,-50%) scale(1); }
+  50%       { opacity: 0.3;  transform: translate(-50%,-50%) scale(1.2); }
+}
+
+.orb-decoration { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; z-index: 0; }
+.orb-1 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--glow-secondary) 0%, transparent 70%);
+  top: -200px; right: -100px;
+  animation: floatOrb1 15s ease-in-out infinite;
+}
+.orb-2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(255,45,85,0.3) 0%, transparent 70%);
+  bottom: -150px; left: -100px;
+  animation: floatOrb2 20s ease-in-out infinite;
+}
+@keyframes floatOrb1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(50px,-50px) scale(1.1); }
+  66%     { transform: translate(-30px,30px) scale(0.9); }
+}
+@keyframes floatOrb2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(-40px,40px) scale(1.15); }
+}
+
+/* ================= FORM CARD ================= */
+.register-card {
+  background: linear-gradient(135deg, rgba(21,25,34,0.9) 0%, rgba(15,20,25,0.95) 100%);
+  backdrop-filter: blur(40px) saturate(180%);
+  border: 2px solid rgba(0,255,136,0.15);
+  border-radius: 28px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 520px;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.6),
+    0 0 80px rgba(0,255,136,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  z-index: 10;
+  animation: cardEntrance 0.8s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(40px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.register-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+  background-size: 300% 300%;
+  border-radius: 30px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  animation: gradientRotate 8s ease infinite;
+}
+@keyframes gradientRotate {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+.register-card:hover::before { opacity: 0.5; }
+
+/* ================= HEADER ================= */
+.register-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.9rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.register-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+/* ================= STEP INDICATOR ================= */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.step-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  border: 2px solid var(--bg-elevated);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+.step.active .step-dot {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-color: var(--primary);
+  color: var(--bg-dark);
+  box-shadow: 0 0 16px var(--glow-primary);
+}
+.step.done .step-dot {
+  background: var(--success);
+  border-color: var(--success);
+  color: var(--bg-dark);
+}
+
+.step-label {
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.step.active .step-label { color: var(--primary); }
+.step.done .step-label   { color: var(--success); }
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--bg-elevated);
+  margin: 0 8px;
+  margin-bottom: 18px;
+  max-width: 60px;
+  transition: background 0.3s ease;
+}
+.step-line.done { background: var(--success); }
+
+/* ================= FORM FIELDS ================= */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8rem;
+  font-family: 'Space Mono', monospace;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: var(--text-primary);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+
+.form-input:focus {
+  border-color: var(--primary);
+  background: rgba(0,255,136,0.04);
+  box-shadow: 0 0 0 3px rgba(0,255,136,0.1);
+}
+
+.form-input.error-field {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: var(--error);
+  margin-top: 4px;
+  font-family: 'Space Mono', monospace;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ================= DOMAIN PREVIEW ================= */
+.domain-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+}
+.domain-badge {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.25);
+  color: var(--primary);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+/* ================= SUBMIT BUTTON ================= */
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--bg-dark);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 4px 20px var(--glow-primary);
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px var(--glow-primary);
+}
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ================= SUCCESS STATE ================= */
+.success-state {
+  text-align: center;
+  animation: cardEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounceIn 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  display: block;
+}
+@keyframes bounceIn {
+  0%  { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100%{ transform: scale(1); opacity: 1; }
+}
+.success-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.4rem;
+  color: var(--success);
+  margin-bottom: 0.75rem;
+}
+.success-body {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.success-email {
+  font-family: 'Space Mono', monospace;
+  color: var(--primary);
+  font-size: 0.85rem;
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+/* ================= BACK LINK ================= */
+.back-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.back-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.back-link a:hover { opacity: 0.7; }
+
+/* ================= DIVIDER ================= */
+.form-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  margin: 1.25rem 0;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 560px) {
+  .register-card { padding: 2rem 1.5rem; }
+  .register-title { font-size: 1.6rem; }
+  .form-row { grid-template-columns: 1fr; }
+}

@@ -2,10 +2,11 @@ package com.verify.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import java.time.Instant;
 
 @org.springframework.data.mongodb.core.mapping.Document(collection = "document")
+@CompoundIndex(name = "college_hash_idx", def = "{'collegeId': 1, 'hash': 1}")
 public class Document {
 
     @Id
@@ -17,17 +18,17 @@ public class Document {
     private String hash;
 
     private String fileUrl;
-    // 🔐 NEW → encryption info
-    private String encryptionType = "NONE"; // NONE or AES
 
-    // ✅ Mongo-safe dates
+    private String encryptionType = "NONE";
+
+    // ⭐ NEW — which college uploaded this document
+    private String collegeId;
+
     private Instant createdAt;
     private Instant verifiedAt;
-
-    // ✅ counter
     private long verificationCount = 0;
 
-    /* getters setters */
+    /* ── getters & setters ── */
 
     public String getId() {
         return id;
@@ -61,6 +62,22 @@ public class Document {
         this.fileUrl = fileUrl;
     }
 
+    public String getEncryptionType() {
+        return encryptionType == null ? "NONE" : encryptionType;
+    }
+
+    public void setEncryptionType(String v) {
+        this.encryptionType = v;
+    }
+
+    public String getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(String collegeId) {
+        this.collegeId = collegeId;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -81,16 +98,7 @@ public class Document {
         return verificationCount;
     }
 
-    public void setVerificationCount(long verificationCount) {
-        this.verificationCount = verificationCount;
+    public void setVerificationCount(long v) {
+        this.verificationCount = v;
     }
-
-    public String getEncryptionType() {
-        return encryptionType == null ? "NONE" : encryptionType;
-    }
-
-    public void setEncryptionType(String encryptionType) {
-        this.encryptionType = encryptionType;
-    }
-
 }

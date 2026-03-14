@@ -414,6 +414,27 @@ body {
   transform: translateY(0);
 }
 
+/* ================= REQUEST ACCESS LINK ================= */
+.request-link {
+  text-align: center;
+  margin-top: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.86rem;
+  transition: all 0.3s ease;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  font-family: 'Space Mono', monospace;
+}
+
+.request-link:hover {
+  color: var(--secondary);
+  border-color: rgba(10, 132, 255, 0.5);
+  background: rgba(10, 132, 255, 0.08);
+}
+
 /* ================= STATS GRID ================= */
 .stats-grid {
   display: grid;

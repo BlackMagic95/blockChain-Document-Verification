@@ -3,6 +3,8 @@ package com.verify.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
+
 @Document(collection = "users")
 public class User {
 
@@ -11,9 +13,14 @@ public class User {
 
     private String email;
     private String password; // bcrypt
-    private String role; // ADMIN or USER
+    private String role; // SUPER_ADMIN or COLLEGE_ADMIN
+    private String approvalStatus; // PENDING, APPROVED, REJECTED
+    private String collegeName;
+    private String contactName;
+    private String contactPhone;
+    private Instant requestedAt;
+    private Instant approvedAt;
 
-    // getters & setters
     public String getId() {
         return id;
     }
@@ -40,5 +47,53 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public String getCollegeName() {
+        return collegeName;
+    }
+
+    public void setCollegeName(String collegeName) {
+        this.collegeName = collegeName;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public Instant getRequestedAt() {
+        return requestedAt;
+    }
+
+    public void setRequestedAt(Instant requestedAt) {
+        this.requestedAt = requestedAt;
+    }
+
+    public Instant getApprovedAt() {
+        return approvedAt;
+    }
+
+    public void setApprovedAt(Instant approvedAt) {
+        this.approvedAt = approvedAt;
     }
 }

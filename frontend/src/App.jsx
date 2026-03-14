@@ -4,37 +4,37 @@ import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login";
 import VerifyPage from "./pages/VerifyPage";
 import AdminPage from "./pages/AdminPage";
+import SuperAdminPage from "./pages/SuperAdminPage";
+import CollegeRequestPage from "./pages/CollegeRequestPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
     <>
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        toastOptions={{
-          duration: 5000, 
-          style: {
-            background: "#0f172a",
-            color: "#fff",
-            border: "1px solid #334155",
-            padding: "14px 18px",
-            fontSize: "14px",
-            borderRadius: "12px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
-          },
-          success: {
-            duration: 4000
-          },
-          error: {
-            duration: 6000
-          }
-        }}
-      />
-
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/verify" element={<VerifyPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/college-request" element={<CollegeRequestPage />} />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute roles={["COLLEGE_ADMIN", "SUPER_ADMIN"]}>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/super-admin"
+          element={
+            <ProtectedRoute role="SUPER_ADMIN">
+              <SuperAdminPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>

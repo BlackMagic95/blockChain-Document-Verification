@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import api from "../api";
 import "./AdminPage.css";
@@ -7,9 +8,6 @@ export default function AdminPage() {
 
   const [file, setFile] = useState(null);
   const [docs, setDocs] = useState([]);
-  const [msg, setMsg] = useState("");
-
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -17,13 +15,18 @@ export default function AdminPage() {
   }, []);
 
   const loadDocs = async () => {
-    const res = await api.get("/docs");
-    setDocs(res.data || []);
+    try {
+      const res = await api.get("/docs");
+      setDocs(res.data || []);
+    } catch {
+      toast.error("Failed to load documents");
+    }
   };
 
   const handleLogout = () => {
     localStorage.clear();
     toast.success("Logged out successfully 👋");
+
     setTimeout(() => {
       window.location.href = "/";
     }, 800);
@@ -31,46 +34,62 @@ export default function AdminPage() {
 
 
   /* ================= UPLOAD ================= */
+
   const handleUpload = async () => {
 
-  if (!file) {
-    toast.error("Please select a file");
-    return;
-  }
-
-  try {
-    setLoading(true);
+    if (!file) {
+      toast.error("Please select a file");
+      return;
+    }
 
     const form = new FormData();
     form.append("file", file);
 
-    
     const toastId = toast.loading("Registering on blockchain ⛓️...");
 
-    const res = await api.post("/upload", form);
+    try {
 
-    
-    toast.dismiss(toastId);
+      setLoading(true);
 
-    if (res.data.status === "DUPLICATE") {
-      toast.error("Duplicate file already exists ⚠️");
-    } else {
-      toast.success("Document registered successfully ✅");
-      setFile(null);
-      loadDocs();
+      const res = await api.post("/upload", form);
+
+      toast.dismiss(toastId);
+
+      const status = res.data?.status;
+
+      if (status === "FILE_TOO_LARGE") {
+        toast.error("File exceeds 5MB limit 📁");
+
+      } else if (status === "DUPLICATE") {
+        toast.error("Duplicate file already exists ⚠️");
+
+      } else if (status === "REGISTERED") {
+        toast.success("Document registered successfully ✅");
+        setFile(null);
+        loadDocs();
+
+      } else {
+        toast.error("Unexpected server response");
+      }
+
+    } catch (err) {
+
+      toast.dismiss(toastId);
+
+      if (err.response?.data?.status === "FILE_TOO_LARGE") {
+        toast.error("File exceeds 5MB limit 📁");
+      } else {
+        toast.error("Upload failed ❌");
+      }
+
+    } finally {
+      setLoading(false);
     }
-
-  } catch {
-    toast.error("Upload failed ❌");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+  };
 
 
   /* ================= EXPORT CSV ================= */
+
   const exportCSV = () => {
 
     if (!docs.length) {
@@ -140,7 +159,6 @@ export default function AdminPage() {
 
           <div className="upload-actions">
 
-            {/* ⭐ BUTTON DISABLED */}
             <button
               className="register-btn"
               onClick={handleUpload}
@@ -155,8 +173,6 @@ export default function AdminPage() {
 
           </div>
         </div>
-
-        {msg && <div className="status">{msg}</div>}
       </div>
 
 
@@ -185,4 +201,4 @@ export default function AdminPage() {
 
     </div>
   );
-}
+};

@@ -7,6 +7,10 @@ import com.verify.entity.Document;
 import com.verify.repo.DocumentRepo;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,13 +59,9 @@ public class DocumentController {
         @Value("${AES_SECRET}")
         private String AES_SECRET;
 
-        /* ================= WEB3 ================= */
-
         private Web3j getWeb3() {
                 return Web3j.build(new HttpService(RPC));
         }
-
-        /* ================= SHA-256 ================= */
 
         private String sha256(byte[] data) throws Exception {
                 MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -74,12 +74,6 @@ public class DocumentController {
                 return sb.toString();
         }
 
-        /*
-         * =====================================================
-         * ⭐ NEW HELPER (ONLY ADDITION)
-         * Download raw bytes from IPFS
-         * =====================================================
-         */
         private byte[] downloadBytes(String url) throws Exception {
                 URL u = new URL(url);
                 try (InputStream in = u.openStream()) {
@@ -87,12 +81,9 @@ public class DocumentController {
                 }
         }
 
-        /* ================= BLOCKCHAIN ================= */
-
         private void storeHashOnChain(String hash) throws Exception {
 
                 Credentials cred = Credentials.create(PRIVATE_KEY);
-
                 RawTransactionManager tm = new RawTransactionManager(getWeb3(), cred, 11155111);
 
                 Function function = new Function(
@@ -120,48 +111,65 @@ public class DocumentController {
                 }
         }
 
-        /* ================= REGISTER (UPLOAD) ================= */
-
         @PostMapping("/upload")
-        public Map<String, Object> upload(@RequestParam("file") MultipartFile file)
-                        throws Exception {
+        @PreAuthorize("hasAuthority('DOC_UPLOAD')")
+        public ResponseEntity<Map<String, Object>> upload(@RequestParam("file") MultipartFile file) {
 
-                if (file.getSize() > 5_000_000)
-                        throw new RuntimeException("File too large");
+                try {
 
-                byte[] originalBytes = file.getBytes();
+                        if (file.getSize() > 5_000_000) {
+                                return ResponseEntity.badRequest().body(
+                                                Map.of(
+                                                                "status", "FILE_TOO_LARGE",
+                                                                "message", "File exceeds 5MB limit"));
+                        }
 
-                String hash = sha256(originalBytes);
+                        byte[] originalBytes = file.getBytes();
+                        String hash = sha256(originalBytes);
 
-                if (repo.findByHash(hash).isPresent()) {
-                        return Map.of("status", "DUPLICATE", "hash", hash);
+                        if (repo.findByHash(hash).isPresent()) {
+                                return ResponseEntity.ok(
+                                                Map.of(
+                                                                "status", "DUPLICATE",
+                                                                "hash", hash));
+                        }
+
+                        byte[] encryptedBytes = AESUtil.encrypt(originalBytes, AES_SECRET);
+
+                        String cid = pinataService.uploadBytes(encryptedBytes);
+                        String fileUrl = "https://gateway.pinata.cloud/ipfs/" + cid;
+
+                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                        String collegeId = auth.getName();
+
+                        Document d = new Document();
+                        d.setName(file.getOriginalFilename());
+                        d.setHash(hash);
+                        d.setFileUrl(fileUrl);
+                        d.setEncryptionType("AES");
+                        d.setCreatedAt(Instant.now());
+                        d.setCollegeId(collegeId);
+
+                        repo.save(d);
+
+                        storeHashOnChain(hash);
+
+                        return ResponseEntity.ok(
+                                        Map.of(
+                                                        "status", "REGISTERED",
+                                                        "hash", hash,
+                                                        "cid", cid,
+                                                        "fileUrl", fileUrl,
+                                                        "id", d.getId()));
+
+                } catch (Exception e) {
+
+                        return ResponseEntity.internalServerError().body(
+                                        Map.of(
+                                                        "status", "ERROR",
+                                                        "message", e.getMessage()));
                 }
-
-                byte[] encryptedBytes = AESUtil.encrypt(originalBytes, AES_SECRET);
-
-                String cid = pinataService.uploadBytes(encryptedBytes);
-
-                String fileUrl = "https://gateway.pinata.cloud/ipfs/" + cid;
-
-                Document d = new Document();
-                d.setName(file.getOriginalFilename());
-                d.setHash(hash);
-                d.setFileUrl(fileUrl);
-                d.setEncryptionType("AES");
-                d.setCreatedAt(Instant.now());
-
-                repo.save(d);
-
-                storeHashOnChain(hash);
-
-                return Map.of(
-                                "status", "REGISTERED",
-                                "hash", hash,
-                                "cid", cid,
-                                "fileUrl", fileUrl,
-                                "id", d.getId());
         }
-        /* ================= BLOCKCHAIN VERIFY (MISSING METHOD FIX) ================= */
 
         private boolean existsOnChain(String hash) throws Exception {
 
@@ -189,11 +197,8 @@ public class DocumentController {
                 return (Boolean) decoded.get(0).getValue();
         }
 
-        /* ================= VERIFY ================= */
-
         @PostMapping("/verify")
-        public Map<String, String> verify(@RequestParam("file") MultipartFile file)
-                        throws Exception {
+        public Map<String, String> verify(@RequestParam("file") MultipartFile file) throws Exception {
 
                 String uploadedHash = sha256(file.getBytes());
 
@@ -203,12 +208,11 @@ public class DocumentController {
                 if (dbMatch && chainMatch) {
 
                         Document d = repo.findByHash(uploadedHash).get();
-
                         d.setVerifiedAt(Instant.now());
                         d.setVerificationCount(d.getVerificationCount() + 1);
+
                         repo.save(d);
 
-                        // ⭐ return secure backend download instead of raw CID
                         return Map.of(
                                         "status", "VERIFIED",
                                         "verifiedAt", d.getVerifiedAt().toString(),
@@ -224,12 +228,6 @@ public class DocumentController {
                 return Map.of("status", "NOT_REGISTERED");
         }
 
-        /*
-         * =====================================================
-         * ⭐ NEW ENDPOINT (ONLY ADDITION)
-         * Secure download + auto decrypt
-         * =====================================================
-         */
         @GetMapping("/download/{id}")
         public ResponseEntity<byte[]> download(@PathVariable String id) throws Exception {
 
@@ -252,17 +250,19 @@ public class DocumentController {
                                 .body(finalBytes);
         }
 
-        /* ================= LIST ================= */
-
         @GetMapping("/docs")
+        @PreAuthorize("hasAuthority('DOC_READ')")
         public List<Map<String, Object>> docs() {
+
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                String collegeId = auth.getName();
 
                 ZoneId ist = ZoneId.of("Asia/Kolkata");
                 DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a 'IST'");
 
                 List<Map<String, Object>> result = new ArrayList<>();
 
-                for (Document d : repo.findAll()) {
+                for (Document d : repo.findByCollegeId(collegeId)) {
 
                         String created = d.getCreatedAt() == null
                                         ? "—"
@@ -283,8 +283,6 @@ public class DocumentController {
 
                 return result;
         }
-
-        /* ================= STATS ================= */
 
         @GetMapping("/stats")
         public Map<String, Object> stats() {

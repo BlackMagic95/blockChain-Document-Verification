@@ -6,20 +6,20 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
 
     private static final String SECRET = "supersecretkeysupersecretkeysupersecretkey123";
-
     private static final long EXPIRATION = 1000 * 60 * 60 * 24;
-
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    public String generateToken(String email, String role) {
+    public String generateToken(String email, String role, List<String> authorities) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", "ROLE_" + role)
+                .claim("role", role)
+                .claim("authorities", authorities)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -43,5 +43,10 @@ public class JwtUtil {
     public String getRole(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().get("role", String.class);
+    }
+
+    public List<String> getAuthorities(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().get("authorities", List.class);
     }
 }
