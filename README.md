@@ -4,292 +4,390 @@
 
 ### Trustless • Tamper-Proof • Decentralized
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.java.com)
-[![Spring Boot](https://img.shields.io/badge/SpringBoot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org)
-[![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen.svg)](https://www.mongodb.com)
-[![Ethereum](https://img.shields.io/badge/Blockchain-Ethereum-purple.svg)](https://ethereum.org)
-[![IPFS](https://img.shields.io/badge/Storage-IPFS-black.svg)](https://ipfs.io)
-[![Status](https://img.shields.io/badge/Build-Stable-success.svg)](#)
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/SpringBoot-3.x-brightgreen)
+![React](https://img.shields.io/badge/React-18-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
+![Ethereum](https://img.shields.io/badge/Ethereum-Sepolia-purple)
+![IPFS](https://img.shields.io/badge/IPFS-Decentralized-black)
 
-A **production-ready Web3 document verification platform** ensuring document authenticity using **blockchain, decentralized storage, and strong cryptography.**
+A **secure Web3 document verification platform** that ensures authenticity of certificates and official documents using **blockchain immutability, decentralized storage, and cryptographic hashing**.
 
 </div>
 
 ---
 
-# 🎯 Overview
+# 📌 Problem
 
-Traditional document verification relies on centralized authorities that can be manipulated or compromised.
+Traditional document verification systems suffer from:
 
-This system removes trust requirements using blockchain and cryptography.
+• Centralized databases  
+• Easily forgeable certificates  
+• Manual verification processes  
+• High trust dependency  
+• Slow institutional validation
+
+Fake certificates are becoming increasingly common.
+
+---
+
+# 💡 Solution
+
+This platform introduces **trustless document verification** by combining:
+
+| Technology     | Purpose                          |
+| -------------- | -------------------------------- |
+| Blockchain     | Immutable document hash registry |
+| IPFS           | Decentralized file storage       |
+| AES Encryption | Secure document protection       |
+| SHA-256        | Cryptographic fingerprint        |
+| MongoDB        | Metadata management              |
+| JWT Auth       | Secure access control            |
+
+This eliminates the need for a central authority to verify documents.
+
+---
+
+# ⚙️ Core Workflow
+
+## Document Registration Flow
 
 ```
-Document
-   ↓
-SHA-256 Hash
-   ↓
+Admin Uploads Document
+        ↓
+SHA-256 Hash Generated
+        ↓
 AES-256 Encryption
-   ↓
-IPFS Storage
-   ↓
-Ethereum Blockchain Registry
-   ↓
-Trustless Verification
-```
-
-Even if someone accesses the **IPFS CID**, the document remains unreadable because it is encrypted.
-
----
-
-# ✨ Features
-
-## 👨‍💼 Admin Portal
-
-- Google OAuth login
-- JWT authentication
-- Upload & register documents
-- SHA-256 hashing
-- AES-256 encryption
-- Blockchain registration
-- CSV export
-- Responsive dashboard
-
----
-
-## 🛡️ Super Admin Panel
-
-Super Admin manages platform access.
-
-Capabilities:
-
-- Approve college applications
-- Reject suspicious requests
-- Monitor system usage
-- Manage issuer access
-
----
-
-## 🏫 College Registration System
-
-Institutions must apply before using the platform.
-
-```
-College submits request
         ↓
-Stored as PENDING
+Encrypted File Uploaded to IPFS
         ↓
-Super Admin reviews
+CID Stored in MongoDB
         ↓
-APPROVED / REJECTED
+Hash Registered on Ethereum Blockchain
         ↓
-Approved college can login
+Document Permanently Verifiable
 ```
-
-This ensures only **verified institutions** can issue documents.
 
 ---
 
-## 🏢 Multi-Tenant College Isolation
-
-Each college sees only its own documents.
+## Document Verification Flow
 
 ```
-College A → documents of A
-College B → documents of B
-Super Admin → all documents
-```
-
-Isolation is implemented using:
-
-- `collegeId`
-- JWT authentication
-- MongoDB scoped queries
-
----
-
-# 🔍 Public Verification
-
-Anyone can verify documents without login.
-
-```
-Upload document
-      ↓
-Generate SHA-256
-      ↓
-Check MongoDB
-      ↓
-Validate on blockchain
-      ↓
-Return result
+User Uploads Document
+        ↓
+System Generates SHA-256 Hash
+        ↓
+Check MongoDB Database
+        ↓
+Verify Hash on Blockchain
+        ↓
+Compare Hashes
+        ↓
+Return Verification Result
 ```
 
 Possible results:
 
-- VERIFIED
-- TAMPERED_DB
-- BLOCKCHAIN_ONLY
-- NOT_REGISTERED
+• VERIFIED  
+• TAMPERED_DB  
+• BLOCKCHAIN_ONLY  
+• NOT_REGISTERED
 
 ---
 
 # 🏗 System Architecture
 
 ```
-User
- ↓
-React Frontend
- ↓
-Spring Boot Backend
- ↓
-MongoDB (metadata)
- ↓
-IPFS (encrypted storage)
- ↓
-Ethereum Blockchain
+                ┌───────────────┐
+                │     User      │
+                └───────┬───────┘
+                        │
+                        ▼
+              ┌─────────────────┐
+              │  React Frontend │
+              └────────┬────────┘
+                       │ API
+                       ▼
+             ┌───────────────────┐
+             │ Spring Boot Server│
+             └───────┬───────────┘
+                     │
+        ┌────────────┼─────────────┐
+        ▼            ▼             ▼
+   MongoDB        IPFS         Ethereum
+  (Metadata)   (Encrypted)   (Hash Registry)
 ```
 
 ---
 
-# 🔐 Security Model
+# 🔐 Security Architecture
 
-| Layer          | Technology         | Purpose                  |
-| -------------- | ------------------ | ------------------------ |
-| Authentication | Google OAuth + JWT | secure login             |
-| Encryption     | AES-256            | document confidentiality |
-| Hashing        | SHA-256            | document fingerprint     |
-| Blockchain     | Ethereum           | tamper proof registry    |
-| Storage        | IPFS               | decentralized storage    |
+Security is implemented in **multiple layers**.
+
+### Authentication
+
+Google OAuth + JWT
+
+### Encryption
+
+AES-256 encryption before file upload
+
+### Hashing
+
+SHA-256 cryptographic fingerprint
+
+### Blockchain Integrity
+
+Ethereum smart contract stores hashes
+
+### Decentralized Storage
+
+IPFS stores encrypted files
+
+---
+
+# 👨‍💼 Admin Portal
+
+Authorized institutions can register documents.
+
+Features:
+
+• Google OAuth login  
+• JWT session authentication  
+• Document upload system  
+• SHA-256 hashing  
+• AES encryption  
+• Blockchain registration  
+• CSV export  
+• Document management dashboard
+
+---
+
+# 🛡 Super Admin Panel
+
+Super Admin controls access to the platform.
+
+Capabilities:
+
+• Approve college access requests  
+• Reject suspicious institutions  
+• Monitor platform activity  
+• Manage issuer accounts
+
+---
+
+# 🏫 College Onboarding System
+
+Institutions must apply before gaining access.
+
+```
+College submits request
+        ↓
+Stored as PENDING
+        ↓
+Super Admin review
+        ↓
+APPROVED or REJECTED
+        ↓
+Approved college receives access
+```
+
+This prevents unauthorized organizations from issuing documents.
+
+---
+
+# 🏢 Multi-Tenant College Isolation
+
+The platform supports **multiple institutions securely**.
+
+```
+College A → sees only A documents
+College B → sees only B documents
+Super Admin → sees everything
+```
+
+Implemented using:
+
+• collegeId metadata  
+• scoped MongoDB queries  
+• JWT-based authentication
+
+---
+
+# 🌐 Public Verification
+
+Anyone can verify documents **without logging in**.
+
+Steps:
+
+1. Upload document
+2. System generates hash
+3. Compare with database
+4. Validate against blockchain
+5. Show authenticity result
 
 ---
 
 # 📸 Screenshots
 
-## Login Page
+### Login Page
 
 ![Login](./screenshots/login.png)
 
-## Document Verification
+### Document Verification
 
 ![Verify](./screenshots/verify.png)
 
-## Admin Dashboard
+### Admin Dashboard
 
 ![Admin](./screenshots/admin.png)
 
-## Super Admin Dashboard
+### Super Admin Panel
 
 ![SuperAdmin](./screenshots/superadmin.png)
 
-## College Request Form
+### College Request Form
 
 ![CollegeForm](./screenshots/college-request.png)
 
 ---
 
-# 🌐 Live Demo
+# 🧰 Tech Stack
 
-| Platform | Link                                                                  |
-| -------- | --------------------------------------------------------------------- |
-| Frontend | https://block-chain-document-verification-phi.vercel.app              |
-| Backend  | https://blockchain-document-verification.onrender.com                 |
-| API Docs | https://blockchain-document-verification.onrender.com/swagger-ui.html |
+## Frontend
+
+React  
+Vite  
+Axios  
+TailwindCSS
 
 ---
 
-# 🛠 Tech Stack
+## Backend
 
-### Frontend
+Spring Boot  
+Java 17  
+JWT Authentication  
+Swagger API Docs
 
-- React
-- Vite
-- Axios
-- TailwindCSS
+---
 
-### Backend
+## Blockchain
 
-- Spring Boot
-- Java 17
-- JWT Security
-- Swagger OpenAPI
+Solidity Smart Contract  
+Web3j  
+Ethereum Sepolia Testnet
 
-### Blockchain
+---
 
-- Solidity
-- Web3j
-- Ethereum Sepolia
+## Storage
 
-### Storage
+IPFS (Pinata)
 
-- IPFS (Pinata)
+---
 
-### Database
+## Database
 
-- MongoDB
+MongoDB
 
-### Deployment
+---
 
-- Vercel
-- Render
+## Deployment
+
+Frontend → Vercel  
+Backend → Render
+
+CI/CD → GitHub push deployment
 
 ---
 
 # 📡 API Endpoints
 
-| Method | Endpoint        | Description       |
-| ------ | --------------- | ----------------- |
-| POST   | /upload         | register document |
-| POST   | /verify         | verify document   |
-| GET    | /docs           | list documents    |
-| GET    | /download/{id}  | download file     |
-| GET    | /stats          | system statistics |
-| POST   | /access/request | college request   |
+| Method | Endpoint        | Description             |
+| ------ | --------------- | ----------------------- |
+| POST   | /upload         | register document       |
+| POST   | /verify         | verify document         |
+| GET    | /docs           | list registered docs    |
+| GET    | /download/{id}  | download decrypted file |
+| GET    | /stats          | platform statistics     |
+| POST   | /access/request | college access request  |
 
 ---
 
-# ⚡ Quick Start
+# 🚀 Quick Start
 
-Clone repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/BlackMagic95/blockChain-Document-Verification.git
 cd blockChain-Document-Verification
 ```
 
-Backend setup
+---
 
-```bash
+## Backend Setup
+
+```
 cd backend
 ./gradlew bootRun
 ```
 
-Frontend setup
+Backend runs at:
 
-```bash
+```
+http://localhost:8080
+```
+
+---
+
+## Frontend Setup
+
+```
 cd frontend
 npm install
 npm run dev
+```
+
+Frontend runs at:
+
+```
+http://localhost:5173
 ```
 
 ---
 
 # 🐳 Docker (Optional)
 
-```bash
+```
 docker build -t doc-verification .
 docker run -p 8080:8080 doc-verification
 ```
 
 ---
 
+# 📊 Project Highlights
+
+This project demonstrates:
+
+• Blockchain integration  
+• Web3 architecture  
+• Cryptographic security  
+• Decentralized storage  
+• Multi-tenant SaaS architecture  
+• Modern full-stack development  
+• CI/CD deployment pipelines
+
+---
+
 # 👨‍💻 Author
 
-Rohan Kumar  
-GitHub: https://github.com/BlackMagic95
+**Rohan Kumar**
+
+GitHub  
+https://github.com/BlackMagic95
 
 ---
 
 # ⭐ Support
 
-If you like this project please give it a **star ⭐ on GitHub**.
+If you found this project useful, please give it a **star ⭐ on GitHub**.
