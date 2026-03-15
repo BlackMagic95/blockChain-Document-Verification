@@ -120,9 +120,7 @@ export default function Login() {
         </p>
 
         {loading ? (
-
-          <div style={{textAlign:"center"}}>Loading...</div>
-
+          <div className="loading">Loading...</div>
         ) : (
 
           <div className="google-wrapper">
