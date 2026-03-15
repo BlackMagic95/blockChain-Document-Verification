@@ -73,8 +73,10 @@ export default function Login() {
       localStorage.setItem("role", res.data.role);
 
       if (res.data.role === "SUPER_ADMIN") {
+        toast.success("Welcome Super Admin");
         window.location.href = "/super-admin";
       } else {
+        toast.success("Welcome Admin");
         window.location.href = "/admin";
       }
     } catch {
@@ -89,20 +91,28 @@ export default function Login() {
       <div className="orb-decoration orb-2"></div>
 
       <div className="login-card">
-        <h1 className="title">🔐 Admin Portal</h1>
+
+        <h1 className="title">
+          🔐 Blockchain Document Verification
+        </h1>
 
         <div className="status-badge">
           System Online
         </div>
 
         <p className="subtitle">
-          Secure blockchain document verification system
+          Secure tamper-proof academic document verification using blockchain
+        </p>
+
+        {/* Simple login instruction */}
+        <p className="login-instruction">
+          Already registered? Login with Google. New institution? Request access.
         </p>
 
         {loading ? (
           <div className="loader"></div>
         ) : (
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
             <GoogleLogin
               onSuccess={onSuccess}
               onError={() => toast.error("Google login failed")}
