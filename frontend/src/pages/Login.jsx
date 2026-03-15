@@ -8,87 +8,87 @@ const API = "https://blockchain-document-verification.onrender.com";
 
 export default function Login() {
 
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [stats,setStats] = useState({
-    totalDocs:0,
-    totalVerifications:0
+  const [stats, setStats] = useState({
+    totalDocs: 0,
+    totalVerifications: 0
   });
 
-  const [display,setDisplay] = useState({
-    totalDocs:0,
-    totalVerifications:0
+  const [display, setDisplay] = useState({
+    totalDocs: 0,
+    totalVerifications: 0
   });
 
   const fetchStats = async () => {
-    try{
+    try {
       const res = await axios.get(`${API}/stats`);
       setStats(res.data);
-    }catch{}
+    } catch {}
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchStats();
-    const i = setInterval(fetchStats,5000);
-    return ()=>clearInterval(i);
-  },[]);
+    const i = setInterval(fetchStats, 5000);
+    return () => clearInterval(i);
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    const animate=(key)=>{
-      let start=0;
-      const end=stats[key];
-      const step=Math.ceil(end/20);
+    const animate = (key) => {
+      let start = 0;
+      const end = stats[key];
+      const step = Math.ceil(end / 20);
 
-      const interval=setInterval(()=>{
-        start+=step;
+      const interval = setInterval(() => {
+        start += step;
 
-        if(start>=end){
-          start=end;
+        if (start >= end) {
+          start = end;
           clearInterval(interval);
         }
 
-        setDisplay(p=>({...p,[key]:start}));
+        setDisplay(p => ({ ...p, [key]: start }));
 
-      },20);
+      }, 20);
     };
 
     animate("totalDocs");
     animate("totalVerifications");
 
-  },[stats]);
+  }, [stats]);
 
   const onSuccess = async (cred) => {
 
-    try{
+    try {
 
       setLoading(true);
 
-      const res = await axios.post(`${API}/auth/google`,{
-        token:cred.credential
+      const res = await axios.post(`${API}/auth/google`, {
+        token: cred.credential
       });
 
-      if(res.data.status==="PENDING_APPROVAL"){
+      if (res.data.status === "PENDING_APPROVAL") {
 
-        localStorage.setItem("pendingGoogleToken",cred.credential);
+        localStorage.setItem("pendingGoogleToken", cred.credential);
 
         toast("Submit college access request");
 
-        window.location.href="/college-request";
+        window.location.href = "/college-request";
 
         return;
       }
 
-      localStorage.setItem("token",res.data.token);
-      localStorage.setItem("role",res.data.role);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
 
-      if(res.data.role==="SUPER_ADMIN"){
-        window.location.href="/super-admin";
-      }else{
-        window.location.href="/admin";
+      if (res.data.role === "SUPER_ADMIN") {
+        window.location.href = "/super-admin";
+      } else {
+        window.location.href = "/admin";
       }
 
-    }catch{
+    } catch {
 
       toast.error("Not authorized");
       setLoading(false);
@@ -127,11 +127,11 @@ export default function Login() {
 
             <GoogleLogin
               onSuccess={onSuccess}
-              onError={()=>toast.error("Google login failed")}
+              onError={() => toast.error("Google login failed")}
               theme="filled_black"
               size="large"
               shape="pill"
-              width="320"
+              width="300"
             />
 
           </div>
@@ -140,7 +140,7 @@ export default function Login() {
 
         <div
           className="verify-link"
-          onClick={()=>window.location.href="/verify"}
+          onClick={() => window.location.href = "/verify"}
         >
           Verify a document →
         </div>

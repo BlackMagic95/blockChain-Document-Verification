@@ -2,305 +2,292 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
 
 /* ================= CSS VARIABLES ================= */
-:root{
-  --primary:#00ff88;
-  --secondary:#0a84ff;
-  --accent:#ff2d55;
-  --bg-dark:#0a0e14;
-  --text-primary:#ffffff;
-  --text-secondary:#9ca3af;
-  --success:#10b981;
-  --glow-primary:rgba(0,255,136,0.4);
+:root {
+  --primary: #00ff88;
+  --secondary: #0a84ff;
+  --accent: #ff2d55;
+  --bg-dark: #0a0e14;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --success: #10b981;
+  --glow-primary: rgba(0, 255, 136, 0.4);
 }
 
 /* ================= BASE ================= */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-  font-family:'Syne',sans-serif;
-  background:var(--bg-dark);
-  overflow-x:hidden;
+/* FIX: prevent any overflow at the root level */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg-dark);
 }
 
 /* ================= LOGIN CONTAINER ================= */
-/* ================= LOGIN CONTAINER ================= */
 
-.login-container{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+.login-container {
+  height: 100vh;           /* FIX: exact viewport height, not min-height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  padding:1rem;
+  padding: 2rem 1rem;
+  gap: 1.5rem;
 
-  position:relative;
+  position: relative;
 
-  overflow-x:hidden;
+  /* FIX: clip the glow orb so it never pushes page height */
+  overflow: hidden;
 
   background:
-    radial-gradient(ellipse at top,#0f1419,#0a0e14),
-    radial-gradient(ellipse at bottom,#1a1f2e,#0a0e14);
+    radial-gradient(ellipse at top, #0f1419, #0a0e14),
+    radial-gradient(ellipse at bottom, #1a1f2e, #0a0e14);
 }
 
-/* ================= GOOGLE BUTTON FIX ================= */
+/* glow orb — safely contained inside overflow:hidden parent */
+.login-container::after {
+  content: "";
+  position: absolute;
 
-.google-wrapper{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  width: 600px;
+  height: 600px;
 
-  width:100%;
+  background: radial-gradient(circle, var(--glow-primary), transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-  margin-top:12px;   /* prevents clipping */
+  animation: pulseOrb 8s ease-in-out infinite;
+
+  pointer-events: none;
+  z-index: 0;
 }
 
-.google-wrapper iframe{
-  max-width:320px!important;
-}
-
-/* ================= LOADING TEXT ================= */
-
-.loading{
-  text-align:center;
-  color:#ccc;
-  margin-top:10px;
-}
-
-@keyframes gridFlow{
-  from{transform:translate(0,0)}
-  to{transform:translate(60px,60px)}
-}
-
-/* glow orb */
-
-.login-container::after{
-  content:"";
-  position:absolute;
-
-  width:600px;
-  height:600px;
-
-  background:radial-gradient(circle,var(--glow-primary),transparent 70%);
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-
-  animation:pulseOrb 8s ease-in-out infinite;
-
-  pointer-events:none;
-}
-
-@keyframes pulseOrb{
-  0%,100%{opacity:.2;transform:translate(-50%,-50%) scale(1)}
-  50%{opacity:.4;transform:translate(-50%,-50%) scale(1.2)}
+@keyframes pulseOrb {
+  0%, 100% { opacity: .2; transform: translate(-50%, -50%) scale(1); }
+  50%       { opacity: .4; transform: translate(-50%, -50%) scale(1.2); }
 }
 
 /* ================= LOGIN CARD ================= */
 
-.login-card{
+.login-card {
+  width: min(440px, 92vw);
+  padding: 2.2rem;
 
-  width:min(440px,92vw);
-  padding:2.2rem;
+  border-radius: 28px;
 
-  border-radius:28px;
+  background: linear-gradient(
+    135deg,
+    rgba(21, 25, 34, .9),
+    rgba(15, 20, 25, .95)
+  );
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(21,25,34,.9),
-      rgba(15,20,25,.95)
-    );
+  backdrop-filter: blur(40px);
 
-  backdrop-filter:blur(40px);
-
-  border:2px solid rgba(0,255,136,.15);
+  border: 2px solid rgba(0, 255, 136, .15);
 
   box-shadow:
-    0 8px 32px rgba(0,0,0,.6),
-    0 0 80px rgba(0,255,136,.1);
+    0 8px 32px rgba(0, 0, 0, .6),
+    0 0 80px rgba(0, 255, 136, .1);
 
-  position:relative;
-  z-index:10;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
 
-  transition:.35s;
+  transition: .35s;
 }
 
-.login-card:hover{
-  transform:scale(1.03);
-  border-color:rgba(0,255,136,.5);
+.login-card:hover {
+  transform: scale(1.03);
+  border-color: rgba(0, 255, 136, .5);
   box-shadow:
-    0 12px 40px rgba(0,0,0,.7),
-    0 0 60px rgba(0,255,136,.35);
+    0 12px 40px rgba(0, 0, 0, .7),
+    0 0 60px rgba(0, 255, 136, .35);
 }
 
 /* ================= TITLE ================= */
 
-.title{
-  font-family:'Space Mono',monospace;
-  font-size:2rem;
-  text-align:center;
+.title {
+  font-family: 'Space Mono', monospace;
+  font-size: 2rem;
+  text-align: center;
 
-  margin-bottom:.6rem;
+  margin-bottom: .6rem;
 
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* ================= STATUS BADGE ================= */
 
-.status-badge{
-  margin:1rem auto;
-
-  width:fit-content;
-
-  padding:.4rem 1.1rem;
-
-  border-radius:50px;
-
-  font-size:.75rem;
-  font-weight:700;
-
-  color:var(--success);
-
-  border:1px solid rgba(16,185,129,.4);
+.status-badge {
+  margin: 1rem auto;
+  width: fit-content;
+  padding: .4rem 1.1rem;
+  border-radius: 50px;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, .4);
 }
 
 /* ================= SUBTITLE ================= */
 
-.subtitle{
-  text-align:center;
-  color:var(--text-secondary);
-  font-size:.9rem;
-  margin-bottom:1.3rem;
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: .9rem;
+  margin-bottom: 1.3rem;
 }
 
-/* ================= LOGIN TEXT ================= */
+/* ================= LOGIN INSTRUCTION ================= */
 
-.login-instruction{
-  text-align:center;
-  font-size:.85rem;
-  color:var(--text-secondary);
-  margin-bottom:.8rem;
+.login-instruction {
+  text-align: center;
+  font-size: .85rem;
+  color: var(--text-secondary);
+  margin-bottom: .8rem;
 }
 
 /* ================= GOOGLE BUTTON FIX ================= */
 
-.google-wrapper{
-  display:flex;
-  justify-content:center;
-  width:100%;
+.google-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  margin-top: 12px;
+
+  /* FIX: overflow visible so Google "G" icon is never clipped */
+  overflow: visible;
+
+  position: relative;
+  z-index: 20;
 }
 
-.google-wrapper iframe{
-  max-width:320px!important;
+/* ================= LOADING TEXT ================= */
+
+.loading {
+  text-align: center;
+  color: #ccc;
+  margin-top: 10px;
 }
 
 /* ================= VERIFY LINK ================= */
 
-.verify-link{
-  text-align:center;
-  margin-top:1.2rem;
+.verify-link {
+  text-align: center;
+  margin-top: 1.2rem;
+  padding: .75rem 1rem;
+  border-radius: 10px;
+  color: #ffffff;
+  border: 1px solid rgba(0, 255, 136, .25);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, .08),
+    rgba(10, 132, 255, .08)
+  );
+  font-family: 'Space Mono', monospace;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: .3s;
+}
 
-  padding:.75rem 1rem;
-
-  border-radius:10px;
-
-  color:#ffffff;
-
-  border:1px solid rgba(0,255,136,.25);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0,255,136,.08),
-      rgba(10,132,255,.08)
-    );
-
-  font-family:'Space Mono',monospace;
-  font-size:.9rem;
-
-  cursor:pointer;
-
-  transition:.3s;
+.verify-link:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, .15),
+    rgba(10, 132, 255, .15)
+  );
+  border-color: rgba(0, 255, 136, .5);
 }
 
 /* ================= STATS ================= */
 
-.stats-grid{
-  margin-top:1.6rem;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* FIX: always 3 cols, no wrapping */
+  gap: 1rem;
 
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:1.2rem;
+  width: 100%;
+  max-width: 860px;
 
-  width:100%;
-  max-width:1000px;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
 }
 
-.stat-card{
-  padding:1.6rem;
-  border-radius:20px;
+.stat-card {
+  padding: 1.1rem;               /* FIX: tighter padding saves vertical space */
+  border-radius: 20px;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(21,25,34,.8),
-      rgba(15,20,25,.9)
-    );
+  background: linear-gradient(
+    135deg,
+    rgba(21, 25, 34, .8),
+    rgba(15, 20, 25, .9)
+  );
 
-  border:1px solid rgba(255,255,255,.08);
+  border: 1px solid rgba(255, 255, 255, .08);
 
-  text-align:center;
-
-  transition:.35s;
+  text-align: center;
+  transition: .35s;
 }
 
-.stat-card:hover{
-  transform:translateY(-8px);
+.stat-card:hover {
+  transform: translateY(-6px);
 }
 
-.stat-icon{
-  font-size:2.5rem;
-  margin-bottom:.6rem;
+.stat-icon {
+  font-size: 1.8rem;             /* FIX: smaller icon to save vertical space */
+  margin-bottom: .3rem;
 }
 
-.stat-card h2{
-  font-family:'Space Mono',monospace;
-  color:#ffffff;
-  font-size:2.2rem;
+.stat-card h2 {
+  font-family: 'Space Mono', monospace;
+  color: #ffffff;
+  font-size: 1.8rem;
 }
 
-.stat-card p{
-  color:var(--text-secondary);
-  font-size:.8rem;
+.stat-card p {
+  color: var(--text-secondary);
+  font-size: .8rem;
 }
 
 /* ================= MOBILE ================= */
 
-@media (max-width:768px){
-
-  .login-container{
-    justify-content:flex-start;
-    padding-top:3rem;
+@media (max-width: 768px) {
+  /* allow scroll on mobile — screen too small to fit everything */
+  html, body {
+    overflow: auto;
   }
 
-  .stats-grid{
-    grid-template-columns:1fr;
+  .login-container {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    justify-content: flex-start;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
   }
 
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width:480px){
-
-  .title{
-    font-size:1.5rem;
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
   }
-
 }
