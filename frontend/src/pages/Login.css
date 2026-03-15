@@ -2,19 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
 
 /* ================= CSS VARIABLES ================= */
-:root {
+:root{
   --primary:#00ff88;
-  --primary-dim:#00cc6a;
   --secondary:#0a84ff;
   --accent:#ff2d55;
   --bg-dark:#0a0e14;
-  --bg-surface:#151922;
   --text-primary:#ffffff;
   --text-secondary:#9ca3af;
   --success:#10b981;
-  --error:#ef4444;
   --glow-primary:rgba(0,255,136,0.4);
-  --glow-secondary:rgba(10,132,255,0.4);
 }
 
 /* ================= BASE ================= */
@@ -25,61 +21,34 @@
 }
 
 body{
-  font-family:'Syne',-apple-system,BlinkMacSystemFont,sans-serif;
-  overflow-x:hidden;
+  font-family:'Syne',sans-serif;
   background:var(--bg-dark);
+  overflow-x:hidden;
 }
 
 /* ================= LOGIN CONTAINER ================= */
-
 .login-container{
   height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:clamp(1rem,2vw,2rem);
+
+  padding:1rem;   /* smaller padding */
+
   position:relative;
-  overflow:hidden;
+
+  overflow-x:hidden;
+  overflow-y:hidden;   /* prevent scroll on desktop */
 
   background:
     radial-gradient(ellipse at top,#0f1419,#0a0e14),
     radial-gradient(ellipse at bottom,#1a1f2e,#0a0e14);
 }
 
-/* animated grid */
-
-.login-container::before{
-  content:"";
-  position:absolute;
-  inset:0;
-
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,255,136,.03) 2px,
-      rgba(0,255,136,.03) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(0,255,136,.03) 2px,
-      rgba(0,255,136,.03) 4px
-    );
-
-  background-size:60px 60px;
-  animation:gridFlow 30s linear infinite;
-
-  pointer-events:none;
-  z-index:0;
-}
-
 @keyframes gridFlow{
-  0%{transform:translate(0,0)}
-  100%{transform:translate(60px,60px)}
+  from{transform:translate(0,0)}
+  to{transform:translate(60px,60px)}
 }
 
 /* glow orb */
@@ -88,8 +57,8 @@ body{
   content:"";
   position:absolute;
 
-  width:700px;
-  height:700px;
+  width:600px;
+  height:600px;
 
   background:radial-gradient(circle,var(--glow-primary),transparent 70%);
   top:50%;
@@ -99,7 +68,6 @@ body{
   animation:pulseOrb 8s ease-in-out infinite;
 
   pointer-events:none;
-  z-index:0;
 }
 
 @keyframes pulseOrb{
@@ -107,35 +75,10 @@ body{
   50%{opacity:.4;transform:translate(-50%,-50%) scale(1.2)}
 }
 
-/* floating decorative orbs */
-
-.orb-decoration{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(60px);
-  pointer-events:none;
-  z-index:0;
-}
-
-.orb-1{
-  width:350px;
-  height:350px;
-  background:radial-gradient(circle,var(--glow-secondary),transparent);
-  top:-150px;
-  right:-100px;
-}
-
-.orb-2{
-  width:320px;
-  height:320px;
-  background:radial-gradient(circle,rgba(255,45,85,.3),transparent);
-  bottom:-120px;
-  left:-100px;
-}
-
 /* ================= LOGIN CARD ================= */
 
 .login-card{
+
   width:min(440px,92vw);
   padding:2.2rem;
 
@@ -154,125 +97,54 @@ body{
 
   box-shadow:
     0 8px 32px rgba(0,0,0,.6),
-    0 0 80px rgba(0,255,136,.1),
-    inset 0 1px 0 rgba(255,255,255,.05);
+    0 0 80px rgba(0,255,136,.1);
 
   position:relative;
-  z-index:20;
+  z-index:10;
 
-  animation:cardEntrance .8s cubic-bezier(.34,1.56,.64,1);
+  transition:.35s;
 }
-/* ================= LOGIN CARD HOVER GLOW ================= */
-
-.login-card{
-  transition: transform 0.35s ease,
-              box-shadow 0.35s ease,
-              border-color 0.35s ease;
-}
-
-/* hover effect */
 
 .login-card:hover{
-
-  transform: scale(1.035);
-
-  border-color: rgba(0,255,136,0.5);
-
+  transform:scale(1.03);
+  border-color:rgba(0,255,136,.5);
   box-shadow:
-    0 12px 40px rgba(0,0,0,0.7),
-    0 0 40px rgba(0,255,136,0.35),
-    0 0 90px rgba(0,255,136,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-
-}
-@keyframes cardEntrance{
-  from{
-    opacity:0;
-    transform:translateY(40px) scale(.9)
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1)
-  }
-}
-
-/* animated border */
-
-.login-card::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius:30px;
-
-  background:
-    linear-gradient(
-      45deg,
-      var(--primary),
-      var(--secondary),
-      var(--accent),
-      var(--primary)
-    );
-
-  background-size:300% 300%;
-  animation:borderRotate 8s ease infinite;
-
-  opacity:0;
-  z-index:-1;
-  pointer-events:none;
-}
-
-.login-card:hover::before{
-  opacity:.6;
-}
-
-@keyframes borderRotate{
-  0%,100%{background-position:0% 50%}
-  50%{background-position:100% 50%}
+    0 12px 40px rgba(0,0,0,.7),
+    0 0 60px rgba(0,255,136,.35);
 }
 
 /* ================= TITLE ================= */
 
 .title{
   font-family:'Space Mono',monospace;
-  font-size:2.1rem;
-  font-weight:700;
+  font-size:2rem;
   text-align:center;
 
-  margin-bottom:.8rem;
+  margin-bottom:.6rem;
 
   background:linear-gradient(135deg,var(--primary),var(--secondary));
 
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-
-  text-shadow:0 0 40px var(--glow-primary);
 }
 
 /* ================= STATUS BADGE ================= */
 
 .status-badge{
   margin:1rem auto;
+
   width:fit-content;
 
-  padding:.45rem 1.2rem;
+  padding:.4rem 1.1rem;
 
   border-radius:50px;
 
-  font-size:.8rem;
+  font-size:.75rem;
   font-weight:700;
 
   color:var(--success);
 
-  border:1.5px solid rgba(16,185,129,.4);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(16,185,129,.15),
-      rgba(16,185,129,.05)
-    );
-
-  font-family:'Space Mono',monospace;
+  border:1px solid rgba(16,185,129,.4);
 }
 
 /* ================= SUBTITLE ================= */
@@ -280,42 +152,44 @@ body{
 .subtitle{
   text-align:center;
   color:var(--text-secondary);
-  font-size:.95rem;
-  margin-bottom:1.5rem;
+  font-size:.9rem;
+  margin-bottom:1.3rem;
 }
 
-/* ================= LOGIN INSTRUCTION ================= */
+/* ================= LOGIN TEXT ================= */
 
 .login-instruction{
   text-align:center;
   font-size:.85rem;
   color:var(--text-secondary);
-  margin-bottom:.7rem;
-  font-family:'Space Mono',monospace;
+  margin-bottom:.8rem;
 }
 
-.login-instruction span{
-  color:var(--secondary);
-  font-weight:600;
+/* ================= GOOGLE BUTTON FIX ================= */
+
+.google-wrapper{
+  display:flex;
+  justify-content:center;
+  width:100%;
 }
 
-/* ================= GOOGLE BUTTON ================= */
-
-.login-card iframe{
-  max-width:100%!important;
+.google-wrapper iframe{
+  max-width:320px!important;
 }
 
 /* ================= VERIFY LINK ================= */
 
 .verify-link{
   text-align:center;
-  margin-top:1.3rem;
-  padding:.8rem 1.2rem;
-  border-radius:12px;
+  margin-top:1.2rem;
+
+  padding:.75rem 1rem;
+
+  border-radius:10px;
 
   color:#ffffff;
 
-  border:1.5px solid rgba(0,255,136,.2);
+  border:1px solid rgba(0,255,136,.25);
 
   background:
     linear-gradient(
@@ -328,36 +202,25 @@ body{
   font-size:.9rem;
 
   cursor:pointer;
+
   transition:.3s;
 }
 
-.verify-link:hover{
-  color:#ffffff;
-}
-
-/* ================= STATS GRID ================= */
+/* ================= STATS ================= */
 
 .stats-grid{
+  margin-top:1.6rem;
+
   display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(200px,1fr));
-
-  gap:clamp(1rem,2vw,1.4rem);
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1.2rem;
 
   width:100%;
   max-width:1000px;
-
-  margin-top:1.5rem;
-
-  z-index:5;
 }
 
-/* ================= STAT CARD ================= */
-
 .stat-card{
-  padding:1.8rem 1.5rem;
-
+  padding:1.6rem;
   border-radius:20px;
 
   background:
@@ -367,46 +230,38 @@ body{
       rgba(15,20,25,.9)
     );
 
-  border:1.5px solid rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.08);
 
   text-align:center;
 
-  transition:.4s;
+  transition:.35s;
 }
 
 .stat-card:hover{
-  transform:translateY(-10px) scale(1.03);
-  border-color:var(--primary);
+  transform:translateY(-8px);
 }
 
 .stat-icon{
-  font-size:2.6rem;
-  margin-bottom:.8rem;
+  font-size:2.5rem;
+  margin-bottom:.6rem;
 }
 
 .stat-card h2{
   font-family:'Space Mono',monospace;
-  font-size:2.3rem;
-  margin-bottom:.4rem;
   color:#ffffff;
+  font-size:2.2rem;
 }
 
 .stat-card p{
   color:var(--text-secondary);
-  font-size:.82rem;
-  letter-spacing:1.3px;
+  font-size:.8rem;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= MOBILE ================= */
 
 @media (max-width:768px){
 
   .login-container{
-    height:auto;
-    min-height:100vh;
-
-    overflow-y:auto;
-
     justify-content:flex-start;
     padding-top:3rem;
   }
@@ -420,15 +275,7 @@ body{
 @media (max-width:480px){
 
   .title{
-    font-size:1.6rem;
-  }
-
-  .subtitle{
-    font-size:.85rem;
-  }
-
-  .login-instruction{
-    font-size:.8rem;
+    font-size:1.5rem;
   }
 
 }
