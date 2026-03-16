@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import "./Login.css";
 import toast from "react-hot-toast";
 
-const API = "https://blockchain-document-verification.onrender.com";
+const API = "https://blockchain-document-verification.onrender.com"; 
 
 export default function Login() {
 
